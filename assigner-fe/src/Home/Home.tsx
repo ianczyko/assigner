@@ -11,7 +11,7 @@ function Home() {
 
   useEffect(() => {
     wretch('/auth')
-      .post({ callbackUrl: "http://localhost:3000/callback" })
+      .post({ callbackUrl: window.location.href + "callback" })
       .json(json => {
         setLoading(false);
         setUrl(json.authorizeUrl);
