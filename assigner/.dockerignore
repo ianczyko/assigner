@@ -1,0 +1,10 @@
+.gradle
+build
+.idea
+gradle
+gradlew
+gradlew.bat
+.gitignore
+.env
+Dockerfile
+.dockerignore
