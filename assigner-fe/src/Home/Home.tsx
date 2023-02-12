@@ -56,7 +56,7 @@ function Home() {
     <div className="Assigner-center-container">
       <div className="Assigner-center">
         <LoadingButton variant="contained" loading={loading} onClick={usosLogin}>
-          Submit
+          USOS Login
         </LoadingButton>
       </div>
     </div>
