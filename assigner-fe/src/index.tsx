@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter as Router, Routes, Route }
-  from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Home/Home';
 import Dashboard from './Dashboard/Dashboard';
 import Callback from './Callback/Callback';
@@ -15,15 +14,9 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path='/' element={
-          <Home />
-        } />
-        <Route path='/callback' element={
-          <Callback />
-        } />
-        <Route path='/dashboard' element={
-          <Dashboard />
-        } />
+        <Route path='/' element={<Home />} />
+        <Route path='/callback' element={<Callback />} />
+        <Route path='/dashboard' element={<Dashboard />} />
       </Routes>
     </Router>
   </React.StrictMode>

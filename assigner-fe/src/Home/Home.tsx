@@ -1,22 +1,22 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import wretch from 'wretch';
 import './Home.css';
 
 function Home() {
   const [loading, setLoading] = React.useState(true);
-  const [url, setUrl] = React.useState("");
+  const [url, setUrl] = React.useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     wretch('/auth')
-      .post({ callbackUrl: window.location.href + "callback" })
-      .json(json => {
+      .post({ callbackUrl: window.location.href + 'callback' })
+      .json((json) => {
         setLoading(false);
         setUrl(json.authorizeUrl);
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, []);
 
   function usosLogin() {
@@ -29,17 +29,21 @@ function Home() {
         wretch('/verify')
           .post({ verifier: event.data.verifier })
           .res((_res) => {
-            navigate("/dashboard");
+            navigate('/dashboard');
           })
-          .catch(error => console.log(error));
+          .catch((error) => console.log(error));
       }
     };
     window.addEventListener('message', receiveVerifier);
   }
   return (
-    <div className="Assigner-center-container">
-      <div className="Assigner-center">
-        <LoadingButton variant="contained" loading={loading} onClick={usosLogin}>
+    <div className='Assigner-center-container'>
+      <div className='Assigner-center'>
+        <LoadingButton
+          variant='contained'
+          loading={loading}
+          onClick={usosLogin}
+        >
           USOS Login
         </LoadingButton>
       </div>

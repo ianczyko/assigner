@@ -10,20 +10,19 @@ function Dashboard() {
   }
   const [profile, setProfile] = useState<IProfileResponse | null>(null);
 
-
   useEffect(() => {
     wretch('/profile')
       .get()
-      .json(json => {
+      .json((json) => {
         setProfile(json);
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, []);
 
   if (profile != null) {
     return (
-      <div className="Assigner-center-container">
-        <header className="Assigner-center Assigner-header">
+      <div className='Assigner-center-container'>
+        <header className='Assigner-center Assigner-header'>
           <p>
             {profile.id} - {profile.first_name} - {profile.last_name}
           </p>
@@ -33,11 +32,9 @@ function Dashboard() {
   }
 
   return (
-    <div className="Assigner-center-container">
-      <header className="Assigner-center Assigner-header">
-        <p>
-          Loading profile...
-        </p>
+    <div className='Assigner-center-container'>
+      <header className='Assigner-center Assigner-header'>
+        <p>Loading profile...</p>
       </header>
     </div>
   );
