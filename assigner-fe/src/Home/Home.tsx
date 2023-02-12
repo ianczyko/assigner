@@ -20,7 +20,6 @@ function Home() {
   }, []);
 
   function usosLogin() {
-    console.log('You clicked submit, url=' + url);
     const authWindow = window.open(url, '_blank');
 
     const receiveVerifier = (event: any) => {
