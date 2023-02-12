@@ -1,7 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import { BrowserRouter as Router, Routes, Route }
+  from 'react-router-dom';
+import Home from './Home/Home';
+import Dashboard from './Dashboard/Dashboard';
+import Callback from './Callback/Callback';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -9,7 +13,19 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Routes>
+        <Route path='/' element={
+          <Home />
+        } />
+        <Route path='/callback' element={
+          <Callback />
+        } />
+        <Route path='/dashboard' element={
+          <Dashboard />
+        } />
+      </Routes>
+    </Router>
   </React.StrictMode>
 );
 
