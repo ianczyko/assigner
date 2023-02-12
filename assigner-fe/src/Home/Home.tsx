@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import wretch from 'wretch';
 import './Home.css';
 
 function Home() {
-  const [loading, setLoading] = React.useState(true);
-  const [url, setUrl] = React.useState('');
+  const [loading, setLoading] = useState(true);
+  const [url, setUrl] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
