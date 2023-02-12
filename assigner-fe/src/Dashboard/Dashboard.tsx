@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import wretch from 'wretch';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -11,11 +12,12 @@ function Dashboard() {
 
 
   useEffect(() => {
-    fetch('/profile')
-      .then((response) => response.json())
-      .then(function (data) {
-        setProfile(data);
-      });
+    wretch('/profile')
+      .get()
+      .json(json => {
+        setProfile(json);
+      })
+      .catch(error => console.log(error));
   }, []);
 
   if (profile != null) {

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import LoadingButton from '@mui/lab/LoadingButton';
+import wretch from 'wretch';
 import './Home.css';
 
 function Home() {
@@ -9,18 +10,13 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/auth', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ callbackUrl: "http://localhost:3000/callback" }),
-    })
-      .then((response) => response.json())
-      .then(function (data) {
+    wretch('/auth')
+      .post({ callbackUrl: "http://localhost:3000/callback" })
+      .json(json => {
         setLoading(false);
-        setUrl(data.authorizeUrl);
-      });
+        setUrl(json.authorizeUrl);
+      })
+      .catch(error => console.log(error));
   }, []);
 
   function usosLogin() {
@@ -30,26 +26,14 @@ function Home() {
     const receiveVerifier = (event: any) => {
       if (event.data.verifier) {
         authWindow?.close();
-        fetch('/verify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ verifier: event.data.verifier }),
-        })
-          .then((response) => {
-            if (response.status == 200) {
-              navigate("/dashboard");
-            } else {
-              // TODO: better fetch error handling
-              console.log(response.status)
-              console.log(response.body)
-              console.log(response)
-            }
+        wretch('/verify')
+          .post({ verifier: event.data.verifier })
+          .res((_res) => {
+            navigate("/dashboard");
           })
+          .catch(error => console.log(error));
       }
     };
-
     window.addEventListener('message', receiveVerifier);
   }
   return (
