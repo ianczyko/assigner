@@ -25,6 +25,7 @@ function Home() {
     const receiveVerifier = (event: any) => {
       if (event.data.verifier) {
         authWindow?.close();
+        window.removeEventListener('message', receiveVerifier);
         wretch('/verify')
           .post({ verifier: event.data.verifier })
           .res((_res) => {
