@@ -11,7 +11,7 @@ function Dashboard() {
   const [profile, setProfile] = useState<IProfileResponse | null>(null);
 
   useEffect(() => {
-    wretch('/profile')
+    wretch('/api/profile')
       .get()
       .json((json) => {
         setProfile(json);

@@ -10,7 +10,7 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    wretch('/auth')
+    wretch('/api/auth')
       .post({ callbackUrl: window.location.href + 'callback' })
       .json((json) => {
         setLoading(false);
@@ -26,7 +26,7 @@ function Home() {
       if (event.data.verifier) {
         authWindow?.close();
         window.removeEventListener('message', receiveVerifier);
-        wretch('/verify')
+        wretch('/api/verify')
           .post({ verifier: event.data.verifier })
           .res((_res) => {
             navigate('/dashboard');
