@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  assigner:
+    build: assigner
+    expose:
+      - 8080
+    env_file: assigner/.env
+
+  assigner-fe:
+    build: assigner-fe
+    ports:
+      - 3000:80
+    environment:
+      - BE_ADDRESS=assigner
+      - BE_PORT=8080
+    depends_on:
+      - assigner
