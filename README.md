@@ -42,6 +42,8 @@ Go to `/etc/nginx/nginx.conf` and comment out the line the following way:
 # include /etc/nginx/sites-enabled/*;
 ```
 
+Create the following file: `/etc/nginx/conf.d/assigner.conf`:
+
 ```conf
 server {
     server_name assigner.anczykowski.com; # optional
