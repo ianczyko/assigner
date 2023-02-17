@@ -6,6 +6,8 @@ plugins {
 
 group = 'com.anczykowski'
 version = '0.0.1-SNAPSHOT'
+
+//noinspection GroovyUnusedAssignment
 sourceCompatibility = '17'
 
 configurations {
@@ -44,6 +46,8 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation files("lib/cplex.jar")
 }
 
 tasks.named('test') {
