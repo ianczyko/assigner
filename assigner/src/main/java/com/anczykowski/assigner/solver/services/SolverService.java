@@ -50,7 +50,7 @@ public class SolverService {
                 for (int i = 0; i < S; ++i) {
                     column.addTerm(1, students_date_assignment[i][j]);
                 }
-                cplex.addEq(column, date_student_limits[j]);
+                cplex.addLe(column, date_student_limits[j]);
             }
 
             //// objective
