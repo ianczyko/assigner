@@ -1,5 +1,9 @@
 package com.anczykowski.assigner.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -11,28 +15,33 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
-
 import com.anczykowski.assigner.auth.CustomLogoutHandler;
 import com.anczykowski.assigner.auth.SessionFilter;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @EnableSpringHttpSession
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
-    SessionFilter sessionFilter;
+    final SessionFilter sessionFilter;
 
-    CustomLogoutHandler customLogoutHandler;
+    final CustomLogoutHandler customLogoutHandler;
+
+    @Value("${disable.auth:false}")
+    private Boolean disableAuth;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        var patternsToPermit = new ArrayList<>(Arrays.asList("/auth", "/verify"));
+        if (disableAuth) patternsToPermit.add("/**");
+        var patternsToPermitListArr = patternsToPermit.toArray(String[]::new);
         var logoutSuccessHandler = new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK);
         http
             .cors().disable()
             .csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/auth", "/verify").permitAll()
+            .requestMatchers(patternsToPermitListArr).permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(sessionFilter, BasicAuthenticationFilter.class)
