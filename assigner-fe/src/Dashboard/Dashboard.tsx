@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import wretch from 'wretch';
 import './Dashboard.css';
 
@@ -26,6 +27,7 @@ function Dashboard() {
           <p>
             {profile.id} - {profile.first_name} - {profile.last_name}
           </p>
+        <Link className='Assigner-link' to="/new-course">New Course</Link>
         </header>
       </div>
     );

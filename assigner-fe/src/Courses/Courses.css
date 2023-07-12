@@ -1,0 +1,19 @@
+ul {
+  text-align: left;
+}
+
+.popup-content {
+  margin: auto;
+  background: rgb(90, 90, 90);
+  width: 50%;
+  padding: 25px;
+}
+
+.popup-arrow {
+  color: rgb(255, 255, 255);
+}
+
+[role='tooltip'].popup-content {
+  width: 250px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}

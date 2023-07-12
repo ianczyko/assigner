@@ -33,3 +33,13 @@ code {
 .Assigner-link {
   color: #61dafb;
 }
+
+.Assigner-row-parent {
+  text-align: center;
+}
+
+.Assigner-row-child {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 0.5rem;
+}
