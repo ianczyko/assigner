@@ -34,7 +34,13 @@ dependencies {
 	implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
 	implementation 'oauth.signpost:signpost-core:1.2.1.2'
 
+	implementation 'org.modelmapper:modelmapper:3.0.0'
+
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	implementation "com.opencsv:opencsv:5.7.1"
+
+	implementation "commons-io:commons-io:2.11.0"
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
