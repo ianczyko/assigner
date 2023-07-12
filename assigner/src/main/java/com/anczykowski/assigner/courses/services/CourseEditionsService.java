@@ -34,8 +34,6 @@ public class CourseEditionsService {
 
     public void create(String courseName, String edition, Reader inputCsvReader) throws IOException {
         var course = coursesRepository.getByName(courseName);
-
-        // TODO: change the below (proof of concept)
         var courseEdition = CourseEdition.builder()
                 .edition(edition)
                 .course(course)
