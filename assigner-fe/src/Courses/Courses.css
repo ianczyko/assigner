@@ -15,5 +15,5 @@ ul {
 
 [role='tooltip'].popup-content {
   width: 250px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 0 3px;
 }
