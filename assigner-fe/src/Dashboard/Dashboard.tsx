@@ -27,7 +27,7 @@ function Dashboard() {
           <p>
             {profile.id} - {profile.first_name} - {profile.last_name}
           </p>
-        <Link className='Assigner-link' to="/new-course">New Course</Link>
+        <Link className='Assigner-link' to="/courses">Kursy</Link>
         </header>
       </div>
     );
@@ -36,7 +36,7 @@ function Dashboard() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
-        <p>Loading profile...</p>
+        <p>Trwa ładowanie profilu...</p>
       </header>
     </div>
   );

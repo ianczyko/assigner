@@ -93,7 +93,7 @@ function Courses() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
-          <p>No courses</p>
+          <p>Brak kursów.</p>
         </header>
       </div>
     );
@@ -102,7 +102,7 @@ function Courses() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
-        <p>Loading courses...</p>
+        <p>Trwa ładowanie kursów...</p>
       </header>
     </div>
   );

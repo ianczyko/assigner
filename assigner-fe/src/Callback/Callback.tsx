@@ -14,13 +14,13 @@ function Callback() {
   }
 
   const renderer = ({ seconds }: TimeSegments) => (
-    <span>Continuing in: {zeroPad(seconds, 1)}s</span>
+    <span>Kontynuowanie w: {zeroPad(seconds, 1)}s</span>
   );
 
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
-        <p>Login successful!</p>
+        <p>Logowanie pomyślne!</p>
         <br />
         <Countdown
           date={Date.now() + 3000}
