@@ -1,14 +1,6 @@
 package com.anczykowski.assigner.auth.services;
 
 
-import java.io.IOException;
-import java.util.Objects;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.session.MapSession;
-import org.springframework.session.MapSessionRepository;
-import org.springframework.stereotype.Service;
-
 import com.anczykowski.assigner.auth.dto.ProfileResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -24,8 +16,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.session.MapSession;
+import org.springframework.session.MapSessionRepository;
+import org.springframework.stereotype.Service;
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
 import se.akerfeldt.okhttp.signpost.SigningInterceptor;
+
+import java.io.IOException;
+import java.util.Objects;
 
 
 @Service
@@ -88,11 +87,15 @@ public class AuthService {
 
             var accessToken = consumer.getToken();
             var accessTokenSecret = consumer.getTokenSecret();
+            var profileData = getProfileData(accessToken, accessTokenSecret);
 
             var session = sessionRepository.findById(sessionId);
             session.setAttribute("accessToken", accessToken);
             session.setAttribute("accessTokenSecret", accessTokenSecret);
+            session.setAttribute("usosId", profileData.getId());
             sessionRepository.save(session);
+
+
 
         } catch (OAuthMessageSignerException |
                  OAuthNotAuthorizedException |
@@ -102,11 +105,15 @@ public class AuthService {
         }
     }
 
-    public ProfileResponse userData(String sessionId){
+    public ProfileResponse userData(String sessionId) {
         var session = sessionRepository.findById(sessionId);
         String accessToken = session.getAttribute("accessToken");
         String accessTokenSecret = session.getAttribute("accessTokenSecret");
         if (accessToken == null) throw new RuntimeException();
+        return getProfileData(accessToken, accessTokenSecret);
+    }
+
+    private ProfileResponse getProfileData(String accessToken, String accessTokenSecret) {
         consumer.setTokenWithSecret(accessToken, accessTokenSecret);
         OkHttpOAuthConsumer okConsumer = new OkHttpOAuthConsumer(consumerKey, consumerSecret);
         okConsumer.setTokenWithSecret(accessToken, accessTokenSecret);

@@ -11,6 +11,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -30,6 +31,10 @@ public class CourseEditionsService {
 
     private int getHeaderLocation(String[] headers, String columnName) {
         return Arrays.asList(headers).indexOf(columnName);
+    }
+
+    private String getUsosIdFromEmail(String email) {
+        return StringUtils.substringBefore(email, "@");
     }
 
     public void create(String courseName, String edition, Reader inputCsvReader) throws IOException {
@@ -60,11 +65,12 @@ public class CourseEditionsService {
                     var first_name = line[first_name_header];
                     var second_name = line[second_name_header];
                     var usos_email = line[usos_email_header];
+                    var usosId = Integer.valueOf(getUsosIdFromEmail(usos_email));
                     var user = User.builder()
                             .name(first_name)
                             .surname(surname)
                             .secondName(second_name.isEmpty() ? null : second_name)
-                            .email(usos_email)
+                            .usosId(usosId)
                             .build();
                     var userCreated = usersService.create(user);
                 }

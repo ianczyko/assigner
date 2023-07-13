@@ -20,6 +20,7 @@ public class UserPersistent {
     @Column(name = "second_name")
     private String secondName;
     private String surname;
-    private String email;
+
+    private Integer usosId;
 
 }

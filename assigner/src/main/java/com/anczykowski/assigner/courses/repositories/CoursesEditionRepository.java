@@ -10,4 +10,6 @@ public interface CoursesEditionRepository {
     List<CourseEdition> getAll(String courseName);
 
     CourseEdition get(String courseName, String edition);
+
+    boolean checkIfUserHasAccessToCourseEdition(String courseName, String edition, String usosId);
 }

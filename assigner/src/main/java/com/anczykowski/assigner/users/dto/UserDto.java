@@ -18,6 +18,5 @@ public class UserDto {
     @NotBlank
     String surname;
 
-    @NotBlank
-    String email;
+    Integer usosId;
 }

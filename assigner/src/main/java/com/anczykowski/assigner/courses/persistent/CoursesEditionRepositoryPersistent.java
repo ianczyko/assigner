@@ -39,6 +39,11 @@ public class CoursesEditionRepositoryPersistent implements CoursesEditionReposit
     public CourseEdition get(String courseName, String edition) {
         return modelMapper.map(repositoryImpl.findByCourseNameAndEdition(courseName, edition).get(0), CourseEdition.class);
     }
+
+    @Override
+    public boolean checkIfUserHasAccessToCourseEdition(String courseName, String edition, String usosId) {
+        return true; // TODO: DB check if user has access to course edition
+    }
 }
 
 @Component

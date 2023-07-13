@@ -12,10 +12,10 @@ public final class User {
     private String name;
     private String secondName;
     private String surname;
-    private String email;
+    private Integer usosId;
 
     @Override
     public String toString() {
-        return "%s %s (%s)".formatted(name, surname, email);
+        return "%s %s (%d)".formatted(name, surname, usosId);
     }
 }

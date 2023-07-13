@@ -1,12 +1,15 @@
 package com.anczykowski.assigner.courses.controllers;
 
+import com.anczykowski.assigner.auth.preauth.PreAuths;
 import com.anczykowski.assigner.courses.dto.CourseDto;
 import com.anczykowski.assigner.courses.dto.CourseEditionDto;
 import com.anczykowski.assigner.courses.services.CourseEditionsService;
 import com.anczykowski.assigner.courses.services.CoursesService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.input.BOMInputStream;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +29,8 @@ public class CoursesController {
     CoursesService coursesService;
 
     CourseEditionsService courseEditionsService;
+
+    PreAuths preAuths;
 
     @PostMapping
     public CourseDto newCourse(@RequestParam String name) {
@@ -67,7 +72,9 @@ public class CoursesController {
     }
 
     @GetMapping("/{courseName}/editions/{edition}")
+    @PreAuthorize("@preAuths.hasAccessToCourseEdition(#courseName, #edition, #request)")
     public CourseEditionDto getCourseEdition(
+            HttpServletRequest request,
             @PathVariable String courseName,
             @PathVariable String edition
     ) {
