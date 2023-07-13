@@ -2,9 +2,12 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
 import './CourseEdition.css';
+import Forbidden from '../Forbidden/Forbidden';
 
 function CourseEdition() {
   const { course_name, edition } = useParams();
+
+  const [isForbidden, setIsForbidden] = useState(false);
 
   const [editionResponse, setEditionResponse] =
     useState<IEditionResponse | null>(null);
@@ -26,11 +29,18 @@ function CourseEdition() {
   useEffect(() => {
     wretch(`/api/courses/${course_name}/editions/${edition}`)
       .get()
+      .forbidden((error) => {
+        setIsForbidden(true);
+      })
       .json((json) => {
         setEditionResponse(json);
       })
       .catch((error) => console.log(error));
   }, [course_name, edition]);
+
+  if (isForbidden) {
+    return <Forbidden />;
+  }
 
   if (editionResponse != null) {
     return (
@@ -57,7 +67,7 @@ function CourseEdition() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
-        <p>Loading course edition...</p>
+        <p>Trwa Ładowanie edycji kursu...</p>
       </header>
     </div>
   );

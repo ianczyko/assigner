@@ -11,5 +11,5 @@ public interface CoursesEditionRepository {
 
     CourseEdition get(String courseName, String edition);
 
-    boolean checkIfUserHasAccessToCourseEdition(String courseName, String edition, String usosId);
+    boolean checkIfUserHasAccessToCourseEdition(String courseName, String edition, Integer usosId);
 }

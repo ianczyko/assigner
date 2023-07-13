@@ -41,13 +41,16 @@ public class CoursesEditionRepositoryPersistent implements CoursesEditionReposit
     }
 
     @Override
-    public boolean checkIfUserHasAccessToCourseEdition(String courseName, String edition, String usosId) {
-        return true; // TODO: DB check if user has access to course edition
+    public boolean checkIfUserHasAccessToCourseEdition(String courseName, String edition, Integer usosId) {
+        return repositoryImpl.existsByCourseNameAndEditionAndUsersUsosId(courseName, edition, usosId);
     }
 }
 
 @Component
 interface CoursesEditionRepositoryPersistentImpl extends JpaRepository<CourseEditionPersistent, Integer> {
+
+    boolean existsByCourseNameAndEditionAndUsersUsosId(String course_name, String edition, Integer users_usosId);
+
     List<CourseEditionPersistent> findByCourseName(String courseName);
 
     List<CourseEditionPersistent> findByCourseNameAndEdition(String courseName, String edition);

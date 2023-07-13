@@ -19,7 +19,7 @@ public class PreAuths {
 
     private final MapSessionRepository sessionRepository;
 
-    CoursesEditionRepository coursesEditionRepository;
+    private final CoursesEditionRepository coursesEditionRepository;
 
     public boolean hasAccessToCourseEdition(String courseName, String edition, HttpServletRequest request) {
         if (disableAuth) return true;
@@ -28,10 +28,10 @@ public class PreAuths {
         return coursesEditionRepository.checkIfUserHasAccessToCourseEdition(courseName, edition, usosId);
     }
 
-    private String getUsosId(HttpServletRequest request) {
+    private Integer getUsosId(HttpServletRequest request) {
         var session = getSessionFromRequest(request);
         if (session == null) return null;
-        return session.getAttribute("usosId");
+        return Integer.valueOf(session.getAttribute("usosId"));
     }
 
     @Nullable
