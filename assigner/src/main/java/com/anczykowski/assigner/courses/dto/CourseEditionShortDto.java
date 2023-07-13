@@ -3,16 +3,11 @@ package com.anczykowski.assigner.courses.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-public class CourseDto {
+public class CourseEditionShortDto {
 
     Integer id;
 
-    String name;
-
-    List<CourseEditionShortDto> courseEditions;
-
+    String edition;
 }

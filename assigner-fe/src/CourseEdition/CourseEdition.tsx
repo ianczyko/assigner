@@ -12,6 +12,15 @@ function CourseEdition() {
   interface IEditionResponse {
     id: Number;
     edition: string;
+    users: Array<IUser>;
+  }
+
+  interface IUser {
+    id: Number;
+    name: string;
+    secondName: string | null;
+    surname: string;
+    usosId: Number;
   }
 
   useEffect(() => {
@@ -30,6 +39,16 @@ function CourseEdition() {
           <p>
             {course_name}, edition: {editionResponse.edition}
           </p>
+          <ul>
+            Lista studentów:
+            {editionResponse.users.map((user) => {
+              return (
+                <li key={user.id.toString()}>
+                  {user.name} {user.surname} {user.usosId.toString()}
+                </li>
+              );
+            })}
+          </ul>
         </header>
       </div>
     );

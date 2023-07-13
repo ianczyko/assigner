@@ -3,6 +3,7 @@ package com.anczykowski.assigner.courses.controllers;
 import com.anczykowski.assigner.auth.preauth.PreAuths;
 import com.anczykowski.assigner.courses.dto.CourseDto;
 import com.anczykowski.assigner.courses.dto.CourseEditionDto;
+import com.anczykowski.assigner.courses.dto.CourseEditionShortDto;
 import com.anczykowski.assigner.courses.services.CourseEditionsService;
 import com.anczykowski.assigner.courses.services.CoursesService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ public class CoursesController {
     }
 
     @PostMapping("/{courseName}/editions")
-    public void newCourseEdition(
+    public CourseEditionShortDto newCourseEdition(
             @PathVariable String courseName,
             @RequestParam String edition,
             @RequestParam(value = "file") MultipartFile file
@@ -57,7 +58,10 @@ public class CoursesController {
                             new BOMInputStream(fileStream), StandardCharsets.UTF_8
                     )
             );
-            courseEditionsService.create(courseName, edition, inputCsvBufferedReader);
+            return modelMapper.map(
+                    courseEditionsService.create(courseName, edition, inputCsvBufferedReader),
+                    CourseEditionShortDto.class
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

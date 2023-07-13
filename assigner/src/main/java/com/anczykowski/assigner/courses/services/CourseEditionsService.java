@@ -37,13 +37,13 @@ public class CourseEditionsService {
         return StringUtils.substringBefore(email, "@");
     }
 
-    public void create(String courseName, String edition, Reader inputCsvReader) throws IOException {
+    public CourseEdition create(String courseName, String edition, Reader inputCsvReader) throws IOException {
         var course = coursesRepository.getByName(courseName);
         var courseEdition = CourseEdition.builder()
                 .edition(edition)
                 .course(course)
                 .build();
-        coursesEditionRepository.save(courseEdition);
+        var courseEditionSaved = coursesEditionRepository.save(courseEdition);
 
         final CSVParser parser = new CSVParserBuilder()
                 .withSeparator(';')
@@ -72,12 +72,14 @@ public class CourseEditionsService {
                             .secondName(second_name.isEmpty() ? null : second_name)
                             .usosId(usosId)
                             .build();
-                    var userCreated = usersService.create(user);
+                    user.addCourseEditionAccess(courseEditionSaved);
+                    usersService.create(user);
                 }
             } catch (CsvValidationException e) {
                 throw new RuntimeException(e);
             }
         }
+        return courseEditionSaved;
     }
 
     public List<CourseEdition> getAll(String courseName) {
