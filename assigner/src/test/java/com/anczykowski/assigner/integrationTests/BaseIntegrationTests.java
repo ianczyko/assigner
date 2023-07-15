@@ -3,6 +3,7 @@ package com.anczykowski.assigner.integrationTests;
 import com.anczykowski.assigner.auth.controllers.AuthController;
 import com.anczykowski.assigner.auth.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import jakarta.servlet.http.Cookie;
 import org.json.JSONObject;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.session.MapSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -44,7 +46,7 @@ public abstract class BaseIntegrationTests {
 
     private AutoCloseable mockCloseHandle;
 
-    private Cookie cookie = null;
+    protected Cookie cookie = null;
 
     private MapSession createSession() {
         var session = sessionRepository.createSession();
@@ -55,7 +57,7 @@ public abstract class BaseIntegrationTests {
     private void verify() {
         var accessToken = "100";
         var accessTokenSecret = "101";
-        var usosId = 103;
+        var usosId = "12345678";
         var session = sessionRepository.findById(cookie.getValue());
         session.setAttribute("accessToken", accessToken);
         session.setAttribute("accessTokenSecret", accessTokenSecret);
@@ -129,6 +131,10 @@ public abstract class BaseIntegrationTests {
         return MockMvcRequestBuilders.delete(url, uriVars)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
+    }
+
+    protected String getFromResult(MvcResult result, String path) throws Exception {
+        return JsonPath.read(result.getResponse().getContentAsString(), path);
     }
 
 }
