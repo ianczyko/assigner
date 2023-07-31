@@ -6,6 +6,7 @@ import Dashboard from './Dashboard/Dashboard';
 import Callback from './Callback/Callback';
 import Courses from './Courses/Courses';
 import CourseEdition from './CourseEdition/CourseEdition';
+import NotFound from './NotFound/NotFound';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 
@@ -24,6 +25,7 @@ root.render(
           path='/courses/:course_name/:edition'
           element={<CourseEdition />}
         />
+        <Route path='*' element={<NotFound />}/>
       </Routes>
     </Router>
   </React.StrictMode>

@@ -1,14 +1,14 @@
-import './Forbidden.css';
+import './NotFound.css';
 
-function Forbidden() {
+function NotFound() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
-        <h1>403</h1>
-        <p>Brak uprawnień do zasobu.</p>
+        <h1>404</h1>
+        <p>Nie odnaleziono zasobu.</p>
       </header>
     </div>
   );
 }
 
-export default Forbidden;
+export default NotFound;
