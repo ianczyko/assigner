@@ -52,6 +52,7 @@ public class AuthController {
         if (cookie == null) {
             throw new UnauthorizedException();
         }
+        // TODO: service should not return response, domain to dto mapping should happen here
         return authService.userData(cookie.getValue());
     }
 }

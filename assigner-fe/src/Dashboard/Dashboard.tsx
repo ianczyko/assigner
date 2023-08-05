@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import wretch from 'wretch';
 import './Dashboard.css';
 
@@ -26,6 +27,7 @@ function Dashboard() {
           <p>
             {profile.id} - {profile.first_name} - {profile.last_name}
           </p>
+        <Link className='Assigner-link' to="/courses">Kursy</Link>
         </header>
       </div>
     );
@@ -34,7 +36,7 @@ function Dashboard() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
-        <p>Loading profile...</p>
+        <p>Trwa ładowanie profilu...</p>
       </header>
     </div>
   );
