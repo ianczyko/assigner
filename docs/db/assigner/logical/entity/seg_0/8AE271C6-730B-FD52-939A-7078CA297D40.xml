@@ -14,4 +14,110 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="User Id" id="D490E422-A160-2766-997B-EFD9C89B738B">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:49:04 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="USOS Id" id="8FB19369-2A19-199A-6216-78AE9E8D43A6">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:49:08 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Name" id="2A629CCF-66FA-4A65-4E82-D5448591C8A5">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:54:29 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Second Name" id="EA383D0E-453C-E600-5C5B-88483A873244">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:54:35 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Surname" id="8092C4B1-4313-96F4-4A08-EE9AE29F1C80">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:54:43 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Team Id" id="CA615CAF-A5BA-44B8-7BC0-56768F5D5CB5">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:55:47 UTC</createdTime>
+<generatorID>6A82C0DF-F233-7000-DF28-168B67552CE4</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>53AD125D-7D15-06E6-9A26-D8DA011A6E4D</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Project Id" id="67F9C6A9-D075-2215-A991-8CC915EE8AF2">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:57:21 UTC</createdTime>
+<generatorID>89B96162-AE79-0B83-8ABA-DB6ADDBED638</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>0A56A082-BB69-13B9-BBD7-DF69E59E7590</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="8005E88B-8B74-59F2-F3E2-DCCF0847BFE9" name="User PK">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:49:10 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>D490E422-A160-2766-997B-EFD9C89B738B</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="6DF4AF88-A5AB-7EEA-E8CE-EA8230D9DAA5" name="Key_2">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:52:27 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<newElementsIDs>8FB19369-2A19-199A-6216-78AE9E8D43A6</newElementsIDs>
+<usedAttributes>
+<attributeRef>8FB19369-2A19-199A-6216-78AE9E8D43A6</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

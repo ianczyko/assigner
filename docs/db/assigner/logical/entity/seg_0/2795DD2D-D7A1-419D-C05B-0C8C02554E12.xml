@@ -14,4 +14,42 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Course Id" id="A5E0412F-A47F-8D7F-C782-5275721C8F1B">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:45:47 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Name" id="3C4B3726-8B72-C8BA-6DD9-0C8C66F3D573">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:46:43 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="539F8FCC-39E1-43FD-7761-40656BD41822" name="Course PK">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:46:16 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>A5E0412F-A47F-8D7F-C782-5275721C8F1B</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

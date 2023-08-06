@@ -14,4 +14,54 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Course Id" id="5B002332-2801-DC83-8277-079B3A907AD6">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:46:16 UTC</createdTime>
+<generatorID>EE41B1EB-42CE-F380-0F14-82E55A64AA75</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<referedAttribute>A5E0412F-A47F-8D7F-C782-5275721C8F1B</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Course Edition Id" id="3E8C8046-8573-E08A-63BC-FC2C465E8D8E">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:48:01 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Name" id="44E6696A-E3B9-FB98-9F59-04BDEE8E1D30">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:48:30 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="0611FD42-9693-ED2C-E783-96588099704C" name="Course Edition PK">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:48:10 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>3E8C8046-8573-E08A-63BC-FC2C465E8D8E</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

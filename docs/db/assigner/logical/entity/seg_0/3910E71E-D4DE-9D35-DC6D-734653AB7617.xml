@@ -14,4 +14,63 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Project Id" id="0A56A082-BB69-13B9-BBD7-DF69E59E7590">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:57:08 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Name" id="B7268CDB-4CAD-9F7A-2B12-413A7C0E028C">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:57:13 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Description" id="823888DF-D48A-4830-5AE3-C879EC21F5C7">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:57:16 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Course Edition Id" id="1D22BED9-D1C4-646C-9F22-C1EF1D85DB04">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-06 13:19:50 UTC</createdTime>
+<generatorID>F2BD3ED2-FE8B-3A3B-15B6-D9642669314C</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<referedAttribute>3E8C8046-8573-E08A-63BC-FC2C465E8D8E</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="70AEA29F-4EA2-61B7-301F-5ECE81088E8F" name="Project PK">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:57:12 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>0A56A082-BB69-13B9-BBD7-DF69E59E7590</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>
