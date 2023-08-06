@@ -5,6 +5,8 @@ import com.anczykowski.assigner.teams.models.Team;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class TeamsService {
@@ -17,5 +19,10 @@ public class TeamsService {
         var courseEdition = courseEditionsService.get(courseName, edition);
         team.setCourseEdition(courseEdition);
         return teamsRepository.save(team);
+    }
+
+    public List<Team> getAll(String courseName, String edition) {
+        var courseEdition = courseEditionsService.get(courseName, edition);
+        return teamsRepository.getAll(courseEdition);
     }
 }

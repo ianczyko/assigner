@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/courses/{courseName}/editions/{edition}/teams")
@@ -25,5 +27,16 @@ public class TeamsController {
         var team = modelMapper.map(teamDto, Team.class);
         var createdTeam = teamsService.create(courseName, edition, team);
         return modelMapper.map(createdTeam, TeamDto.class);
+    }
+
+    @GetMapping
+    public List<TeamDto> getTeams(
+            @PathVariable String courseName,
+            @PathVariable String edition
+    ) {
+        return teamsService.getAll(courseName, edition)
+                .stream()
+                .map(c -> modelMapper.map(c, TeamDto.class))
+                .toList();
     }
 }
