@@ -1,11 +1,13 @@
 package com.anczykowski.assigner.courses.persistent;
 
+import com.anczykowski.assigner.teams.persistent.TeamPersistent;
 import com.anczykowski.assigner.users.persistent.UserPersistent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,4 +31,8 @@ public class CourseEditionPersistent {
             mappedBy = "courseEditionsAccess"
     )
     private Set<UserPersistent> users;
+
+
+    @OneToMany(mappedBy = "courseEdition")
+    private List<TeamPersistent> teams;
 }
