@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.session.MapSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,8 +22,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,6 +50,12 @@ public abstract class BaseIntegrationTests {
     private AutoCloseable mockCloseHandle;
 
     protected Cookie cookie = null;
+
+    protected final String courseName = "PZSP3";
+
+    protected final String edition = "21l";
+
+    protected final String editionPath = "/courses/%s/editions/%s".formatted(courseName, edition);
 
     private MapSession createSession() {
         var session = sessionRepository.createSession();
@@ -83,6 +92,27 @@ public abstract class BaseIntegrationTests {
                 .content(new JSONObject().put("verifier", "104").toString());
         mockMvc.perform(verifyRequest)
                 .andExpect(status().isOk());
+    }
+
+    protected void setupCourseAndCourseEdition() throws Exception {
+        var request = post("/courses").param("name", courseName);
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        var file = new MockMultipartFile(
+                "file",
+                "students.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;12345678@pw.edu.pl".getBytes()
+        );
+        var courseEditionRequest = multipart("/courses/PZSP3/editions")
+                .file(file)
+                .param("edition", edition)
+                .cookie(cookie);
+
+        mockMvc.perform(courseEditionRequest)
+                .andExpect(status().isOk());
+
     }
 
     protected MockHttpServletRequestBuilder get(String url, Object... uriVars) {
