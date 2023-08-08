@@ -9,4 +9,6 @@ public interface TeamsRepository {
     Team save(Team team);
 
     List<Team> getAll(CourseEdition courseEdition);
+
+    Team get(Integer teamId);
 }

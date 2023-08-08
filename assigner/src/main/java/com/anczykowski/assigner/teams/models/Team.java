@@ -1,7 +1,11 @@
 package com.anczykowski.assigner.teams.models;
 
 import com.anczykowski.assigner.courses.models.CourseEdition;
+import com.google.common.math.IntMath;
 import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @Setter
@@ -14,5 +18,12 @@ public final class Team {
     private Integer id;
     private String name;
     private CourseEdition courseEdition;
+    private Integer accessToken;
+    private LocalDateTime accessTokenExpirationDate;
 
+    public void regenerateAccessToken(Integer tokenDigits, Integer validDays) {
+        var origin = IntMath.pow(10, tokenDigits - 1);
+        accessToken = ThreadLocalRandom.current().nextInt(origin, origin * 10);
+        accessTokenExpirationDate = LocalDateTime.now().plusDays(validDays);
+    }
 }

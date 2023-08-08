@@ -35,6 +35,11 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
                 .map(c -> modelMapper.map(c, Team.class))
                 .toList();
     }
+
+    @Override
+    public Team get(Integer teamId) {
+        return modelMapper.map(repositoryImpl.getReferenceById(teamId), Team.class);
+    }
 }
 
 @Component

@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.teams;
 
+import com.anczykowski.assigner.teams.dto.TeamAccessTokenDto;
 import com.anczykowski.assigner.teams.dto.TeamDto;
 import com.anczykowski.assigner.teams.models.Team;
 import jakarta.validation.Valid;
@@ -27,6 +28,26 @@ public class TeamsController {
         var team = modelMapper.map(teamDto, Team.class);
         var createdTeam = teamsService.create(courseName, edition, team);
         return modelMapper.map(createdTeam, TeamDto.class);
+    }
+
+    @PutMapping("/{teamId}/access-token")
+    public TeamAccessTokenDto generateAccessToken(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId
+    ) {
+        var team = teamsService.generateAccessToken(teamId);
+        return modelMapper.map(team, TeamAccessTokenDto.class);
+    }
+
+    @GetMapping("/{teamId}/access-token")
+    public TeamAccessTokenDto getAccessToken(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId
+    ) {
+        var team = teamsService.get(teamId);
+        return modelMapper.map(team, TeamAccessTokenDto.class);
     }
 
     @GetMapping
