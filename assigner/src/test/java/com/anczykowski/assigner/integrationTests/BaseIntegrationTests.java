@@ -163,7 +163,7 @@ public abstract class BaseIntegrationTests {
                 .accept(MediaType.APPLICATION_JSON);
     }
 
-    protected String getFromResult(MvcResult result, String path) throws Exception {
+    protected <T> T getFromResult(MvcResult result, String path) throws Exception {
         return JsonPath.read(result.getResponse().getContentAsString(), path);
     }
 
