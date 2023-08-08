@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -45,9 +44,8 @@ public abstract class BaseIntegrationTests {
     private AuthService authService;
 
     @InjectMocks
+    @SuppressWarnings("unused")
     private AuthController authController;
-
-    private AutoCloseable mockCloseHandle;
 
     protected Cookie cookie = null;
 
