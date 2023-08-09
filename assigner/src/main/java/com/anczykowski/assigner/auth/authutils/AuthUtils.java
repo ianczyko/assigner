@@ -1,6 +1,7 @@
 package com.anczykowski.assigner.auth.authutils;
 
 import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
+import com.anczykowski.assigner.error.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +25,10 @@ public class AuthUtils {
     public boolean hasAccessToCourseEdition(String courseName, String edition, HttpServletRequest request) {
         var usosId = getUsosId(request);
         if (usosId == null) return false;
-        return coursesEditionRepository.checkIfUserHasAccessToCourseEdition(courseName, edition, usosId);
+        if (coursesEditionRepository.checkIfUserHasAccessToCourseEdition(courseName, edition, usosId)) {
+            return true;
+        }
+        throw new UnauthorizedException("User has no access to requested course edition");
     }
 
     public Integer getUsosId(HttpServletRequest request) {

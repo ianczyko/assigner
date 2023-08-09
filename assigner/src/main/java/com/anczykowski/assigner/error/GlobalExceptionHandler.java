@@ -2,6 +2,7 @@ package com.anczykowski.assigner.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -17,6 +18,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<?> unauthorizedException(UnauthorizedException ex, WebRequest request) {
+        var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorResponseEntity, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> unauthorizedException(AccessDeniedException ex, WebRequest request) {
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorResponseEntity, HttpStatus.UNAUTHORIZED);
     }
