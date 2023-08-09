@@ -54,4 +54,42 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
     }
 
+    @Test
+    @DirtiesContext
+    void addTeamMember() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+
+        var request = post(editionPath + "/teams")
+                .content(new JSONObject().put("name", "test1").toString());
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var teamId = (Integer) getFromResult(result, "id");
+
+        var accessTokenRequest = put("%s/teams/%d/access-token".formatted(editionPath, teamId));
+
+        var accessTokenResult = mockMvc.perform(accessTokenRequest)
+                .andExpect(status().isOk())
+                .andExpect(json().node("accessToken").isPresent())
+                .andReturn();
+
+        var accessToken = getFromResult(accessTokenResult, "accessToken");
+
+        var addTeamMemberRequest = post("%s/teams/%d/members".formatted(editionPath, teamId))
+                .param("access-token", accessToken.toString());
+
+        mockMvc.perform(addTeamMemberRequest)
+                .andExpect(status().isOk());
+
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionPath, teamId));
+
+        mockMvc.perform(getTeamMemberRequest)
+                .andExpect(status().isOk())
+                .andExpect(json().node("[0].usosId").isEqualTo(testUserUsosId));
+
+    }
+
 }

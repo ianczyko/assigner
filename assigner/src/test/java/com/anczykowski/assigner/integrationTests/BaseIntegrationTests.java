@@ -55,6 +55,8 @@ public abstract class BaseIntegrationTests {
 
     protected final String editionPath = "/courses/%s/editions/%s".formatted(courseName, edition);
 
+    protected final Integer testUserUsosId = 12345678;
+
     private MapSession createSession() {
         var session = sessionRepository.createSession();
         sessionRepository.save(session);
@@ -101,7 +103,7 @@ public abstract class BaseIntegrationTests {
                 "file",
                 "students.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;12345678@pw.edu.pl".getBytes()
+                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;%d@pw.edu.pl".formatted(testUserUsosId).getBytes()
         );
         var courseEditionRequest = multipart("/courses/PZSP3/editions")
                 .file(file)
