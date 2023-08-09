@@ -1,6 +1,8 @@
 package com.anczykowski.assigner.teams;
 
 import com.anczykowski.assigner.courses.services.CourseEditionsService;
+import com.anczykowski.assigner.error.NotFoundException;
+import com.anczykowski.assigner.error.UnauthorizedException;
 import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
@@ -47,15 +49,17 @@ public class TeamsService {
         return teamsRepository.get(teamId);
     }
 
-    public boolean addMember(Integer teamId, Integer accessToken, Integer usosId) {
+    public List<User> addMember(Integer teamId, Integer accessToken, Integer usosId) {
         var team = teamsRepository.get(teamId);
-        if (team.getAccessToken().equals(accessToken)) {
-            var member = usersRepository.getByUsosId(usosId);
-            team.addMember(member);
-            teamsRepository.save(team);
-            return true;
+        if (!team.getAccessToken().equals(accessToken)) {
+            throw new UnauthorizedException("Unmatched access token");
         }
-        return false;
+        var member = usersRepository.getByUsosId(usosId)
+                .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
+
+        team.addMember(member);
+        teamsRepository.save(team);
+        return team.getMembers();
     }
 
     public List<User> getTeamMembers(Integer teamId) {

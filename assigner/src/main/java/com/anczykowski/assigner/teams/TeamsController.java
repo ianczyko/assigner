@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +58,7 @@ public class TeamsController {
 
     @PostMapping("/{teamId}/members")
     @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
-    public ResponseEntity<Void> addTeamMember(
+    public List<UserDto> addTeamMember(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
             @PathVariable Integer teamId,
@@ -68,8 +67,9 @@ public class TeamsController {
     ) {
         var usosId = authUtils.getUsosId(request);
         return teamsService.addMember(teamId, accessToken, usosId)
-                        ? ResponseEntity.ok().build()
-                        : ResponseEntity.badRequest().build();
+                .stream()
+                .map(c -> modelMapper.map(c, UserDto.class))
+                .toList();
     }
 
     @GetMapping("/{teamId}/members")

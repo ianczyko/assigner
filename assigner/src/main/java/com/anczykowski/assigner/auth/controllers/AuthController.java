@@ -11,7 +11,7 @@ import com.anczykowski.assigner.auth.dto.AuthRequest;
 import com.anczykowski.assigner.auth.dto.AuthResponse;
 import com.anczykowski.assigner.auth.dto.ProfileResponse;
 import com.anczykowski.assigner.auth.dto.VerifyRequest;
-import com.anczykowski.assigner.auth.exceptions.UnauthorizedException;
+import com.anczykowski.assigner.error.UnauthorizedException;
 import com.anczykowski.assigner.auth.services.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

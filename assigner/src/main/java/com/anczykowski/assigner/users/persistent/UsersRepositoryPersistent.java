@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -35,12 +35,13 @@ public class UsersRepositoryPersistent implements UsersRepository {
 
     @Override
     @Transactional
-    public User getByUsosId(Integer usosId) {
-        return modelMapper.map(repositoryImpl.findByUsosId(usosId).get(0), User.class);
+    public Optional<User> getByUsosId(Integer usosId) {
+        return repositoryImpl.findByUsosId(usosId)
+                .map(ce -> modelMapper.map(ce, User.class));
     }
 }
 
 @Component
 interface UsersRepositoryPersistentImpl extends JpaRepository<UserPersistent, Integer> {
-    List<UserPersistent> findByUsosId(Integer usosId);
+    Optional<UserPersistent> findByUsosId(Integer usosId);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -36,8 +37,9 @@ public class CoursesEditionRepositoryPersistent implements CoursesEditionReposit
     }
 
     @Override
-    public CourseEdition get(String courseName, String edition) {
-        return modelMapper.map(repositoryImpl.findByCourseNameAndEdition(courseName, edition).get(0), CourseEdition.class);
+    public Optional<CourseEdition> get(String courseName, String edition) {
+        return repositoryImpl.findByCourseNameAndEdition(courseName, edition)
+                .map(ce -> modelMapper.map(ce, CourseEdition.class));
     }
 
     @Override
@@ -53,5 +55,5 @@ interface CoursesEditionRepositoryPersistentImpl extends JpaRepository<CourseEdi
 
     List<CourseEditionPersistent> findByCourseName(String courseName);
 
-    List<CourseEditionPersistent> findByCourseNameAndEdition(String courseName, String edition);
+    Optional<CourseEditionPersistent> findByCourseNameAndEdition(String courseName, String edition);
 }

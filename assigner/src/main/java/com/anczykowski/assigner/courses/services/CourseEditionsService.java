@@ -3,6 +3,7 @@ package com.anczykowski.assigner.courses.services;
 import com.anczykowski.assigner.courses.models.CourseEdition;
 import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
 import com.anczykowski.assigner.courses.repositories.CoursesRepository;
+import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.users.UsersService;
 import com.anczykowski.assigner.users.models.User;
 import com.opencsv.CSVParser;
@@ -38,7 +39,8 @@ public class CourseEditionsService {
     }
 
     public CourseEdition create(String courseName, String edition, Reader inputCsvReader) throws IOException {
-        var course = coursesRepository.getByName(courseName);
+        var course = coursesRepository.getByName(courseName)
+                .orElseThrow(() -> new NotFoundException("%s course not found".formatted(courseName)));
         var courseEdition = CourseEdition.builder()
                 .edition(edition)
                 .course(course)
@@ -87,6 +89,7 @@ public class CourseEditionsService {
     }
 
     public CourseEdition get(String courseName, String edition) {
-        return coursesEditionRepository.get(courseName, edition);
+        return coursesEditionRepository.get(courseName, edition)
+                .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 }
