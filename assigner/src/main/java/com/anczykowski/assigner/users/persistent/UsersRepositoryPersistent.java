@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class UsersRepositoryPersistent implements UsersRepository {
     ModelMapper modelMapper;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public User save(User user) {
         var userPersistent = modelMapper.map(user, UserPersistent.class);
         var userPersistentSaved = repositoryImpl.save(userPersistent);
@@ -28,13 +29,11 @@ public class UsersRepositoryPersistent implements UsersRepository {
     }
 
     @Override
-    @Transactional
     public User get(Integer id) {
         return modelMapper.map(repositoryImpl.getReferenceById(id), User.class);
     }
 
     @Override
-    @Transactional
     public Optional<User> getByUsosId(Integer usosId) {
         return repositoryImpl.findByUsosId(usosId)
                 .map(ce -> modelMapper.map(ce, User.class));

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.session.MapSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
 import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
@@ -28,6 +29,7 @@ import java.util.Objects;
 
 
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     final String OAUTH_BASE_URL = "https://apps.usos.pw.edu.pl";

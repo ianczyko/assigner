@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
     ModelMapper modelMapper;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public Team save(Team team) {
         var teamPersistent = modelMapper.map(team, TeamPersistent.class);
         var teamPersistentSaved = repositoryImpl.save(teamPersistent);

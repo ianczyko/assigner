@@ -9,11 +9,13 @@ import com.anczykowski.assigner.users.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TeamsService {
 
     final TeamsRepository teamsRepository;
@@ -28,6 +30,7 @@ public class TeamsService {
     @Value("${token.valid-days:2}")
     int tokenValidDays;
 
+    @Transactional
     public Team create(String courseName, String edition, Team team) {
         var courseEdition = courseEditionsService.get(courseName, edition);
         team.setCourseEdition(courseEdition);
@@ -39,6 +42,7 @@ public class TeamsService {
         return teamsRepository.getAll(courseEdition);
     }
 
+    @Transactional
     public Team generateAccessToken(Integer teamId) {
         var team = teamsRepository.get(teamId);
         team.regenerateAccessToken(tokenDigits, tokenValidDays);
@@ -49,6 +53,7 @@ public class TeamsService {
         return teamsRepository.get(teamId);
     }
 
+    @Transactional
     public List<User> addMember(Integer teamId, Integer accessToken, Integer usosId) {
         var team = teamsRepository.get(teamId);
         if (!team.getAccessToken().equals(accessToken)) {

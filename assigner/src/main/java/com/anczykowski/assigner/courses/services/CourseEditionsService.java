@@ -14,6 +14,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class CourseEditionsService {
 
     UsersService usersService;
@@ -38,6 +40,7 @@ public class CourseEditionsService {
         return StringUtils.substringBefore(email, "@");
     }
 
+    @Transactional
     public CourseEdition create(String courseName, String edition, Reader inputCsvReader) throws IOException {
         var course = coursesRepository.getByName(courseName)
                 .orElseThrow(() -> new NotFoundException("%s course not found".formatted(courseName)));

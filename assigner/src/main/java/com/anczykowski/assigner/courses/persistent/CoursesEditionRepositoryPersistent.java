@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class CoursesEditionRepositoryPersistent implements CoursesEditionReposit
     ModelMapper modelMapper;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public CourseEdition save(CourseEdition course) {
         var courseEditionPersistent = modelMapper.map(course, CourseEditionPersistent.class);
         var courseEditionPersistentSaved = repositoryImpl.save(courseEditionPersistent);
