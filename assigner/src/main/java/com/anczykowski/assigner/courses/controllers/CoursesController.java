@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.courses.controllers;
 
-import com.anczykowski.assigner.auth.preauth.PreAuths;
+import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.courses.dto.CourseDto;
 import com.anczykowski.assigner.courses.dto.CourseEditionDto;
 import com.anczykowski.assigner.courses.dto.CourseEditionShortDto;
@@ -31,7 +31,7 @@ public class CoursesController {
 
     CourseEditionsService courseEditionsService;
 
-    PreAuths preAuths;
+    AuthUtils authUtils;
 
     @PostMapping
     public CourseDto newCourse(@RequestParam String name) {
@@ -76,7 +76,7 @@ public class CoursesController {
     }
 
     @GetMapping("/{courseName}/editions/{edition}")
-    @PreAuthorize("@preAuths.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
     public CourseEditionDto getCourseEdition(
             HttpServletRequest request,
             @PathVariable String courseName,

@@ -1,4 +1,4 @@
-package com.anczykowski.assigner.auth.preauth;
+package com.anczykowski.assigner.auth.authutils;
 
 import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import org.springframework.web.util.WebUtils;
 
 @Component
 @RequiredArgsConstructor
-public class PreAuths {
+public class AuthUtils {
 
     @Value("${disable.auth:false}")
     private Boolean disableAuth;
@@ -28,7 +28,7 @@ public class PreAuths {
         return coursesEditionRepository.checkIfUserHasAccessToCourseEdition(courseName, edition, usosId);
     }
 
-    private Integer getUsosId(HttpServletRequest request) {
+    public Integer getUsosId(HttpServletRequest request) {
         var session = getSessionFromRequest(request);
         if (session == null) return null;
         return Integer.valueOf(session.getAttribute("usosId"));
