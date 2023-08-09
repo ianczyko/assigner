@@ -1,11 +1,13 @@
 package com.anczykowski.assigner.users.persistent;
 
 import com.anczykowski.assigner.courses.persistent.CourseEditionPersistent;
+import com.anczykowski.assigner.teams.persistent.TeamPersistent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,5 +34,8 @@ public class UserPersistent {
             inverseJoinColumns = @JoinColumn(name = "course_edition_id")
     )
     private Set<CourseEditionPersistent> courseEditionsAccess;
+
+    @ManyToMany(mappedBy = "members")
+    private List<TeamPersistent> teamAccesses;
 
 }

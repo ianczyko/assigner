@@ -1,11 +1,16 @@
 package com.anczykowski.assigner.teams;
 
+import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.teams.dto.TeamAccessTokenDto;
 import com.anczykowski.assigner.teams.dto.TeamDto;
 import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.users.dto.UserDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +23,8 @@ public class TeamsController {
     ModelMapper modelMapper;
 
     TeamsService teamsService;
+
+    AuthUtils authUtils;
 
     @PostMapping
     public TeamDto newTeam(
@@ -48,6 +55,35 @@ public class TeamsController {
     ) {
         var team = teamsService.get(teamId);
         return modelMapper.map(team, TeamAccessTokenDto.class);
+    }
+
+    @PostMapping("/{teamId}/members")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    public ResponseEntity<Void> addTeamMember(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId,
+            @RequestParam(name = "access-token") Integer accessToken,
+            HttpServletRequest request
+    ) {
+        var usosId = authUtils.getUsosId(request);
+        return teamsService.addMember(teamId, accessToken, usosId)
+                        ? ResponseEntity.ok().build()
+                        : ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/{teamId}/members")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    public List<UserDto> getTeamMembers(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId,
+            HttpServletRequest request
+    ) {
+        return teamsService.getTeamMembers(teamId)
+                .stream()
+                .map(c -> modelMapper.map(c, UserDto.class))
+                .toList();
     }
 
     @GetMapping

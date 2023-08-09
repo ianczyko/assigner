@@ -2,6 +2,8 @@ package com.anczykowski.assigner.teams;
 
 import com.anczykowski.assigner.courses.services.CourseEditionsService;
 import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.users.UsersRepository;
+import com.anczykowski.assigner.users.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ public class TeamsService {
     final TeamsRepository teamsRepository;
 
     final CourseEditionsService courseEditionsService;
+
+    final UsersRepository usersRepository;
 
     @Value("${token.digits:6}")
     int tokenDigits;
@@ -41,5 +45,21 @@ public class TeamsService {
 
     public Team get(Integer teamId) {
         return teamsRepository.get(teamId);
+    }
+
+    public boolean addMember(Integer teamId, Integer accessToken, Integer usosId) {
+        var team = teamsRepository.get(teamId);
+        if (team.getAccessToken().equals(accessToken)) {
+            var member = usersRepository.getByUsosId(usosId);
+            team.addMember(member);
+            teamsRepository.save(team);
+            return true;
+        }
+        return false;
+    }
+
+    public List<User> getTeamMembers(Integer teamId) {
+        var team = teamsRepository.get(teamId);
+        return team.getMembers();
     }
 }

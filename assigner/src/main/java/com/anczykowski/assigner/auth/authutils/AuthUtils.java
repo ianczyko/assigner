@@ -22,13 +22,13 @@ public class AuthUtils {
     private final CoursesEditionRepository coursesEditionRepository;
 
     public boolean hasAccessToCourseEdition(String courseName, String edition, HttpServletRequest request) {
-        if (disableAuth) return true;
         var usosId = getUsosId(request);
         if (usosId == null) return false;
         return coursesEditionRepository.checkIfUserHasAccessToCourseEdition(courseName, edition, usosId);
     }
 
     public Integer getUsosId(HttpServletRequest request) {
+        if (disableAuth) return 12345678; // Test user
         var session = getSessionFromRequest(request);
         if (session == null) return null;
         return Integer.valueOf(session.getAttribute("usosId"));
