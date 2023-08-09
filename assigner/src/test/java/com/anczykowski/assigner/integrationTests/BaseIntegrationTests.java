@@ -151,6 +151,7 @@ public abstract class BaseIntegrationTests {
                 .accept(MediaType.APPLICATION_JSON);
     }
 
+    @SuppressWarnings("unused")
     protected MockHttpServletRequestBuilder delete(String url, Object... uriVars) {
         if (cookie != null) {
             return MockMvcRequestBuilders.delete(url, uriVars)
