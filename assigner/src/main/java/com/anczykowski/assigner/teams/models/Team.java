@@ -6,6 +6,7 @@ import com.google.common.math.IntMath;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,7 +24,7 @@ public final class Team {
     private Integer accessToken;
     private LocalDateTime accessTokenExpirationDate;
     private User leader;
-    private List<User> members;
+    private List<User> members = new ArrayList<>();
 
     public void regenerateAccessToken(Integer tokenDigits, Integer validDays) {
         var origin = IntMath.pow(10, tokenDigits - 1);

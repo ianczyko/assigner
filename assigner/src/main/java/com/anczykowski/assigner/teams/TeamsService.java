@@ -35,6 +35,7 @@ public class TeamsService {
         var leader = usersRepository.getByUsosId(leaderUsosId)
                 .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(leaderUsosId)));
         team.setLeader(leader);
+        team.addMember(leader);
 
         var courseEdition = courseEditionsService.get(courseName, edition);
         team.setCourseEdition(courseEdition);
