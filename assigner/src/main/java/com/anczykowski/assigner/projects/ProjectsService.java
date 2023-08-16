@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -28,6 +30,9 @@ public class ProjectsService {
     public Project get(Integer projectId) {
         return projectsRepository.get(projectId);
     }
-    
-    
+
+    public List<Project> getProjects(String courseName, String edition) {
+        var courseEdition = courseEditionsService.get(courseName, edition);
+        return projectsRepository.getAll(courseEdition);
+    }
 }

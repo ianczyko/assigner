@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/courses/{courseName}/editions/{edition}/projects")
@@ -28,6 +30,17 @@ public class ProjectsController {
         var project = modelMapper.map(projectDto, Project.class);
         var createdProject = projectsService.create(courseName, edition, project);
         return modelMapper.map(createdProject, ProjectDto.class);
+    }
+
+    @GetMapping
+    public List<ProjectDto> getProjects(
+            @PathVariable String courseName,
+            @PathVariable String edition
+    ) {
+        return projectsService.getProjects(courseName, edition)
+                .stream()
+                .map(c -> modelMapper.map(c, ProjectDto.class))
+                .toList();
     }
 
 }
