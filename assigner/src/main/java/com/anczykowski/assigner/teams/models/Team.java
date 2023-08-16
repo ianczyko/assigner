@@ -22,6 +22,7 @@ public final class Team {
     private CourseEdition courseEdition;
     private Integer accessToken;
     private LocalDateTime accessTokenExpirationDate;
+    private User leader;
     private List<User> members;
 
     public void regenerateAccessToken(Integer tokenDigits, Integer validDays) {

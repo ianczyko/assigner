@@ -31,7 +31,11 @@ public class TeamsService {
     int tokenValidDays;
 
     @Transactional
-    public Team create(String courseName, String edition, Team team) {
+    public Team create(String courseName, String edition, Team team, Integer leaderUsosId) {
+        var leader = usersRepository.getByUsosId(leaderUsosId)
+                .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(leaderUsosId)));
+        team.setLeader(leader);
+
         var courseEdition = courseEditionsService.get(courseName, edition);
         team.setCourseEdition(courseEdition);
         return teamsRepository.save(team);
