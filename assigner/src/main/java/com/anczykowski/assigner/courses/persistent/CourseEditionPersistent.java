@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.courses.persistent;
 
+import com.anczykowski.assigner.projects.persistent.ProjectPersistent;
 import com.anczykowski.assigner.teams.persistent.TeamPersistent;
 import com.anczykowski.assigner.users.persistent.UserPersistent;
 import jakarta.persistence.*;
@@ -35,4 +36,7 @@ public class CourseEditionPersistent {
 
     @OneToMany(mappedBy = "courseEdition")
     private List<TeamPersistent> teams;
+
+    @OneToMany(mappedBy = "courseEdition")
+    private List<ProjectPersistent> projects;
 }
