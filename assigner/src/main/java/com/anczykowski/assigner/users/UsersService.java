@@ -13,7 +13,8 @@ public class UsersService {
     UsersRepository usersRepository;
 
     @Transactional
-    public User create(User user) {
-        return usersRepository.save(user);
+    public User createOrGet(User user) {
+        var existingUser = usersRepository.getByUsosId(user.getUsosId());
+        return existingUser.orElseGet(() -> usersRepository.save(user));
     }
 }

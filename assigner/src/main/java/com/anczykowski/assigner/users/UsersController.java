@@ -21,8 +21,8 @@ public class UsersController {
     public UserDto newUser(
             @Valid @RequestBody final UserDto userDto
     ) {
-        var user = modelMapper.map(userDto, User.class);
-        var createdUser = usersService.create(user);
-        return modelMapper.map(createdUser, UserDto.class);
+        var newUser = modelMapper.map(userDto, User.class);
+        var user = usersService.createOrGet(newUser);
+        return modelMapper.map(user, UserDto.class);
     }
 }

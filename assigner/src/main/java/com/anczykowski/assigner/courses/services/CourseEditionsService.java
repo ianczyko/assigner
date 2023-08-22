@@ -78,7 +78,7 @@ public class CourseEditionsService {
                             .usosId(usosId)
                             .build();
                     user.addCourseEditionAccess(courseEditionSaved);
-                    usersService.create(user);
+                    usersService.createOrGet(user);
                 }
             } catch (CsvValidationException e) {
                 throw new RuntimeException(e);

@@ -25,6 +25,8 @@ public class UserPersistent {
     @Column(name = "second_name")
     private String secondName;
     private String surname;
+
+    @Column(unique = true)
     private Integer usosId;
 
     @ManyToMany(cascade = CascadeType.MERGE)
