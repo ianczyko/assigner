@@ -49,6 +49,10 @@ public abstract class BaseIntegrationTests {
 
     protected Cookie cookie = null;
 
+    protected Integer teamId = null;
+
+    protected Integer projectId = null;
+
     protected final String courseName = "PZSP3";
 
     protected final String edition = "21l";
@@ -56,6 +60,7 @@ public abstract class BaseIntegrationTests {
     protected final String editionPath = "/courses/%s/editions/%s".formatted(courseName, edition);
 
     protected final Integer testUserUsosId = 12345678;
+
 
     private MapSession createSession() {
         var session = sessionRepository.createSession();
@@ -112,6 +117,31 @@ public abstract class BaseIntegrationTests {
 
         mockMvc.perform(courseEditionRequest)
                 .andExpect(status().isOk());
+
+    }
+
+    protected void setupTeam() throws Exception {
+        var request = post(editionPath + "/teams")
+                .content(new JSONObject().put("name", "team1").toString());
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        teamId = getFromResult(result, "id");
+    }
+
+    protected void setupProject() throws Exception {
+        var request = post(editionPath + "/projects")
+                .content(new JSONObject()
+                        .put("name", "name1")
+                        .put("description", "desc1")
+                        .toString());
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        projectId = getFromResult(result, "id");
 
     }
 

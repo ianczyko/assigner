@@ -37,8 +37,4 @@ public final class Team {
     public void addMember(User member) {
         members.add(member);
     }
-
-    public void addPreference(ProjectPreference preference) {
-        preferences.add(preference);
-    }
 }

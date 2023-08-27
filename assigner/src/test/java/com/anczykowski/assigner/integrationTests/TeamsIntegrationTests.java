@@ -27,15 +27,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
     void generateAccessToken() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();
-
-        var request = post(editionPath + "/teams")
-                .content(new JSONObject().put("name", "test1").toString());
-
-        var result = mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andReturn();
-
-        var teamId = (Integer) getFromResult(result, "id");
+        setupTeam();
 
         var accessTokenRequest = put("%s/teams/%d/access-token".formatted(editionPath, teamId));
 
@@ -59,15 +51,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
     void addTeamMember() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();
-
-        var request = post(editionPath + "/teams")
-                .content(new JSONObject().put("name", "test1").toString());
-
-        var result = mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andReturn();
-
-        var teamId = (Integer) getFromResult(result, "id");
+        setupTeam();
 
         var accessTokenRequest = put("%s/teams/%d/access-token".formatted(editionPath, teamId));
 
@@ -89,6 +73,47 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
         mockMvc.perform(getTeamMemberRequest)
                 .andExpect(status().isOk())
                 .andExpect(json().node("[0].usosId").isEqualTo(testUserUsosId));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void addProjectPreference() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+        setupProject();
+
+        var request = put("%s/teams/%d/project-ratings".formatted(editionPath, teamId))
+                .param("rating", "3")
+                .param("project-id", projectId.toString());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(json().node("rating").isEqualTo(3));
+    }
+
+    @Test
+    @DirtiesContext
+    void addProjectPreferenceGetAll() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+        setupProject();
+
+        var request = put("%s/teams/%d/project-ratings".formatted(editionPath, teamId))
+                .param("rating", "3")
+                .param("project-id", projectId.toString());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(json().node("rating").isEqualTo(3));
+
+        var getRequest = get("%s/teams/%d/project-ratings".formatted(editionPath, teamId));
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(json().node("[0].rating").isEqualTo(3));
 
     }
 
