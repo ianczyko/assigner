@@ -43,4 +43,7 @@ public class TeamPersistent {
     )
     private List<UserPersistent> members;
 
+    @OneToMany(mappedBy = "team")
+    private List<ProjectPreferencePersistent> preferences;
+
 }

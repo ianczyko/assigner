@@ -1,6 +1,7 @@
 package com.anczykowski.assigner.teams;
 
 import com.anczykowski.assigner.auth.authutils.AuthUtils;
+import com.anczykowski.assigner.teams.dto.ProjectPreferenceDto;
 import com.anczykowski.assigner.teams.dto.TeamAccessTokenDto;
 import com.anczykowski.assigner.teams.dto.TeamDto;
 import com.anczykowski.assigner.teams.models.Team;
@@ -85,6 +86,34 @@ public class TeamsController {
         return teamsService.getTeamMembers(teamId)
                 .stream()
                 .map(c -> modelMapper.map(c, UserDto.class))
+                .toList();
+    }
+
+    @PutMapping("/{teamId}/project-ratings")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    public ProjectPreferenceDto rateProject(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId,
+            @RequestParam(name = "project-id") Integer projectId,
+            @RequestParam Integer rating,
+            HttpServletRequest request
+    ) {
+        var preference = teamsService.rateProject(teamId, projectId, rating);
+        return modelMapper.map(preference, ProjectPreferenceDto.class);
+    }
+
+    @GetMapping("/{teamId}/project-ratings")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    public List<ProjectPreferenceDto> getRatings(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId,
+            HttpServletRequest request
+    ) {
+        return teamsService.getRatings(teamId)
+                .stream()
+                .map(c -> modelMapper.map(c, ProjectPreferenceDto.class))
                 .toList();
     }
 

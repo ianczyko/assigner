@@ -1,10 +1,13 @@
 package com.anczykowski.assigner.projects.persistent;
 
 import com.anczykowski.assigner.courses.persistent.CourseEditionPersistent;
+import com.anczykowski.assigner.teams.persistent.ProjectPreferencePersistent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -25,5 +28,7 @@ public class ProjectPersistent {
     @JoinColumn(name = "course_edition_id")
     private CourseEditionPersistent courseEdition;
 
+    @OneToMany(mappedBy = "project")
+    private List<ProjectPreferencePersistent> preferences;
 
 }

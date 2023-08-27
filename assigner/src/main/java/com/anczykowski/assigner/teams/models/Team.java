@@ -15,8 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(exclude = "preferences")
+@ToString(exclude = "preferences")
 public final class Team {
     private Integer id;
     private String name;
@@ -25,6 +25,8 @@ public final class Team {
     private LocalDateTime accessTokenExpirationDate;
     private User leader;
     private List<User> members = new ArrayList<>();
+    private List<ProjectPreference> preferences = new ArrayList<>();
+
 
     public void regenerateAccessToken(Integer tokenDigits, Integer validDays) {
         var origin = IntMath.pow(10, tokenDigits - 1);
@@ -34,5 +36,9 @@ public final class Team {
 
     public void addMember(User member) {
         members.add(member);
+    }
+
+    public void addPreference(ProjectPreference preference) {
+        preferences.add(preference);
     }
 }

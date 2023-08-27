@@ -3,6 +3,9 @@ package com.anczykowski.assigner.teams;
 import com.anczykowski.assigner.courses.services.CourseEditionsService;
 import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.error.UnauthorizedException;
+import com.anczykowski.assigner.projects.ProjectsService;
+import com.anczykowski.assigner.teams.models.ProjectPreference;
+import com.anczykowski.assigner.teams.models.ProjectPreferenceId;
 import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
@@ -21,6 +24,10 @@ public class TeamsService {
     final TeamsRepository teamsRepository;
 
     final CourseEditionsService courseEditionsService;
+
+    final ProjectsService projectsService;
+
+    final ProjectPreferenceRepository projectPreferenceRepository;
 
     final UsersRepository usersRepository;
 
@@ -75,5 +82,23 @@ public class TeamsService {
     public List<User> getTeamMembers(Integer teamId) {
         var team = teamsRepository.get(teamId);
         return team.getMembers();
+    }
+
+    @Transactional
+    public ProjectPreference rateProject(Integer teamId, Integer projectId, Integer rating) {
+        var project = projectsService.get(projectId);
+        var team = teamsRepository.get(teamId);
+        var preference = ProjectPreference.builder()
+                .id(new ProjectPreferenceId(project.getId(), team.getId()))
+                .project(project)
+                .team(team)
+                .rating(rating)
+                .build();
+        return projectPreferenceRepository.save(preference);
+    }
+
+    public List<ProjectPreference> getRatings(Integer teamId) {
+        var team = teamsRepository.get(teamId);
+        return team.getPreferences();
     }
 }
