@@ -62,6 +62,8 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
         var accessToken = getFromResult(accessTokenResult, "accessToken");
 
+        authenticate(testUser2UsosId);
+
         var addTeamMemberRequest = post("%s/teams/%d/members".formatted(editionPath, teamId))
                 .param("access-token", accessToken.toString());
 
@@ -72,7 +74,10 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
         mockMvc.perform(getTeamMemberRequest)
                 .andExpect(status().isOk())
-                .andExpect(json().node("[0].usosId").isEqualTo(testUserUsosId));
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray(
+                        new JSONObject().put("usosId", testUserUsosId),
+                        new JSONObject().put("usosId", testUser2UsosId)
+                )));
 
     }
 

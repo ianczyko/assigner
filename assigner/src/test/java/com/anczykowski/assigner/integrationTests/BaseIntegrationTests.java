@@ -5,6 +5,9 @@ import com.anczykowski.assigner.auth.services.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.servlet.http.Cookie;
+import net.javacrumbs.jsonunit.core.Option;
+import net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -61,6 +65,8 @@ public abstract class BaseIntegrationTests {
 
     protected final Integer testUserUsosId = 12345678;
 
+    protected final Integer testUser2UsosId = 22222222;
+
 
     private MapSession createSession() {
         var session = sessionRepository.createSession();
@@ -68,22 +74,25 @@ public abstract class BaseIntegrationTests {
         return session;
     }
 
-    private void verify() {
+    private void verify(Integer usosId) {
         var accessToken = "100";
         var accessTokenSecret = "101";
-        var usosId = "12345678";
         var session = sessionRepository.findById(cookie.getValue());
         session.setAttribute("accessToken", accessToken);
         session.setAttribute("accessTokenSecret", accessTokenSecret);
-        session.setAttribute("usosId", usosId);
+        session.setAttribute("usosId", usosId.toString());
         sessionRepository.save(session);
     }
 
+
     protected void authenticate() throws Exception {
+        authenticate(testUserUsosId);
+    }
+    protected void authenticate(Integer usosId) throws Exception {
         cookie = null;
         Mockito.when(authService.createSession()).thenAnswer((Answer<MapSession>) invocation -> createSession());
         doAnswer(invocation -> {
-            verify();
+            verify(usosId);
             return null;
         }).when(authService).verify(any(String.class), any(String.class));
 
@@ -108,7 +117,7 @@ public abstract class BaseIntegrationTests {
                 "file",
                 "students.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;%d@pw.edu.pl".formatted(testUserUsosId).getBytes()
+                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;%d@pw.edu.pl\nKowalski2;Jan2;;0;0;%d@pw.edu.pl".formatted(testUserUsosId, testUser2UsosId).getBytes()
         );
         var courseEditionRequest = multipart("/courses/PZSP3/editions")
                 .file(file)
@@ -143,6 +152,16 @@ public abstract class BaseIntegrationTests {
                 .andReturn();
         projectId = getFromResult(result, "id");
 
+    }
+
+    protected JsonUnitResultMatchers jsonIgnoringWrapper() {
+        return json().when(Option.IGNORING_EXTRA_FIELDS).when(Option.IGNORING_ARRAY_ORDER);
+    }
+
+    protected static JSONArray jsonArray(JSONObject... contents) {
+        var result = new JSONArray();
+        result.putAll(contents);
+        return result;
     }
 
     protected MockHttpServletRequestBuilder get(String url, Object... uriVars) {

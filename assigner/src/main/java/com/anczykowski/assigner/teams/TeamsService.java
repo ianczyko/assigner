@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +67,7 @@ public class TeamsService {
     }
 
     @Transactional
-    public List<User> addMember(Integer teamId, Integer accessToken, Integer usosId) {
+    public Set<User> addMember(Integer teamId, Integer accessToken, Integer usosId) {
         var team = teamsRepository.get(teamId);
         if (!team.getAccessToken().equals(accessToken)) {
             throw new UnauthorizedException("Unmatched access token");
@@ -79,7 +80,7 @@ public class TeamsService {
         return team.getMembers();
     }
 
-    public List<User> getTeamMembers(Integer teamId) {
+    public Set<User> getTeamMembers(Integer teamId) {
         var team = teamsRepository.get(teamId);
         return team.getMembers();
     }

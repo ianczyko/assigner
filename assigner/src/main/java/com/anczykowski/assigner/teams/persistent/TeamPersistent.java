@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "teams")
@@ -41,7 +42,7 @@ public class TeamPersistent {
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<UserPersistent> members;
+    private Set<UserPersistent> members;
 
     @OneToMany(mappedBy = "team")
     private List<ProjectPreferencePersistent> preferences;

@@ -7,7 +7,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
@@ -15,8 +17,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "preferences")
-@ToString(exclude = "preferences")
+@EqualsAndHashCode(exclude = {"members", "preferences"})
+@ToString(exclude = {"members", "preferences"})
 public final class Team {
     private Integer id;
     private String name;
@@ -24,7 +26,9 @@ public final class Team {
     private Integer accessToken;
     private LocalDateTime accessTokenExpirationDate;
     private User leader;
-    private List<User> members = new ArrayList<>();
+    @Builder.Default
+    private Set<User> members = new HashSet<>();
+    @Builder.Default
     private List<ProjectPreference> preferences = new ArrayList<>();
 
 
