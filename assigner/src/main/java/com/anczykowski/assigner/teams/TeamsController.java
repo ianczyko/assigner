@@ -90,7 +90,7 @@ public class TeamsController {
     }
 
     @PutMapping("/{teamId}/project-ratings")
-    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToTeam(#teamId, #request)")
     public ProjectPreferenceDto rateProject(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,

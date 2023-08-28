@@ -2,6 +2,7 @@ package com.anczykowski.assigner.auth.authutils;
 
 import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
 import com.anczykowski.assigner.error.UnauthorizedException;
+import com.anczykowski.assigner.teams.TeamsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +23,8 @@ public class AuthUtils {
 
     private final CoursesEditionRepository coursesEditionRepository;
 
+    private final TeamsRepository teamsRepository;
+
     public boolean hasAccessToCourseEdition(String courseName, String edition, HttpServletRequest request) {
         var usosId = getUsosId(request);
         if (usosId == null) return false;
@@ -29,6 +32,16 @@ public class AuthUtils {
             return true;
         }
         throw new UnauthorizedException("User has no access to requested course edition");
+    }
+
+    public boolean hasAccessToTeam(Integer teamId, HttpServletRequest request) {
+        var usosId = getUsosId(request);
+        if (usosId == null) return false;
+        var team = teamsRepository.get(teamId);
+        if (team.getMembers().stream().anyMatch(m -> m.getUsosId().equals(usosId))) {
+            return true;
+        }
+        throw new UnauthorizedException("User has no access to requested team");
     }
 
     public Integer getUsosId(HttpServletRequest request) {
