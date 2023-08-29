@@ -2,7 +2,10 @@ package com.anczykowski.assigner.projects;
 
 import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.projects.dto.ProjectDto;
+import com.anczykowski.assigner.projects.dto.ProjectForumCommentDto;
 import com.anczykowski.assigner.projects.models.Project;
+import com.anczykowski.assigner.projects.models.ProjectForumComment;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -40,6 +43,32 @@ public class ProjectsController {
         return projectsService.getProjects(courseName, edition)
                 .stream()
                 .map(c -> modelMapper.map(c, ProjectDto.class))
+                .toList();
+    }
+
+    @PostMapping("/{projectId}/forum-comments")
+    public ProjectForumCommentDto addProjectForumComment(
+            @PathVariable Integer projectId,
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            HttpServletRequest request,
+            @Valid @RequestBody final ProjectForumCommentDto projectForumCommentDto
+    ) {
+        var usosId = authUtils.getUsosId(request);
+        var projectForumComment = modelMapper.map(projectForumCommentDto, ProjectForumComment.class);
+        var projectForumCommentCreated = projectsService.addProjectForumComment(projectId, usosId, projectForumComment);
+        return modelMapper.map(projectForumCommentCreated, ProjectForumCommentDto.class);
+    }
+
+    @GetMapping("/{projectId}/forum-comments")
+    public List<ProjectForumCommentDto> getProjectForumComments(
+            @PathVariable Integer projectId,
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition
+    ) {
+        return projectsService.getProjectForumComments(projectId)
+                .stream()
+                .map(c -> modelMapper.map(c, ProjectForumCommentDto.class))
                 .toList();
     }
 

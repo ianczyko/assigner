@@ -50,4 +50,19 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="66FC13DE-CF88-C34C-E813-E9245D31ADF2" name="Project preference PK">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-29 16:56:43 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>07D8FCEE-84D6-82C2-D1F1-25D7BE6F68BB</attributeRef>
+<attributeRef>274EAC6E-575D-4236-863B-14EEA347DCCD</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

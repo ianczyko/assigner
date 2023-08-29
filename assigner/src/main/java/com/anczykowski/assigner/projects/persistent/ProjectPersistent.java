@@ -31,4 +31,7 @@ public class ProjectPersistent {
     @OneToMany(mappedBy = "project")
     private List<ProjectPreferencePersistent> preferences;
 
+    @OneToMany(mappedBy = "project")
+    private List<ProjectForumCommentPersistent> comments;
+
 }

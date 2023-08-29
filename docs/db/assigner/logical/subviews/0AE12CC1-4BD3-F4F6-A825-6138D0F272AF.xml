@@ -39,11 +39,6 @@
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
 <bounds x="320" y="230" width="170" height="110"/>
 </OView>
-<OView class="oracle.dbtools.crest.swingui.TVNote" oid="A49BD10A-47EA-1E25-8912-6AED98B92E45" otype="Note" vid="04CFA580-BA00-A754-D126-7AAC05747932">
-<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="770" y="290" width="121" height="30"/>
-<comment>TODO: jakie ID?</comment>
-</OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="A9823F07-B440-A795-D79F-F029727B8A70" otype="Entity" vid="E28CEE26-992C-7E1C-3E96-590731F89B4D">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
 <bounds x="550" y="230" width="170" height="110"/>

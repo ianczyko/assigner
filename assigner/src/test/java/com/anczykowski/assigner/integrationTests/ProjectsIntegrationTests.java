@@ -31,22 +31,57 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
     void getProject() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();
+        setupProject();
 
-        var request = post(editionPath + "/projects")
+        var request = get(editionPath + "/projects");
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(json().node("[0].name").isEqualTo("name1"))
+                .andExpect(json().node("[0].description").isEqualTo("desc1"));
+    }
+
+    @Test
+    @DirtiesContext
+    void addProjectForumComment() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupProject();
+
+        var request = post("%s/projects/%d/forum-comments".formatted(editionPath, projectId))
                 .content(new JSONObject()
-                        .put("name", "name1")
-                        .put("description", "desc1")
+                        .put("content", "comment_content")
+                        .toString());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(json().node("content").isEqualTo("comment_content"))
+                .andExpect(json().node("createdDate").isNotNull())
+                .andExpect(json().node("author.surname").isEqualTo("Kowalski"));
+    }
+
+    @Test
+    @DirtiesContext
+    void getProjectForumComments() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupProject();
+
+        var request = post("%s/projects/%d/forum-comments".formatted(editionPath, projectId))
+                .content(new JSONObject()
+                        .put("content", "comment_content")
                         .toString());
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        var getRequest = get(editionPath + "/projects");
+        var getRequest = get("%s/projects/%d/forum-comments".formatted(editionPath, projectId));
 
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
-                .andExpect(json().node("[0].name").isEqualTo("name1"))
-                .andExpect(json().node("[0].description").isEqualTo("desc1"));
+                .andExpect(json().node("[0].content").isEqualTo("comment_content"))
+                .andExpect(json().node("[0].createdDate").isNotNull())
+                .andExpect(json().node("[0].author.surname").isEqualTo("Kowalski"));
     }
 
 }
