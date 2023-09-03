@@ -48,6 +48,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="Project Id" id="CA097A9E-B380-8C83-A085-EEDA339C9AD2">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-09-03 14:10:29 UTC</createdTime>
+<generatorID>B28CA8C0-2B5B-FD61-5ADE-2592550CCEB1</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<referedAttribute>0A56A082-BB69-13B9-BBD7-DF69E59E7590</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="0DB0142E-B392-0224-F87F-90697C55E754" name="Team PK">
