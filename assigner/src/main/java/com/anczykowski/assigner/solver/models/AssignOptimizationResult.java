@@ -1,17 +1,21 @@
 package com.anczykowski.assigner.solver.models;
 
-import lombok.Data;
+import com.anczykowski.assigner.teams.models.Team;
+import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class AssignOptimizationResult {
 
     double objective;
 
-    List<TeamProjectAssignment> teamProjectAssignments = new ArrayList<>();
+    List<Team> teams;
 
-    public void addTeamProjectAssignment(TeamProjectAssignment teamProjectAssignment){
-        teamProjectAssignments.add(teamProjectAssignment);
-    }}
+}

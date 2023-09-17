@@ -55,7 +55,11 @@ public abstract class BaseIntegrationTests {
 
     protected Integer teamId = null;
 
+    protected Integer secondTeamId = null;
+
     protected Integer projectId = null;
+
+    protected Integer secondProjectId = null;
 
     protected final String courseName = "PZSP3";
 
@@ -88,6 +92,7 @@ public abstract class BaseIntegrationTests {
     protected void authenticate() throws Exception {
         authenticate(testUserUsosId);
     }
+
     protected void authenticate(Integer usosId) throws Exception {
         cookie = null;
         Mockito.when(authService.createSession()).thenAnswer((Answer<MapSession>) invocation -> createSession());
@@ -140,6 +145,17 @@ public abstract class BaseIntegrationTests {
         teamId = getFromResult(result, "id");
     }
 
+    protected void setupSecondTeam() throws Exception {
+        var request = post(editionPath + "/teams")
+                .content(new JSONObject().put("name", "team2").toString());
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        secondTeamId = getFromResult(result, "id");
+    }
+
     protected void setupProject() throws Exception {
         var request = post(editionPath + "/projects")
                 .content(new JSONObject()
@@ -151,6 +167,20 @@ public abstract class BaseIntegrationTests {
                 .andExpect(status().isOk())
                 .andReturn();
         projectId = getFromResult(result, "id");
+
+    }
+
+    protected void setupSecondProject() throws Exception {
+        var request = post(editionPath + "/projects")
+                .content(new JSONObject()
+                        .put("name", "name2")
+                        .put("description", "desc2")
+                        .toString());
+
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        secondProjectId = getFromResult(result, "id");
 
     }
 
