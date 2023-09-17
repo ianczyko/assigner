@@ -18,12 +18,12 @@ public class ProjectPreferencePersistent {
     @EmbeddedId
     private ProjectPreferencePersistentId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("projectId")
     @JoinColumn(name = "project_id")
     private ProjectPersistent project;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("teamId")
     @JoinColumn(name = "team_id")
     private TeamPersistent team;
