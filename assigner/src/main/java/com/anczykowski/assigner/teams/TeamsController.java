@@ -103,6 +103,20 @@ public class TeamsController {
         return modelMapper.map(preference, ProjectPreferenceDto.class);
     }
 
+    @PutMapping("/{teamId}/assigned-project")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    // TODO: PreAuth of coordinator (elevated access)
+    public TeamDto assignProjectToTeam(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId,
+            @RequestParam(name = "project-id") Integer projectId,
+            HttpServletRequest request
+    ) {
+        var team = teamsService.assignProject(teamId, projectId);
+        return modelMapper.map(team, TeamDto.class);
+    }
+
     @GetMapping("/{teamId}/project-ratings")
     @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
     public List<ProjectPreferenceDto> getRatings(

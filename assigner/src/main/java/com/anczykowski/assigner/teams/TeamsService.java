@@ -102,4 +102,11 @@ public class TeamsService {
         var team = teamsRepository.get(teamId);
         return team.getPreferences();
     }
+
+    public Team assignProject(Integer teamId, Integer projectId) {
+        var team = teamsRepository.get(teamId);
+        var project = projectsService.get(projectId);
+        team.setAssignedProject(project);
+        return teamsRepository.save(team);
+    }
 }

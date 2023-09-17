@@ -1,6 +1,5 @@
-package com.anczykowski.assigner.teams.dto;
+package com.anczykowski.assigner.projects.dto;
 
-import com.anczykowski.assigner.projects.dto.ProjectShortDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,13 +10,11 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
-public class TeamDto {
+public class ProjectShortDto {
 
     Integer id;
 
     @NotBlank
     String name;
-
-    ProjectShortDto assignedProject;
 
 }

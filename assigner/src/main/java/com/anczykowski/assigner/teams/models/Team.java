@@ -1,6 +1,7 @@
 package com.anczykowski.assigner.teams.models;
 
 import com.anczykowski.assigner.courses.models.CourseEdition;
+import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.users.models.User;
 import com.google.common.math.IntMath;
 import lombok.*;
@@ -25,6 +26,7 @@ public final class Team {
     private CourseEdition courseEdition;
     private Integer accessToken;
     private LocalDateTime accessTokenExpirationDate;
+    private Project assignedProject;
     private User leader;
     @Builder.Default
     private Set<User> members = new HashSet<>();

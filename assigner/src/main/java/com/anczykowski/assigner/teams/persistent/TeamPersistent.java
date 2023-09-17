@@ -1,6 +1,7 @@
 package com.anczykowski.assigner.teams.persistent;
 
 import com.anczykowski.assigner.courses.persistent.CourseEditionPersistent;
+import com.anczykowski.assigner.projects.persistent.ProjectPersistent;
 import com.anczykowski.assigner.users.persistent.UserPersistent;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,6 +32,10 @@ public class TeamPersistent {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leader_id")
     private UserPersistent leader;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_project_id")
+    private ProjectPersistent assignedProject;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_edition_id")

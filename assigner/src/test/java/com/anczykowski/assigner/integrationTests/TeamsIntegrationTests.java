@@ -100,6 +100,22 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
     @Test
     @DirtiesContext
+    void assignProjectToTeam() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+        setupProject();
+
+        var request = put("%s/teams/%d/assigned-project".formatted(editionPath, teamId))
+                .param("project-id", projectId.toString());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(json().node("assignedProject.id").isEqualTo(projectId));
+    }
+
+    @Test
+    @DirtiesContext
     void addProjectPreferenceGetAll() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();
