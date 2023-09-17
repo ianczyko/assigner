@@ -15,7 +15,7 @@ public class SolverController {
 
     @GetMapping("/solve")
     public AssignOptimizationResponse solve() {
-        var assignOptimizationResult = solverService.assignDates();
+        var assignOptimizationResult = solverService.assignProjects();
         return AssignOptimizationResponse.of(assignOptimizationResult);
     }
 }

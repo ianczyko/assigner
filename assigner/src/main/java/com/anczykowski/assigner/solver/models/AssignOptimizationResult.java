@@ -10,8 +10,8 @@ public class AssignOptimizationResult {
 
     double objective;
 
-    List<PersonDateAssignment> personDateAssignments = new ArrayList<>();
+    List<PersonProjectAssignment> personProjectAssignments = new ArrayList<>();
 
-    public void addPersonDateAssignment(PersonDateAssignment personDateAssignment){
-        personDateAssignments.add(personDateAssignment);
+    public void addPersonProjectAssignment(PersonProjectAssignment personProjectAssignment){
+        personProjectAssignments.add(personProjectAssignment);
     }}
