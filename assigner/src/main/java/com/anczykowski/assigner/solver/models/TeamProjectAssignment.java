@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PersonProjectAssignment {
-    int personId;
+public class TeamProjectAssignment {
+    int teamId;
 
     int projectId;
 }

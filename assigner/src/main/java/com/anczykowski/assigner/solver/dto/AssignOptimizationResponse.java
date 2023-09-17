@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 public record AssignOptimizationResponse(
     double objective,
-    List<PersonProjectAssignmentResponse> personProjectAssignments
+    List<TeamProjectAssignmentResponse> teamProjectAssignments
 ) {
 
     public static AssignOptimizationResponse of(AssignOptimizationResult assignOptimizationResult) {
         return new AssignOptimizationResponse(
             assignOptimizationResult.getObjective(),
-            assignOptimizationResult.getPersonProjectAssignments().stream().map(PersonProjectAssignmentResponse::of).collect(
+            assignOptimizationResult.getTeamProjectAssignments().stream().map(TeamProjectAssignmentResponse::of).collect(
                 Collectors.toList())
         );
     }
