@@ -43,6 +43,28 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
 
     @Test
     @DirtiesContext
+    void createProjectWithManager() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+
+        var request = post(editionPath + "/projects")
+                .content(new JSONObject()
+                        .put("name", "name1")
+                        .put("description", "desc1")
+                        .put("projectManager", new JSONObject()
+                                .put("id", 1))
+                        .toString());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(json().node("name").isEqualTo("name1"))
+                .andExpect(json().node("description").isEqualTo("desc1"))
+                .andExpect(json().node("projectManager.id").isEqualTo(1))
+                .andExpect(json().node("projectManager.name").isNotNull());
+    }
+
+    @Test
+    @DirtiesContext
     void addProjectForumComment() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();

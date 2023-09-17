@@ -1,6 +1,7 @@
 package com.anczykowski.assigner.projects.models;
 
 import com.anczykowski.assigner.courses.models.CourseEdition;
+import com.anczykowski.assigner.users.models.User;
 import lombok.*;
 
 import java.util.List;
@@ -17,5 +18,6 @@ public final class Project {
     private String name;
     private String description;
     private CourseEdition courseEdition;
+    private User projectManager;
     private List<ProjectForumComment> comments;
 }

@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.projects.dto;
 
+import com.anczykowski.assigner.users.dto.UserSimpleDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,6 +17,8 @@ public class ProjectDto {
 
     @NotBlank
     String name;
+
+    UserSimpleDto projectManager;
 
     String description;
 

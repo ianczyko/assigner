@@ -20,13 +20,17 @@ public class ProjectsService {
 
     final CourseEditionsService courseEditionsService;
 
-    final UsersRepository usersRepository;
+    final UsersRepository usersRepository; // TODO: maybe use service here?
 
     final ProjectForumCommentsRepository projectForumCommentsRepository;
 
     @Transactional
     public Project create(String courseName, String edition, Project project) {
         var courseEdition = courseEditionsService.get(courseName, edition);
+        if (project.getProjectManager() != null) {
+            var projectManager = usersRepository.get(project.getProjectManager().getId());
+            project.setProjectManager(projectManager);
+        }
         project.setCourseEdition(courseEdition);
         return projectsRepository.save(project);
     }
