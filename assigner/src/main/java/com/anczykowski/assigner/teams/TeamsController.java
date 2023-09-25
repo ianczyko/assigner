@@ -3,6 +3,7 @@ package com.anczykowski.assigner.teams;
 import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.teams.dto.ProjectPreferenceDto;
 import com.anczykowski.assigner.teams.dto.TeamAccessTokenDto;
+import com.anczykowski.assigner.teams.dto.TeamDetailedDto;
 import com.anczykowski.assigner.teams.dto.TeamDto;
 import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.users.dto.UserDto;
@@ -140,5 +141,14 @@ public class TeamsController {
                 .stream()
                 .map(c -> modelMapper.map(c, TeamDto.class))
                 .toList();
+    }
+
+    @GetMapping("/{teamId}")
+    public TeamDetailedDto getTeam(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer teamId
+    ) {
+        return modelMapper.map(teamsService.get(teamId), TeamDetailedDto.class);
     }
 }

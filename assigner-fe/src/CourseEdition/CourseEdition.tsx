@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
 import './CourseEdition.css';
@@ -100,7 +100,16 @@ function CourseEdition() {
             <br />
             Lista zespołów:
             {teamsResponse.map((team) => {
-              return <li key={team.id.toString()}>{team.name}</li>;
+              return (
+                <li key={team.id.toString()}>
+                  <Link
+                    className='Assigner-link'
+                    to={`/courses/${course_name}/${edition}/teams/${team.id}`}
+                  >
+                    {team.name}
+                  </Link>
+                </li>
+              );
             })}
           </ul>
 

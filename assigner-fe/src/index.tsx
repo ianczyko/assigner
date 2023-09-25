@@ -9,6 +9,7 @@ import CourseEdition from './CourseEdition/CourseEdition';
 import NotFound from './NotFound/NotFound';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import Team from './Team/Team';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -25,7 +26,11 @@ root.render(
           path='/courses/:course_name/:edition'
           element={<CourseEdition />}
         />
-        <Route path='*' element={<NotFound />}/>
+        <Route
+          path='/courses/:course_name/:edition/teams/:team_id'
+          element={<Team />}
+        />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Router>
   </React.StrictMode>
