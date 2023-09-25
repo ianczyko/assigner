@@ -6,9 +6,11 @@ import Popup from 'reactjs-popup';
 import wretch from 'wretch';
 import { Button } from '@mui/material';
 import NewCourseEdition from '../NewCourseEdition/NewCourseEdition';
+import NewCourse from '../NewCourse/NewCourse';
 
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
+  const [isOpenCourse, setIsOpenCourse] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   interface ICourse {
@@ -40,6 +42,7 @@ function Courses() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          {newCoursePopup()}
           <ul>
             {courses.map((course) => {
               return (
@@ -94,6 +97,7 @@ function Courses() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <p>Brak kursów.</p>
+          {newCoursePopup()}
         </header>
       </div>
     );
@@ -106,6 +110,20 @@ function Courses() {
       </header>
     </div>
   );
+
+  function newCoursePopup() {
+    return (
+      <Popup
+        trigger={(open) => <Button variant='contained'>Nowy kurs</Button>}
+        position='right center'
+        closeOnDocumentClick
+        open={isOpenCourse}
+        onOpen={() => setIsOpenCourse(!isOpenCourse)}
+      >
+        <NewCourse onFinish={fetchCourses} />
+      </Popup>
+    );
+  }
 }
 
 export default Courses;
