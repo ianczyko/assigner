@@ -1,16 +1,16 @@
-import './NewCourse.css';
+import './NewCourseEdition.css';
 
 import wretch from 'wretch';
 import FormDataAddon from 'wretch/addons/formData';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useRef } from 'react';
 
-interface NewCourseParams {
+interface NewCourseEditionParams {
   courseName: string;
   onFinish: Function;
 }
 
-function NewCourse({ courseName, onFinish }: NewCourseParams) {
+function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
   const { register, handleSubmit } = useForm();
 
   const form = useRef(null);
@@ -52,4 +52,4 @@ function NewCourse({ courseName, onFinish }: NewCourseParams) {
   );
 }
 
-export default NewCourse;
+export default NewCourseEdition;

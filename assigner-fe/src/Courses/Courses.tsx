@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import wretch from 'wretch';
 import { Button } from '@mui/material';
-import NewCourse from '../NewCourse/NewCourse';
+import NewCourseEdition from '../NewCourseEdition/NewCourseEdition';
 
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
@@ -56,7 +56,7 @@ function Courses() {
                         open={isOpen}
                         onOpen={() => setIsOpen(!isOpen)}
                       >
-                        <NewCourse
+                        <NewCourseEdition
                           courseName={course.name}
                           onFinish={fetchCourses}
                         />
