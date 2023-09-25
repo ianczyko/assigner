@@ -11,10 +11,10 @@ import NewCourse from '../NewCourse/NewCourse';
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
   const [isOpenCourse, setIsOpenCourse] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDict, setIsOpenDict] = useState<Record<number, boolean>>({});
 
   interface ICourse {
-    id: string;
+    id: number;
     name: string;
     courseEditions: Array<ICourseEdition>;
   }
@@ -28,14 +28,21 @@ function Courses() {
     wretch('/api/courses')
       .get()
       .json((json) => {
-        setIsOpen(false);
         setCourses(json);
+        if (courses != null) {
+          let dictionary = Object.assign(
+            {},
+            ...courses.map((x) => ({ [x.id]: false }))
+          );
+          setIsOpenDict(dictionary);
+        }
       })
       .catch((error) => console.log(error));
   }
 
   useEffect(() => {
     fetchCourses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (courses != null && courses.length > 0) {
@@ -56,8 +63,13 @@ function Courses() {
                         )}
                         position='right center'
                         closeOnDocumentClick
-                        open={isOpen}
-                        onOpen={() => setIsOpen(!isOpen)}
+                        open={isOpenDict[course.id]}
+                        onOpen={() => {
+                          setIsOpenDict({
+                            ...isOpenDict,
+                            [course.id]: !isOpenDict[course.id],
+                          });
+                        }}
                       >
                         <NewCourseEdition
                           courseName={course.name}
