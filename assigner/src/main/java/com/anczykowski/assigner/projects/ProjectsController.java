@@ -46,6 +46,15 @@ public class ProjectsController {
                 .toList();
     }
 
+    @GetMapping("/{projectId}")
+    public ProjectDto getProject(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable Integer projectId
+    ) {
+        return modelMapper.map(projectsService.get(projectId), ProjectDto.class);
+    }
+
     @PostMapping("/{projectId}/forum-comments")
     public ProjectForumCommentDto addProjectForumComment(
             @PathVariable Integer projectId,

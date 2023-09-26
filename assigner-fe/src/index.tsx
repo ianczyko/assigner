@@ -10,6 +10,7 @@ import NotFound from './NotFound/NotFound';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import Team from './Team/Team';
+import Project from './Project/Project';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -29,6 +30,10 @@ root.render(
         <Route
           path='/courses/:course_name/:edition/teams/:team_id'
           element={<Team />}
+        />
+        <Route
+          path='/courses/:course_name/:edition/projects/:project_id'
+          element={<Project />}
         />
         <Route path='*' element={<NotFound />} />
       </Routes>
