@@ -43,3 +43,27 @@ code {
   vertical-align: middle;
   padding: 0 0.5rem;
 }
+
+.Assigner-align-left {
+  text-align: left;
+}
+
+.Assigner-align-center {
+  text-align: center;
+}
+
+.Assigner-align-right {
+  text-align: right;
+}
+
+.Assigner-no-padding {
+  padding: 0;
+}
+
+.Assigner-no-margin {
+  margin: 0;
+}
+
+.Assigner-list-type-none {
+  list-style-type: none;
+}

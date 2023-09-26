@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,8 @@ public class TeamsService {
     final ProjectPreferenceRepository projectPreferenceRepository;
 
     final UsersRepository usersRepository;
+
+    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
 
     @Value("${token.digits:6}")
     int tokenDigits;
@@ -108,5 +111,23 @@ public class TeamsService {
         var project = projectsService.get(projectId);
         team.setAssignedProject(project);
         return teamsRepository.save(team);
+    }
+
+    public List<ProjectPreference> getRatingsView(String courseName, String edition, Integer teamId) {
+        var team = teamsRepository.get(teamId);
+        var projectPreferenceMap = team.getPreferences().stream().collect(Collectors.toMap(
+                item -> item.getProject().getId(),
+                item -> item)
+        );
+
+        var projects = projectsService.getProjects(courseName, edition);
+        return projects.stream().map(
+                project -> projectPreferenceMap.getOrDefault(project.getId(), ProjectPreference.builder()
+                        .rating(DEFAULT_RATING)
+                        .team(team)
+                        .project(project)
+                        .build()
+                )
+        ).toList();
     }
 }

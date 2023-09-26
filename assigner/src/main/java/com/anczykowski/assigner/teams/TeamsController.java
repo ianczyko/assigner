@@ -132,6 +132,21 @@ public class TeamsController {
                 .toList();
     }
 
+    // TODO: Write tests for this endpoint
+    @GetMapping("/{teamId}/project-ratings/view")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    public List<ProjectPreferenceDto> getRatingsView(
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable Integer teamId,
+            HttpServletRequest request
+    ) {
+        return teamsService.getRatingsView(courseName, edition, teamId)
+                .stream()
+                .map(c -> modelMapper.map(c, ProjectPreferenceDto.class))
+                .toList();
+    }
+
     @GetMapping
     public List<TeamDto> getTeams(
             @PathVariable String courseName,
