@@ -120,7 +120,7 @@ function Team() {
           <div className='Assigner-align-left'>
             <p>Zespół: {teamResponse.name}</p>
             <p>
-              Przypisany temat: {teamResponse.assignedProject.name ?? 'brak'}
+              Przypisany temat: {teamResponse.assignedProject?.name ?? 'brak'}
             </p>
             <p className='Assigner-no-margin'>Członkowie zespołu:</p>
             <ul className='Assigner-align-left Assigner-no-margin'>
