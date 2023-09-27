@@ -9,7 +9,7 @@ function Project() {
 
   const [isForbidden, setIsForbidden] = useState(false);
 
-  const [ProjectResponse, setProjectResponse] =
+  const [projectResponse, setProjectResponse] =
     useState<IProjectResponse | null>(null);
 
   interface IProjectResponse {
@@ -37,12 +37,12 @@ function Project() {
     return <Forbidden />;
   }
 
-  if (ProjectResponse != null) {
+  if (projectResponse != null) {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
-          <p>Temat: {ProjectResponse.name}</p>
-          <p>{ProjectResponse.description}</p>
+          <p>Temat: {projectResponse.name}</p>
+          <p>{projectResponse.description}</p>
         </header>
       </div>
     );
