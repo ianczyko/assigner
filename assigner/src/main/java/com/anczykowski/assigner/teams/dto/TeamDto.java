@@ -20,4 +20,6 @@ public class TeamDto {
 
     ProjectShortDto assignedProject;
 
+    Integer happiness;
+
 }

@@ -11,6 +11,7 @@ import reportWebVitals from './reportWebVitals';
 import './index.css';
 import Team from './Team/Team';
 import Project from './Project/Project';
+import AssignmentView from './AssignmentView/AssignmentView';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -26,6 +27,10 @@ root.render(
         <Route
           path='/courses/:course_name/:edition'
           element={<CourseEdition />}
+        />
+        <Route
+          path='/courses/:course_name/:edition/assignment-view'
+          element={<AssignmentView />}
         />
         <Route
           path='/courses/:course_name/:edition/teams/:team_id'

@@ -184,6 +184,14 @@ function CourseEdition() {
               );
             })}
           </ul>
+
+          <br />
+          <Link
+            className='Assigner-link'
+            to={`/courses/${course_name}/${edition}/assignment-view`}
+          >
+            Przypisania tematów do zespołów
+          </Link>
         </header>
       </div>
     );
