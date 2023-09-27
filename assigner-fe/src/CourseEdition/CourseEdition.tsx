@@ -4,7 +4,7 @@ import wretch from 'wretch';
 import './CourseEdition.css';
 import Forbidden from '../Forbidden/Forbidden';
 import Popup from 'reactjs-popup';
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
 
@@ -107,76 +107,79 @@ function CourseEdition() {
             Kurs {course_name}, edycja: {editionResponse.edition}
           </p>
 
-          <ul>
-            <Popup
-              trigger={(open) => (
-                <Button variant='contained'>Nowy zespół</Button>
-              )}
-              position='right center'
-              closeOnDocumentClick
-              open={isOpen}
-              onOpen={() => setIsOpen(!isOpen)}
-            >
-              <NewTeam
-                courseEdition={editionResponse.edition}
-                courseName={course_name!}
-                onFinish={fetchTeams}
-              />
-            </Popup>
-            <br />
-            Lista zespołów:
-            {teamsResponse.map((team) => {
-              return (
-                <li key={team.id.toString()}>
-                  <Link
-                    className='Assigner-link'
-                    to={`/courses/${course_name}/${edition}/teams/${team.id}`}
-                  >
-                    {team.name}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-
-          <ul>
-            <Popup
-              trigger={(open) => (
-                <Button variant='contained'>Nowy temat</Button>
-              )}
-              position='right center'
-              closeOnDocumentClick
-              open={isOpenProject}
-              onOpen={() => setIsOpenProject(!isOpenProject)}
-            >
-              <NewProject
-                courseEdition={editionResponse.edition}
-                courseName={course_name!}
-                onFinish={fetchProjects}
-              />
-            </Popup>
-            <br />
-            Lista tematów:
-            {projectsResponse.map((project) => {
-              return (
-                <li key={project.id.toString()}>
-                  <Link
-                    className='Assigner-link'
-                    to={`/courses/${course_name}/${edition}/projects/${project.id}`}
-                  >
-                    {project.name}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <Stack direction='row'>
+            <ul>
+              <Popup
+                trigger={(open) => (
+                  <Button variant='contained'>Nowy zespół</Button>
+                )}
+                position='right center'
+                closeOnDocumentClick
+                open={isOpen}
+                onOpen={() => setIsOpen(!isOpen)}
+              >
+                <NewTeam
+                  courseEdition={editionResponse.edition}
+                  courseName={course_name!}
+                  onFinish={fetchTeams}
+                />
+              </Popup>
+              <br />
+              Lista zespołów:
+              {teamsResponse.map((team) => {
+                return (
+                  <li key={team.id.toString()}>
+                    <Link
+                      className='Assigner-link'
+                      to={`/courses/${course_name}/${edition}/teams/${team.id}`}
+                    >
+                      {team.name}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            <ul>
+              <Popup
+                trigger={(open) => (
+                  <Button variant='contained'>Nowy temat</Button>
+                )}
+                position='right center'
+                closeOnDocumentClick
+                open={isOpenProject}
+                onOpen={() => setIsOpenProject(!isOpenProject)}
+              >
+                <NewProject
+                  courseEdition={editionResponse.edition}
+                  courseName={course_name!}
+                  onFinish={fetchProjects}
+                />
+              </Popup>
+              <br />
+              Lista tematów:
+              {projectsResponse.map((project) => {
+                return (
+                  <li key={project.id.toString()}>
+                    <Link
+                      className='Assigner-link'
+                      to={`/courses/${course_name}/${edition}/projects/${project.id}`}
+                    >
+                      {project.name}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </Stack>
 
           <ul>
             Lista studentów:
             {editionResponse.users.map((user) => {
               return (
                 <li key={user.id.toString()}>
-                  {user.name} {user.surname} {user.usosId.toString()}
+                  <p className='Assigner-font-medium Assigner-no-margin'>
+                    {user.name} {user.surname} {user.usosId.toString()}
+                  </p>
                 </li>
               );
             })}

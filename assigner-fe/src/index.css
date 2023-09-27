@@ -67,3 +67,11 @@ code {
 .Assigner-list-type-none {
   list-style-type: none;
 }
+
+.Assigner-font-small {
+  font-size: small;
+}
+
+.Assigner-font-medium {
+  font-size: medium;
+}
