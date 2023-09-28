@@ -85,12 +85,13 @@ function AssignmentView() {
                 <li key={team.id.toString()}>
                   <Stack direction='row' alignItems='center' spacing='10px'>
                     <div>
+                      zespół:{' '}
                       <Link
                         className='Assigner-link'
                         to={`/courses/${course_name}/${edition}/teams/${team.id}`}
                       >
                         {team.name}
-                      </Link>
+                      </Link>{' '}
                       - temat:{' '}
                       {team.assignedProject == null ? (
                         'brak'
@@ -101,8 +102,8 @@ function AssignmentView() {
                         >
                           {team.assignedProject.name}
                         </Link>
-                      )}
-                      , zadowolenie: {team.happiness}/5
+                      )}{' '}
+                      - zadowolenie: {team.happiness}/5
                     </div>
                     <div
                       style={{
