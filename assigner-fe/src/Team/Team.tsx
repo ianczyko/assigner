@@ -1,30 +1,44 @@
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
+import Snackbar from '@mui/material/Snackbar';
 import QueryStringAddon from 'wretch/addons/queryString';
 import './Team.css';
 import Forbidden from '../Forbidden/Forbidden';
-import { Slider } from '@mui/material';
+import { IconButton, Slider, Stack, Tooltip } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 function Team() {
   const { course_name, edition, team_id } = useParams();
 
   const [isForbidden, setIsForbidden] = useState(false);
 
+  const [isCopied, setIsCopied] = useState(false);
+
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitLoadingAccessToken, setSubmitLoadingAccessToken] =
+    useState(false);
 
   const [sliderValueDict, setSliderValueDict] = useState<
     Record<number, number | number[]>
   >({});
 
   const [teamResponse, setTeamResponse] = useState<ITeamResponse | null>(null);
+  const [accessTokenResponse, setAccessTokenResponse] =
+    useState<IAccessTokenResponse | null>(null);
   const [preferenceResponse, setPreferenceResponse] =
     useState<Array<IPreferenceResponse> | null>(null);
 
   interface IPreferenceResponse {
     rating: number;
     project: IProjectResponse;
+  }
+
+  interface IAccessTokenResponse {
+    accessToken: number;
+    accessTokenExpirationDate: Date;
   }
 
   interface IProjectResponse {
@@ -81,6 +95,50 @@ function Team() {
     };
   }
 
+  function getAccessToken() {
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/access-token`
+    )
+      .get()
+      .forbidden((error) => {
+        setIsForbidden(true);
+      })
+      .json((json) => {
+        setAccessTokenResponse(json);
+        console.log(json); // TODO: remove me
+      })
+      .catch((error) => console.log(error));
+  }
+
+  async function generateAccessToken() {
+    setSubmitLoadingAccessToken(true);
+    await wretch(
+      `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/access-token`
+    )
+      .put()
+      .forbidden((error) => {
+        setIsForbidden(true);
+      })
+      .json((json) => {
+        setAccessTokenResponse(json);
+        console.log(json); // TODO: remove me
+      })
+      .catch((error) => console.log(error));
+    setSubmitLoadingAccessToken(false);
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(
+      accessTokenResponse?.accessToken?.toString() ?? 'Brak'
+    );
+    setIsCopied(true);
+  }
+
+  useEffect(() => {
+    getAccessToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [course_name, edition, team_id]);
+
   useEffect(() => {
     wretch(`/api/courses/${course_name}/editions/${edition}/teams/${team_id}`)
       .get()
@@ -118,54 +176,105 @@ function Team() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <div className='Assigner-align-left'>
-            <p>Zespół: {teamResponse.name}</p>
-            <p>
-              Przypisany temat: {teamResponse.assignedProject?.name ?? 'brak'}
-            </p>
-            <p className='Assigner-no-margin'>Członkowie zespołu:</p>
-            <ul className='Assigner-align-left Assigner-no-margin'>
-              {teamResponse.members.map((user) => {
-                return (
-                  <li key={user.id.toString()}>
-                    {user.name} {user.surname}
-                  </li>
-                );
-              })}
-            </ul>
+            <p style={{ textAlign: 'center' }}>Zespół: {teamResponse.name}</p>
+            <Stack direction='row' alignItems='center' spacing='30px'>
+              <div>
+                <p>
+                  Przypisany temat:{' '}
+                  {teamResponse.assignedProject?.name ?? 'brak'}
+                </p>
+                <Stack direction='row' alignItems='center' spacing='10px'>
+                  <p>Kod dostępu: </p>
+                  {(() => {
+                    if (accessTokenResponse?.accessToken) {
+                      return (
+                        <Stack
+                          direction='row'
+                          alignItems='center'
+                          spacing='6px'
+                        >
+                          <p>{accessTokenResponse!.accessToken}</p>
+                          <Stack direction='row' alignItems='center'>
+                            <IconButton onClick={handleCopy} color='inherit'>
+                              <FontAwesomeIcon icon={faCopy} />
+                            </IconButton>
+                            <Snackbar
+                              open={isCopied}
+                              autoHideDuration={2500}
+                              onClose={() => setIsCopied(false)}
+                              message='Skopiowano do schowka.'
+                            />
+                            <Tooltip
+                              title={`Kod ważny do: ${
+                                accessTokenResponse!.accessTokenExpirationDate // TODO: better date format
+                              }`}
+                            >
+                              <IconButton onClick={() => {}} color='inherit'>
+                                <FontAwesomeIcon icon={faQuestionCircle} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </Stack>
+                      );
+                    }
+                    return (
+                      <LoadingButton
+                        variant='contained'
+                        loading={submitLoadingAccessToken}
+                        onClick={generateAccessToken}
+                      >
+                        Generuj
+                      </LoadingButton>
+                    );
+                  })()}
+                </Stack>
+                <p className='Assigner-no-margin'>Członkowie zespołu:</p>
+                <ul className='Assigner-align-left Assigner-no-margin'>
+                  {teamResponse.members.map((user) => {
+                    return (
+                      <li key={user.id.toString()}>
+                        {user.name} {user.surname}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              <div>
+                <ul className='Assigner-list-type-none Assigner-no-padding'>
+                  Preferencje zespołu:
+                  {preferenceResponse.map((pref) => {
+                    return (
+                      <li key={pref.project.id} className='Assigner-no-padding'>
+                        <Link
+                          className='Assigner-link'
+                          to={`/courses/${course_name}/${edition}/projects/${pref.project.id}`}
+                        >
+                          {pref.project.name}
+                        </Link>
 
-            <ul className='Assigner-list-type-none Assigner-no-padding'>
-              Preferencje zespołu:
-              {preferenceResponse.map((pref) => {
-                return (
-                  <li key={pref.project.id} className='Assigner-no-padding'>
-                    <Link
-                      className='Assigner-link'
-                      to={`/courses/${course_name}/${edition}/projects/${pref.project.id}`}
-                    >
-                      {pref.project.name}
-                    </Link>
-
-                    <Slider
-                      aria-label='Ocena'
-                      defaultValue={pref.rating}
-                      valueLabelDisplay='auto'
-                      step={1}
-                      marks
-                      onChange={updateSliderValues(pref.project.id)}
-                      min={1}
-                      max={5}
-                    />
-                  </li>
-                );
-              })}
-              <LoadingButton
-                variant='contained'
-                loading={submitLoading}
-                onClick={submitPreference}
-              >
-                Zapisz preferencje
-              </LoadingButton>
-            </ul>
+                        <Slider
+                          aria-label='Ocena'
+                          defaultValue={pref.rating}
+                          valueLabelDisplay='auto'
+                          step={1}
+                          marks
+                          onChange={updateSliderValues(pref.project.id)}
+                          min={1}
+                          max={5}
+                        />
+                      </li>
+                    );
+                  })}
+                  <LoadingButton
+                    variant='contained'
+                    loading={submitLoading}
+                    onClick={submitPreference}
+                  >
+                    Zapisz preferencje
+                  </LoadingButton>
+                </ul>
+              </div>
+            </Stack>
           </div>
         </header>
       </div>
