@@ -7,6 +7,7 @@ import Popup from 'reactjs-popup';
 import { Button, Stack } from '@mui/material';
 import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
+import JoinTeam from '../JoinTeam/JoinTeam';
 
 function CourseEdition() {
   const { course_name, edition } = useParams();
@@ -15,12 +16,14 @@ function CourseEdition() {
 
   const [editionResponse, setEditionResponse] =
     useState<IEditionResponse | null>(null);
+  const [assignedTeam, setAssignedTeam] = useState<ITeamResponse | null>(null);
   const [teamsResponse, setTeamsResponse] =
     useState<Array<ITeamResponse> | null>(null);
   const [projectsResponse, setProjectsResponse] =
     useState<Array<ITeamResponse> | null>(null);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenJoin, setIsOpenJoin] = useState(false);
   const [isOpenProject, setIsOpenProject] = useState(false);
 
   interface IEditionResponse {
@@ -55,6 +58,25 @@ function CourseEdition() {
       .catch((error) => console.log(error));
   }, [course_name, edition]);
 
+  function getAssignedTeam() {
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/teams/assigned-team`
+    )
+      .get()
+      .forbidden((error) => {
+        setIsForbidden(true);
+      })
+      .json((json) => {
+        setAssignedTeam(json);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    getAssignedTeam();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [course_name, edition]);
+
   function fetchTeams() {
     wretch(`/api/courses/${course_name}/editions/${edition}/teams`)
       .get()
@@ -66,6 +88,7 @@ function CourseEdition() {
         setTeamsResponse(json);
       })
       .catch((error) => console.log(error));
+      getAssignedTeam();
   }
 
   useEffect(() => {
@@ -108,37 +131,66 @@ function CourseEdition() {
           </p>
 
           <Stack direction='row'>
-            <ul>
-              <Popup
-                trigger={(open) => (
-                  <Button variant='contained'>Nowy zespół</Button>
-                )}
-                position='right center'
-                closeOnDocumentClick
-                open={isOpen}
-                onOpen={() => setIsOpen(!isOpen)}
-              >
-                <NewTeam
-                  courseEdition={editionResponse.edition}
-                  courseName={course_name!}
-                  onFinish={fetchTeams}
-                />
-              </Popup>
-              <br />
-              Lista zespołów:
-              {teamsResponse.map((team) => {
-                return (
-                  <li key={team.id.toString()}>
-                    <Link
-                      className='Assigner-link'
-                      to={`/courses/${course_name}/${edition}/teams/${team.id}`}
+            <Stack>
+              <ul>
+                <Popup
+                  trigger={(open) => (
+                    <Button variant='contained'>Nowy zespół</Button>
+                  )}
+                  position='right center'
+                  closeOnDocumentClick
+                  open={isOpen}
+                  onOpen={() => setIsOpen(!isOpen)}
+                >
+                  <NewTeam
+                    courseEdition={editionResponse.edition}
+                    courseName={course_name!}
+                    onFinish={fetchTeams}
+                  />
+                </Popup>
+                <br />
+                Lista zespołów:
+                {teamsResponse.map((team) => {
+                  return (
+                    <li key={team.id.toString()}>
+                      <Link
+                        className='Assigner-link'
+                        to={`/courses/${course_name}/${edition}/teams/${team.id}`}
+                      >
+                        {team.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+              <Stack direction='row' spacing='6px' alignItems='center'>
+                <p>Twój zespół: </p>
+                {(() => {
+                  if (assignedTeam?.id) {
+                    return <p>{assignedTeam!.name}</p>;
+                  }
+                  return (
+                    <Popup
+                      trigger={(open) => (
+                        <Button variant='contained'>
+                          Dołącz do <br /> zespołu
+                        </Button>
+                      )}
+                      position='right center'
+                      closeOnDocumentClick
+                      open={isOpenJoin}
+                      onOpen={() => setIsOpenJoin(!isOpenJoin)}
                     >
-                      {team.name}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+                      <JoinTeam
+                        courseEdition={editionResponse.edition}
+                        courseName={course_name!}
+                        onFinish={getAssignedTeam}
+                      />
+                    </Popup>
+                  );
+                })()}
+              </Stack>
+            </Stack>
             <ul>
               <Popup
                 trigger={(open) => (

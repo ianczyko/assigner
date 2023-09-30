@@ -4,6 +4,7 @@ import com.anczykowski.assigner.courses.models.CourseEdition;
 import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
 import com.anczykowski.assigner.courses.repositories.CoursesRepository;
 import com.anczykowski.assigner.error.NotFoundException;
+import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.UsersService;
 import com.anczykowski.assigner.users.models.User;
 import com.opencsv.CSVParser;
@@ -27,6 +28,8 @@ import java.util.List;
 public class CourseEditionsService {
 
     UsersService usersService;
+
+    UsersRepository usersRepository;
 
     CoursesRepository coursesRepository;
 
@@ -77,8 +80,9 @@ public class CourseEditionsService {
                             .secondName(second_name.isEmpty() ? null : second_name)
                             .usosId(usosId)
                             .build();
-                    user.addCourseEditionAccess(courseEditionSaved);
-                    usersService.createOrGet(user);
+                    var userFetched = usersService.createOrGet(user);
+                    userFetched.addCourseEditionAccess(courseEditionSaved);
+                    usersRepository.save(userFetched);
                 }
             } catch (CsvValidationException e) {
                 throw new RuntimeException(e);

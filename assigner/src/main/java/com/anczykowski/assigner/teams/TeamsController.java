@@ -170,4 +170,16 @@ public class TeamsController {
     ) {
         return modelMapper.map(teamsService.get(teamId), TeamDetailedDto.class);
     }
+
+    @GetMapping("/assigned-team") // TODO: tests
+    public TeamDetailedDto getAssignedTeam(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @PathVariable String edition,
+            HttpServletRequest request
+    ) {
+        var usosId = authUtils.getUsosId(request);
+        return teamsService.getAssignedTeam(edition, usosId)
+                .map(team -> modelMapper.map(team, TeamDetailedDto.class))
+                .orElse(new TeamDetailedDto());
+    }
 }

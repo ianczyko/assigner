@@ -129,8 +129,8 @@ function Team() {
 
   function handleCopy() {
     navigator.clipboard.writeText(
-      accessTokenResponse?.accessToken?.toString() ?? 'Brak'
-    );
+      `${team_id}:${accessTokenResponse?.accessToken!.toString()}`
+    )
     setIsCopied(true);
   }
 
@@ -193,7 +193,7 @@ function Team() {
                           alignItems='center'
                           spacing='6px'
                         >
-                          <p>{accessTokenResponse!.accessToken}</p>
+                          <p>{team_id}:{accessTokenResponse!.accessToken}</p>
                           <Stack direction='row' alignItems='center'>
                             <IconButton onClick={handleCopy} color='inherit'>
                               <FontAwesomeIcon icon={faCopy} />

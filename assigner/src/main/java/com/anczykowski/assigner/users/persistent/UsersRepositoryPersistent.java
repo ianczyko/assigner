@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.users.persistent;
 
+import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -37,6 +41,15 @@ public class UsersRepositoryPersistent implements UsersRepository {
     public Optional<User> getByUsosId(Integer usosId) {
         return repositoryImpl.findByUsosId(usosId)
                 .map(ce -> modelMapper.map(ce, User.class));
+    }
+
+    @Override
+    public List<Team> getAssignedTeamByUsosId(Integer usosId) {
+        return repositoryImpl.findByUsosId(usosId)
+                .map(user -> user.getTeamAccesses().stream()
+                        .map(ta -> modelMapper.map(ta, Team.class))
+                        .collect(Collectors.toList())
+                ).orElse(new ArrayList<>());
     }
 }
 

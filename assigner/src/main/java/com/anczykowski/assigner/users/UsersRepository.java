@@ -1,7 +1,9 @@
 package com.anczykowski.assigner.users;
 
+import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.users.models.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UsersRepository {
@@ -10,4 +12,6 @@ public interface UsersRepository {
     User get(Integer id);
 
     Optional<User> getByUsosId(Integer usosId);
+
+    List<Team> getAssignedTeamByUsosId(Integer usosId);
 }
