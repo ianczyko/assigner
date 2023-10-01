@@ -25,6 +25,7 @@ import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
 import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Objects;
 
 
@@ -79,6 +80,7 @@ public class AuthService {
 
     public MapSession createSession() {
         var session = sessionRepository.createSession();
+        session.setMaxInactiveInterval(Duration.ofMinutes(60));
         sessionRepository.save(session);
         return session;
     }
@@ -92,13 +94,13 @@ public class AuthService {
             var profileData = getProfileData(accessToken, accessTokenSecret);
 
             var session = sessionRepository.findById(sessionId);
-            session.setAttribute("accessToken", accessToken);
-            session.setAttribute("accessTokenSecret", accessTokenSecret);
-            session.setAttribute("usosId", profileData.getId());
-            sessionRepository.save(session);
 
-
-
+            if (session != null) {
+                session.setAttribute("accessToken", accessToken);
+                session.setAttribute("accessTokenSecret", accessTokenSecret);
+                session.setAttribute("usosId", profileData.getId());
+                sessionRepository.save(session);
+            }
         } catch (OAuthMessageSignerException |
                  OAuthNotAuthorizedException |
                  OAuthExpectationFailedException |

@@ -82,10 +82,12 @@ public abstract class BaseIntegrationTests {
         var accessToken = "100";
         var accessTokenSecret = "101";
         var session = sessionRepository.findById(cookie.getValue());
-        session.setAttribute("accessToken", accessToken);
-        session.setAttribute("accessTokenSecret", accessTokenSecret);
-        session.setAttribute("usosId", usosId.toString());
-        sessionRepository.save(session);
+        if(session != null){
+            session.setAttribute("accessToken", accessToken);
+            session.setAttribute("accessTokenSecret", accessTokenSecret);
+            session.setAttribute("usosId", usosId.toString());
+            sessionRepository.save(session);
+        }
     }
 
 

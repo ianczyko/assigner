@@ -1,8 +1,10 @@
 package com.anczykowski.assigner.auth;
 
-import java.io.IOException;
-import java.util.Collections;
-
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,11 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.Collections;
 
 @Component
 @AllArgsConstructor
@@ -38,6 +38,8 @@ public class SessionFilter extends OncePerRequestFilter {
         if (session != null) {
             String userId = session.getAttribute("accessToken");
             if (userId != null) {
+                session.setLastAccessedTime(Instant.now());
+                sessionRepository.save(session);
                 SecurityContextHolder.getContext().setAuthentication(
                     new UsernamePasswordAuthenticationToken(
                         userId,
@@ -46,6 +48,9 @@ public class SessionFilter extends OncePerRequestFilter {
                     )
                 );
             }
+        } else {
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
         }
         filterChain.doFilter(request, response);
     }
