@@ -2,7 +2,7 @@ package com.anczykowski.assigner.teams;
 
 import com.anczykowski.assigner.courses.services.CourseEditionsService;
 import com.anczykowski.assigner.error.NotFoundException;
-import com.anczykowski.assigner.error.UnauthorizedException;
+import com.anczykowski.assigner.error.ForbiddenException;
 import com.anczykowski.assigner.projects.ProjectsService;
 import com.anczykowski.assigner.teams.models.ProjectPreference;
 import com.anczykowski.assigner.teams.models.ProjectPreferenceId;
@@ -74,7 +74,7 @@ public class TeamsService {
     public Set<User> addMember(Integer teamId, Integer accessToken, Integer usosId) {
         var team = teamsRepository.get(teamId);
         if (!team.getAccessToken().equals(accessToken)) {
-            throw new UnauthorizedException("Unmatched access token");
+            throw new ForbiddenException("Unmatched access token");
         }
         var member = usersRepository.getByUsosId(usosId)
                 .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));

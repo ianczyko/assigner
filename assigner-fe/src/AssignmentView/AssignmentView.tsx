@@ -1,10 +1,11 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
 import './AssignmentView.css';
 import Forbidden from '../Forbidden/Forbidden';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Stack } from '@mui/material';
+import Helpers from '../Common/Helpers';
 
 function AssignmentView() {
   const { course_name, edition } = useParams();
@@ -14,6 +15,8 @@ function AssignmentView() {
 
   const [teamsResponse, setTeamsResponse] =
     useState<Array<ITeamResponse> | null>(null);
+
+  const navigate = useNavigate();
 
   interface ITeamResponse {
     id: number;
@@ -35,6 +38,9 @@ function AssignmentView() {
         `/api/courses/${course_name}/editions/${edition}/team-project-assignment`
       )
       .post()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .res((res) => {
         console.log(res); // TODO: remove me
       })
@@ -56,6 +62,9 @@ function AssignmentView() {
       .forbidden((error) => {
         console.log(error); // TODO: better error handling
         setIsForbidden(true);
+      })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
       })
       .json((json) => {
         setTeamsResponse(json);

@@ -4,6 +4,8 @@ import wretch from 'wretch';
 import { FieldValues, useForm } from 'react-hook-form';
 import QueryStringAddon from 'wretch/addons/queryString';
 import { useRef } from 'react';
+import Helpers from '../Common/Helpers';
+import { useNavigate } from 'react-router-dom';
 
 interface JoinTeamParams {
   courseName: string;
@@ -16,6 +18,8 @@ function JoinTeam({ courseName, courseEdition, onFinish }: JoinTeamParams) {
 
   const form = useRef(null);
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: FieldValues) => {
     let token: string = data.token;
     if (token.split(':').length === 0) return;
@@ -27,6 +31,9 @@ function JoinTeam({ courseName, courseEdition, onFinish }: JoinTeamParams) {
     )
       .query({ 'access-token': actualtoken })
       .post()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .res((res) => {
         console.log(res); // TODO: remove me
         onFinish();

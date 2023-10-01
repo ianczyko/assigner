@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
 import Snackbar from '@mui/material/Snackbar';
@@ -9,6 +9,7 @@ import { IconButton, Slider, Stack, Tooltip } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import Helpers from '../Common/Helpers';
 
 function Team() {
   const { course_name, edition, team_id } = useParams();
@@ -30,6 +31,8 @@ function Team() {
     useState<IAccessTokenResponse | null>(null);
   const [preferenceResponse, setPreferenceResponse] =
     useState<Array<IPreferenceResponse> | null>(null);
+
+  const navigate = useNavigate();
 
   interface IPreferenceResponse {
     rating: number;
@@ -80,6 +83,9 @@ function Team() {
             rating: sliderValueDict[pref.project.id],
           })
           .put()
+          .unauthorized((error) => {
+            Helpers.handleUnathorised(navigate);
+          })
           .res((res) => {
             console.log(res); // TODO: remove me
           })
@@ -103,6 +109,9 @@ function Team() {
       .forbidden((error) => {
         setIsForbidden(true);
       })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .json((json) => {
         setAccessTokenResponse(json);
         console.log(json); // TODO: remove me
@@ -119,6 +128,9 @@ function Team() {
       .forbidden((error) => {
         setIsForbidden(true);
       })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .json((json) => {
         setAccessTokenResponse(json);
         console.log(json); // TODO: remove me
@@ -130,7 +142,7 @@ function Team() {
   function handleCopy() {
     navigator.clipboard.writeText(
       `${team_id}:${accessTokenResponse?.accessToken!.toString()}`
-    )
+    );
     setIsCopied(true);
   }
 
@@ -145,11 +157,15 @@ function Team() {
       .forbidden((error) => {
         setIsForbidden(true);
       })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .json((json) => {
         setTeamResponse(json);
         console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, team_id]);
 
   useEffect(() => {
@@ -160,11 +176,15 @@ function Team() {
       .forbidden((error) => {
         setIsForbidden(true);
       })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .json((json) => {
         setPreferenceResponse(json);
         console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, team_id]);
 
   if (isForbidden) {
@@ -193,7 +213,9 @@ function Team() {
                           alignItems='center'
                           spacing='6px'
                         >
-                          <p>{team_id}:{accessTokenResponse!.accessToken}</p>
+                          <p>
+                            {team_id}:{accessTokenResponse!.accessToken}
+                          </p>
                           <Stack direction='row' alignItems='center'>
                             <IconButton onClick={handleCopy} color='inherit'>
                               <FontAwesomeIcon icon={faCopy} />

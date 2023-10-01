@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
 import './CourseEdition.css';
@@ -8,6 +8,7 @@ import { Button, Stack } from '@mui/material';
 import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
 import JoinTeam from '../JoinTeam/JoinTeam';
+import Helpers from '../Common/Helpers';
 
 function CourseEdition() {
   const { course_name, edition } = useParams();
@@ -25,6 +26,8 @@ function CourseEdition() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenJoin, setIsOpenJoin] = useState(false);
   const [isOpenProject, setIsOpenProject] = useState(false);
+
+  const navigate = useNavigate();
 
   interface IEditionResponse {
     id: Number;
@@ -52,10 +55,14 @@ function CourseEdition() {
       .forbidden((error) => {
         setIsForbidden(true);
       })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .json((json) => {
         setEditionResponse(json);
       })
       .catch((error) => console.log(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition]);
 
   function getAssignedTeam() {
@@ -65,6 +72,9 @@ function CourseEdition() {
       .get()
       .forbidden((error) => {
         setIsForbidden(true);
+      })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
       })
       .json((json) => {
         setAssignedTeam(json);
@@ -84,11 +94,14 @@ function CourseEdition() {
         console.log(error); // TODO: better error handling
         setIsForbidden(true);
       })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .json((json) => {
         setTeamsResponse(json);
       })
       .catch((error) => console.log(error));
-      getAssignedTeam();
+    getAssignedTeam();
   }
 
   useEffect(() => {
@@ -102,6 +115,9 @@ function CourseEdition() {
       .forbidden((error) => {
         console.log(error); // TODO: better error handling
         setIsForbidden(true);
+      })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
       })
       .json((json) => {
         setProjectsResponse(json);

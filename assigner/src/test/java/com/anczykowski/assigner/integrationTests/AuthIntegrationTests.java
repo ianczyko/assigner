@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthIntegrationTests extends BaseIntegrationTests {
 
     @Test
-    void protectedEndpointReturns403() throws Exception {
+    void protectedEndpointWithoutCredentialsReturns401() throws Exception {
         var request = get("/profile");
         mockMvc.perform(request)
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -22,7 +22,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
     }
 
     @Test
-    void protectedEndpointAfterAuthAndLogoutReturns403() throws Exception {
+    void protectedEndpointAfterAuthAndLogoutReturns401() throws Exception {
         authenticate();
 
         var request = get("/profile");
@@ -35,7 +35,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
 
         var profileRequest = get("/profile");
         mockMvc.perform(profileRequest)
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

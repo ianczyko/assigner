@@ -25,13 +25,20 @@ public class SessionFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-        @NotNull HttpServletRequest request,
-        @NotNull HttpServletResponse response,
-        @NotNull FilterChain filterChain
+            @NotNull HttpServletRequest request,
+            @NotNull HttpServletResponse response,
+            @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
         var cookie = WebUtils.getCookie(request, "SESSION");
         if (cookie == null) {
-            filterChain.doFilter(request, response);
+            var requestURI = request.getRequestURI();
+            var contextPath = request.getContextPath();
+            var endpoint = requestURI.substring(contextPath.length());
+            if (endpoint.equals("/auth")) {
+                filterChain.doFilter(request, response);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
             return;
         }
         var session = sessionRepository.findById(cookie.getValue());
@@ -41,16 +48,18 @@ public class SessionFilter extends OncePerRequestFilter {
                 session.setLastAccessedTime(Instant.now());
                 sessionRepository.save(session);
                 SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(
-                        userId,
-                        null,
-                        Collections.emptyList()
-                    )
+                        new UsernamePasswordAuthenticationToken(
+                                userId,
+                                null,
+                                Collections.emptyList()
+                        )
                 );
             }
         } else {
             cookie.setMaxAge(0);
             response.addCookie(cookie);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
         filterChain.doFilter(request, response);
     }

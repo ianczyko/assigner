@@ -82,7 +82,7 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
 
         var getCourseEditionRequest = get("/courses/PZSP3/editions/21l");
         mockMvc.perform(getCourseEditionRequest)
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
         ;
     }
 

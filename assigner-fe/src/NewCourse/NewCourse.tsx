@@ -4,6 +4,8 @@ import wretch from 'wretch';
 import QueryStringAddon from 'wretch/addons/queryString';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useRef } from 'react';
+import Helpers from '../Common/Helpers';
+import { useNavigate } from 'react-router-dom';
 
 interface NewCourseParams {
   onFinish: Function;
@@ -14,13 +16,18 @@ function NewCourse({ onFinish }: NewCourseParams) {
 
   const form = useRef(null);
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: FieldValues) => {
     const w = wretch().addon(QueryStringAddon);
     w.url(`/api/courses`)
       .query({ name: data.name })
       .post()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .res((res) => {
-        console.log(res) // TODO: remove me
+        console.log(res); // TODO: remove me
         onFinish();
       })
       .catch((error) => console.log(error));

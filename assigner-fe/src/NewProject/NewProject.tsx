@@ -3,6 +3,8 @@ import './NewProject.css';
 import wretch from 'wretch';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useRef } from 'react';
+import Helpers from '../Common/Helpers';
+import { useNavigate } from 'react-router-dom';
 
 interface NewProjectParams {
   courseName: string;
@@ -14,11 +16,15 @@ function NewProject({ courseName, courseEdition, onFinish }: NewProjectParams) {
   const { register, handleSubmit } = useForm();
 
   const form = useRef(null);
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FieldValues) => {
     wretch()
       .url(`/api/courses/${courseName}/editions/${courseEdition}/projects`)
       .post({ name: data.name, description: data.description })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .res((res) => {
         console.log(res); // TODO: remove me
         onFinish();

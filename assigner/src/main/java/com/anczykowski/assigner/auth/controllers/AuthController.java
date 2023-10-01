@@ -5,7 +5,7 @@ import com.anczykowski.assigner.auth.dto.AuthResponse;
 import com.anczykowski.assigner.auth.dto.ProfileResponse;
 import com.anczykowski.assigner.auth.dto.VerifyRequest;
 import com.anczykowski.assigner.auth.services.AuthService;
-import com.anczykowski.assigner.error.UnauthorizedException;
+import com.anczykowski.assigner.error.ForbiddenException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,7 +40,7 @@ public class AuthController {
     public ResponseEntity<Void> verify(@RequestBody VerifyRequest verifyRequest, HttpServletRequest request) {
         var cookie = WebUtils.getCookie(request, "SESSION");
         if (cookie == null) {
-            throw new UnauthorizedException();
+            throw new ForbiddenException();
         }
         authService.verify(verifyRequest.getVerifier(), cookie.getValue());
         return ResponseEntity.ok().build();
@@ -51,7 +51,7 @@ public class AuthController {
     public ProfileResponse profile(HttpServletRequest request) {
         var cookie = WebUtils.getCookie(request, "SESSION");
         if (cookie == null) {
-            throw new UnauthorizedException();
+            throw new ForbiddenException();
         }
         // TODO: service should not return response, domain to dto mapping should happen here
         return authService.userData(cookie.getValue());

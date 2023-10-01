@@ -1,7 +1,7 @@
 package com.anczykowski.assigner.auth.authutils;
 
 import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
-import com.anczykowski.assigner.error.UnauthorizedException;
+import com.anczykowski.assigner.error.ForbiddenException;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class AuthUtils {
         if (coursesEditionRepository.checkIfUserHasAccessToCourseEdition(courseName, edition, usosId)) {
             return true;
         }
-        throw new UnauthorizedException("User has no access to requested course edition");
+        throw new ForbiddenException("User has no access to requested course edition");
     }
 
     public boolean hasAccessToTeam(Integer teamId, HttpServletRequest request) {
@@ -41,7 +41,7 @@ public class AuthUtils {
         if (team.getMembers().stream().anyMatch(m -> m.getUsosId().equals(usosId))) {
             return true;
         }
-        throw new UnauthorizedException("User has no access to requested team");
+        throw new ForbiddenException("User has no access to requested team");
     }
 
     public Integer getUsosId(HttpServletRequest request) {

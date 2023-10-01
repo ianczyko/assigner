@@ -37,16 +37,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return defaultExceptionHandler(ex, request);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<?> unauthorizedException(UnauthorizedException ex, WebRequest request) {
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<?> forbiddenException(ForbiddenException ex, WebRequest request) {
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorResponseEntity, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponseEntity, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> unauthorizedException(AccessDeniedException ex, WebRequest request) {
+    public ResponseEntity<?> forbiddenException(AccessDeniedException ex, WebRequest request) {
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorResponseEntity, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponseEntity, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)

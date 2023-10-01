@@ -4,6 +4,8 @@ import wretch from 'wretch';
 import FormDataAddon from 'wretch/addons/formData';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useRef } from 'react';
+import Helpers from '../Common/Helpers';
+import { useNavigate } from 'react-router-dom';
 
 interface NewCourseEditionParams {
   courseName: string;
@@ -16,6 +18,8 @@ function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
   const form = useRef(null);
   const fileUpload = useRef<HTMLInputElement>(null);
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: FieldValues) => {
     const w = wretch().addon(FormDataAddon);
     var file = fileUpload.current!.files![0];
@@ -25,6 +29,9 @@ function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
         edition: data.edition,
       })
       .post()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .res((res) => {
         onFinish();
         console.log(res); // TODO: change this

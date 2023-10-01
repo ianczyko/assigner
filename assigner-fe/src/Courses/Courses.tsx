@@ -1,17 +1,20 @@
 import './Courses.css';
 
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import wretch from 'wretch';
 import { Button } from '@mui/material';
 import NewCourseEdition from '../NewCourseEdition/NewCourseEdition';
 import NewCourse from '../NewCourse/NewCourse';
+import Helpers from '../Common/Helpers';
 
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
   const [isOpenCourse, setIsOpenCourse] = useState(false);
   const [isOpenDict, setIsOpenDict] = useState<Record<number, boolean>>({});
+
+  const navigate = useNavigate();
 
   interface ICourse {
     id: number;
@@ -27,6 +30,9 @@ function Courses() {
   function fetchCourses() {
     wretch('/api/courses')
       .get()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
       .json((json) => {
         setCourses(json);
         if (courses != null) {
