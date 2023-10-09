@@ -36,7 +36,6 @@ public class SolverService {
             cplex.setOut(null);
 
             //// parameters
-            // This will not be hard-coded in the future but obtained from a database
             int T = teams.size();
             var P = projects.size();
 
