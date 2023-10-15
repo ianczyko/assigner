@@ -112,15 +112,21 @@ function AssignmentView() {
                           {team.assignedProject.name}
                         </Link>
                       )}{' '}
-                      - zadowolenie: {team.happiness}/5
                     </div>
-                    <div
-                      style={{
-                        width: '1em',
-                        height: '1em',
-                        backgroundColor: getColor(team.happiness / 5.0),
-                      }}
-                    ></div>
+                    {team.happiness ? (
+                      <Stack direction='row' alignItems='center' spacing='10px'>
+                        <div>- zadowolenie: {team.happiness}/5</div>
+                        <div
+                          style={{
+                            width: '1em',
+                            height: '1em',
+                            backgroundColor: getColor(team.happiness / 5.0),
+                          }}
+                        ></div>
+                      </Stack>
+                    ) : (
+                      <div></div>
+                    )}
                   </Stack>
                 </li>
               );
