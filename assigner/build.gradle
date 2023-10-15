@@ -59,7 +59,12 @@ dependencies {
 	testImplementation 'net.javacrumbs.json-unit:json-unit-spring:2.36.0'
 
 	// Cplex
-	implementation files("lib/cplex.jar")
+	if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
+		implementation files("/opt/ibm/ILOG/CPLEX_Studio2211/cplex/lib/cplex.jar")
+	} else {
+		implementation files("lib/cplex.jar")
+	}
+
 }
 
 tasks.named('test') {

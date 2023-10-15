@@ -1,4 +1,5 @@
 lib/
+installers/
 .env
 HELP.md
 .gradle
