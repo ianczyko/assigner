@@ -9,6 +9,7 @@ import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
 import JoinTeam from '../JoinTeam/JoinTeam';
 import Helpers from '../Common/Helpers';
+import { ToastContainer } from 'react-toastify';
 
 function CourseEdition() {
   const { course_name, edition } = useParams();
@@ -58,6 +59,9 @@ function CourseEdition() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .json((json) => {
         setEditionResponse(json);
       })
@@ -75,6 +79,9 @@ function CourseEdition() {
       })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
       })
       .json((json) => {
         setAssignedTeam(json);
@@ -97,6 +104,9 @@ function CourseEdition() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .json((json) => {
         setTeamsResponse(json);
       })
@@ -118,6 +128,9 @@ function CourseEdition() {
       })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
       })
       .json((json) => {
         setProjectsResponse(json);
@@ -142,6 +155,7 @@ function CourseEdition() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          <ToastContainer />
           <p>
             Kurs {course_name}, edycja: {editionResponse.edition}
           </p>
@@ -268,6 +282,7 @@ function CourseEdition() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
+        <ToastContainer />
         <p>Trwa Ładowanie edycji kursu...</p>
       </header>
     </div>

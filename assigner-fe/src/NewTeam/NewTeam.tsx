@@ -25,6 +25,9 @@ function NewTeam({ courseName, courseEdition, onFinish }: NewTeamParams) {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .res((res) => {
         console.log(res); // TODO: remove me
         onFinish();

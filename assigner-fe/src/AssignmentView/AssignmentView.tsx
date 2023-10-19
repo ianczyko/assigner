@@ -6,6 +6,7 @@ import Forbidden from '../Forbidden/Forbidden';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Stack } from '@mui/material';
 import Helpers from '../Common/Helpers';
+import { ToastContainer } from 'react-toastify';
 
 function AssignmentView() {
   const { course_name, edition } = useParams();
@@ -41,6 +42,9 @@ function AssignmentView() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .res((res) => {
         console.log(res); // TODO: remove me
       })
@@ -66,6 +70,9 @@ function AssignmentView() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .json((json) => {
         setTeamsResponse(json);
       })
@@ -86,6 +93,7 @@ function AssignmentView() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          <ToastContainer />
           <ul>
             Obecne przypisania <br />
             zespołów do projektów:
@@ -147,6 +155,7 @@ function AssignmentView() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
+        <ToastContainer />
         <p>Trwa Ładowanie przypisań projektów do zespołów...</p>
       </header>
     </div>

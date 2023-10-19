@@ -2,13 +2,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
 import './Project.css';
-import Forbidden from '../Forbidden/Forbidden';
 import Helpers from '../Common/Helpers';
+import { ToastContainer } from 'react-toastify';
 
 function Project() {
   const { course_name, edition, project_id } = useParams();
-
-  const [isForbidden, setIsForbidden] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,11 +24,11 @@ function Project() {
       `/api/courses/${course_name}/editions/${edition}/projects/${project_id}`
     )
       .get()
-      .forbidden((error) => {
-        setIsForbidden(true);
-      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
       })
       .json((json) => {
         setProjectResponse(json);
@@ -40,14 +38,16 @@ function Project() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, project_id]);
 
-  if (isForbidden) {
-    return <Forbidden />;
-  }
+  // TODO: maybe forbidden should be handled differently on this page?
+  // if (isForbidden) {
+  //   return <Forbidden />;
+  // }
 
   if (projectResponse != null) {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          <ToastContainer />
           <p>Temat: {projectResponse.name}</p>
           <p>{projectResponse.description}</p>
         </header>
@@ -58,6 +58,7 @@ function Project() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
+        <ToastContainer />
         <p>Trwa Ładowanie zespołu...</p>
       </header>
     </div>

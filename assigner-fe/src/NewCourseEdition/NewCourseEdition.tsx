@@ -32,6 +32,9 @@ function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .res((res) => {
         onFinish();
         console.log(res); // TODO: change this

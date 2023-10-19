@@ -10,7 +10,6 @@ import NewCourse from '../NewCourse/NewCourse';
 import Helpers, { UserType } from '../Common/Helpers';
 
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
@@ -36,6 +35,9 @@ function Courses() {
       .get()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
       })
       .res((response) => {
         Helpers.extractUserType(response, setUserType);
@@ -63,6 +65,7 @@ function Courses() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          <ToastContainer />
           {newCoursePopup()}
           <ul>
             {courses.map((course) => {
@@ -129,6 +132,7 @@ function Courses() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          <ToastContainer />
           <p>Brak kursów.</p>
           {newCoursePopup()}
         </header>
@@ -145,7 +149,7 @@ function Courses() {
   );
 
   function newCoursePopup() {
-    if (userType === UserType.STUDENT) {
+    if (userType !== UserType.STUDENT) {
       return;
     }
     return (
@@ -159,7 +163,6 @@ function Courses() {
         >
           <NewCourse onFinish={fetchCourses} />
         </Popup>
-        <ToastContainer />
       </div>
     );
   }

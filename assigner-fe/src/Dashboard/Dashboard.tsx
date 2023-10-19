@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import wretch from 'wretch';
 import './Dashboard.css';
 import Helpers from '../Common/Helpers';
+import { ToastContainer } from 'react-toastify';
 
 function Dashboard() {
   interface IProfileResponse {
@@ -20,6 +21,9 @@ function Dashboard() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .json((json) => {
         setProfile(json);
       })
@@ -31,6 +35,7 @@ function Dashboard() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          <ToastContainer />
           <p>
             {profile.id} - {profile.first_name} - {profile.last_name}
           </p>
@@ -45,6 +50,7 @@ function Dashboard() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
+        <ToastContainer />
         <p>Trwa ładowanie profilu...</p>
       </header>
     </div>

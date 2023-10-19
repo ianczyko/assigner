@@ -9,6 +9,7 @@ import CourseEdition from './CourseEdition/CourseEdition';
 import NotFound from './NotFound/NotFound';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import 'react-toastify/dist/ReactToastify.css';
 import Team from './Team/Team';
 import Project from './Project/Project';
 import AssignmentView from './AssignmentView/AssignmentView';

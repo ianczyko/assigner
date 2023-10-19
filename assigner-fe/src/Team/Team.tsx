@@ -10,6 +10,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import Helpers from '../Common/Helpers';
+import { ToastContainer } from 'react-toastify';
 
 function Team() {
   const { course_name, edition, team_id } = useParams();
@@ -112,6 +113,9 @@ function Team() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .json((json) => {
         setAccessTokenResponse(json);
         console.log(json); // TODO: remove me
@@ -130,6 +134,9 @@ function Team() {
       })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
       })
       .json((json) => {
         setAccessTokenResponse(json);
@@ -160,6 +167,9 @@ function Team() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .json((json) => {
         setTeamResponse(json);
         console.log(json); // TODO: remove me
@@ -179,6 +189,9 @@ function Team() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
       .json((json) => {
         setPreferenceResponse(json);
         console.log(json); // TODO: remove me
@@ -195,6 +208,7 @@ function Team() {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
+          <ToastContainer />
           <div className='Assigner-align-left'>
             <p style={{ textAlign: 'center' }}>Zespół: {teamResponse.name}</p>
             <Stack direction='row' alignItems='center' spacing='30px'>
@@ -306,6 +320,7 @@ function Team() {
   return (
     <div className='Assigner-center-container'>
       <header className='Assigner-center Assigner-header'>
+        <ToastContainer />
         <p>Trwa Ładowanie zespołu...</p>
       </header>
     </div>
