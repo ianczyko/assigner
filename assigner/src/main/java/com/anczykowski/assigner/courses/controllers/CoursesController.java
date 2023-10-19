@@ -34,6 +34,7 @@ public class CoursesController {
     AuthUtils authUtils;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('COORDINATOR')")
     public CourseDto newCourse(@RequestParam String name) {
         return modelMapper.map(coursesService.create(name), CourseDto.class);
     }

@@ -18,6 +18,8 @@ public final class User {
     private String secondName;
     private String surname;
     private Integer usosId;
+    @Builder.Default
+    private UserType userType = UserType.STUDENT;
     private Set<CourseEdition> courseEditionsAccess;
 
     @Override

@@ -7,12 +7,16 @@ import wretch from 'wretch';
 import { Button } from '@mui/material';
 import NewCourseEdition from '../NewCourseEdition/NewCourseEdition';
 import NewCourse from '../NewCourse/NewCourse';
-import Helpers from '../Common/Helpers';
+import Helpers, { UserType } from '../Common/Helpers';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
   const [isOpenCourse, setIsOpenCourse] = useState(false);
   const [isOpenDict, setIsOpenDict] = useState<Record<number, boolean>>({});
+  const [userType, setUserType] = useState<UserType>(UserType.STUDENT);
 
   const navigate = useNavigate();
 
@@ -33,7 +37,11 @@ function Courses() {
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
-      .json((json) => {
+      .res((response) => {
+        Helpers.extractUserType(response, setUserType);
+        return response.json();
+      })
+      .then((json) => {
         setCourses(json);
         if (courses != null) {
           let dictionary = Object.assign(
@@ -63,25 +71,32 @@ function Courses() {
                   <div className='Assigner-row-parent'>
                     <div className='Assigner-row-child'>{course.name}</div>
                     <div className='Assigner-row-child'>
-                      <Popup
-                        trigger={(open) => (
-                          <Button variant='contained'>Nowa edycja</Button>
-                        )}
-                        position='right center'
-                        closeOnDocumentClick
-                        open={isOpenDict[course.id]}
-                        onOpen={() => {
-                          setIsOpenDict({
-                            ...isOpenDict,
-                            [course.id]: !isOpenDict[course.id],
-                          });
-                        }}
-                      >
-                        <NewCourseEdition
-                          courseName={course.name}
-                          onFinish={fetchCourses}
-                        />
-                      </Popup>
+                      {(() => {
+                        if (userType === UserType.STUDENT) {
+                          return <div></div>;
+                        }
+                        return (
+                          <Popup
+                            trigger={(open) => (
+                              <Button variant='contained'>Nowa edycja</Button>
+                            )}
+                            position='right center'
+                            closeOnDocumentClick
+                            open={isOpenDict[course.id]}
+                            onOpen={() => {
+                              setIsOpenDict({
+                                ...isOpenDict,
+                                [course.id]: !isOpenDict[course.id],
+                              });
+                            }}
+                          >
+                            <NewCourseEdition
+                              courseName={course.name}
+                              onFinish={fetchCourses}
+                            />
+                          </Popup>
+                        );
+                      })()}
                     </div>
                   </div>
                   <ul>
@@ -130,16 +145,22 @@ function Courses() {
   );
 
   function newCoursePopup() {
+    if (userType === UserType.STUDENT) {
+      return;
+    }
     return (
-      <Popup
-        trigger={(open) => <Button variant='contained'>Nowy kurs</Button>}
-        position='right center'
-        closeOnDocumentClick
-        open={isOpenCourse}
-        onOpen={() => setIsOpenCourse(!isOpenCourse)}
-      >
-        <NewCourse onFinish={fetchCourses} />
-      </Popup>
+      <div>
+        <Popup
+          trigger={(open) => <Button variant='contained'>Nowy kurs</Button>}
+          position='right center'
+          closeOnDocumentClick
+          open={isOpenCourse}
+          onOpen={() => setIsOpenCourse(!isOpenCourse)}
+        >
+          <NewCourse onFinish={fetchCourses} />
+        </Popup>
+        <ToastContainer />
+      </div>
     );
   }
 }

@@ -75,3 +75,8 @@ code {
 .Assigner-font-medium {
   font-size: medium;
 }
+
+
+.Toastify__toast-body {
+  font-size: large;
+}

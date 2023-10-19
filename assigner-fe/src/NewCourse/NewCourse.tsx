@@ -7,6 +7,8 @@ import { useRef } from 'react';
 import Helpers from '../Common/Helpers';
 import { useNavigate } from 'react-router-dom';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 interface NewCourseParams {
   onFinish: Function;
 }
@@ -25,6 +27,9 @@ function NewCourse({ onFinish }: NewCourseParams) {
       .post()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
       })
       .res((res) => {
         console.log(res); // TODO: remove me

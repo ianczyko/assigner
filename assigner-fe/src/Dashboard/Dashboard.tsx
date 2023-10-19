@@ -24,6 +24,7 @@ function Dashboard() {
         setProfile(json);
       })
       .catch((error) => console.log(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (profile != null) {

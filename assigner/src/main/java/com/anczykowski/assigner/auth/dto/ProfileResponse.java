@@ -9,4 +9,8 @@ public class ProfileResponse {
     String first_name;
 
     String last_name;
+
+    Integer student_status;
+
+    Integer staff_status;
 }

@@ -2,6 +2,8 @@ package com.anczykowski.assigner.auth.services;
 
 
 import com.anczykowski.assigner.auth.dto.ProfileResponse;
+import com.anczykowski.assigner.users.UsersRepository;
+import com.anczykowski.assigner.users.models.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import oauth.signpost.OAuthConsumer;
@@ -12,10 +14,7 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.session.MapSession;
 import org.springframework.session.MapSessionRepository;
@@ -55,11 +54,17 @@ public class AuthService {
 
     private OAuthProvider provider;
 
-    public AuthService(MapSessionRepository sessionRepository) {
+    public AuthService(
+            MapSessionRepository sessionRepository,
+            UsersRepository usersRepository
+    ) {
         this.sessionRepository = sessionRepository;
+        this.usersRepository = usersRepository;
     }
 
     MapSessionRepository sessionRepository;
+
+    UsersRepository usersRepository;
 
     @PostConstruct
     private void postConstruct() {
@@ -99,6 +104,17 @@ public class AuthService {
                 session.setAttribute("accessToken", accessToken);
                 session.setAttribute("accessTokenSecret", accessTokenSecret);
                 session.setAttribute("usosId", profileData.getId());
+
+                var userType = UserType.STUDENT.ordinal();
+                if (profileData.getStaff_status() > 0) {
+                    userType = UserType.TEACHER.ordinal();
+                }
+                var user = usersRepository.getByUsosId(Integer.valueOf(profileData.getId()));
+                if (user.isPresent()) {
+                    userType = user.get().getUserType().ordinal();
+                }
+                session.setAttribute("userType", String.valueOf(userType));
+
                 sessionRepository.save(session);
             }
         } catch (OAuthMessageSignerException |
@@ -119,11 +135,17 @@ public class AuthService {
 
     private ProfileResponse getProfileData(String accessToken, String accessTokenSecret) {
         consumer.setTokenWithSecret(accessToken, accessTokenSecret);
-        OkHttpOAuthConsumer okConsumer = new OkHttpOAuthConsumer(consumerKey, consumerSecret);
+        var okConsumer = new OkHttpOAuthConsumer(consumerKey, consumerSecret);
         okConsumer.setTokenWithSecret(accessToken, accessTokenSecret);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new SigningInterceptor(okConsumer)).build();
+        var client = new OkHttpClient.Builder().addInterceptor(new SigningInterceptor(okConsumer)).build();
 
-        Request request = new Request.Builder().url(USER_URL).get().build();
+        var urlBuilder = Objects.requireNonNull(HttpUrl.parse(USER_URL)).newBuilder();
+        urlBuilder.addQueryParameter("fields", "id|first_name|last_name|student_status|staff_status");
+
+        var request = new Request.Builder()
+                .url(urlBuilder.build())
+                .get()
+                .build();
 
         try (Response response = client.newCall(request).execute()) {
             ObjectMapper objectMapper = new ObjectMapper();

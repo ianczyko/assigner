@@ -2,6 +2,7 @@ package com.anczykowski.assigner.users.persistent;
 
 import com.anczykowski.assigner.courses.persistent.CourseEditionPersistent;
 import com.anczykowski.assigner.teams.persistent.TeamPersistent;
+import com.anczykowski.assigner.users.models.UserType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,9 @@ public class UserPersistent {
 
     @Column(unique = true)
     private Integer usosId;
+
+    @Enumerated(EnumType.ORDINAL)
+    private UserType userType;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
