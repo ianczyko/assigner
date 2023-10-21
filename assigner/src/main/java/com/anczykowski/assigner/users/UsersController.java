@@ -5,6 +5,7 @@ import com.anczykowski.assigner.users.models.User;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ public class UsersController {
     UsersService usersService;
 
     @PostMapping("/users")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
     public UserDto newUser(
             @Valid @RequestBody final UserDto userDto
     ) {

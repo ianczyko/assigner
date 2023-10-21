@@ -8,13 +8,15 @@ import { Button, Stack } from '@mui/material';
 import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
 import JoinTeam from '../JoinTeam/JoinTeam';
-import Helpers from '../Common/Helpers';
+import Helpers, { UserType } from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 
 function CourseEdition() {
   const { course_name, edition } = useParams();
 
   const [isForbidden, setIsForbidden] = useState(false);
+
+  const [userType, setUserType] = useState<UserType>(UserType.STUDENT);
 
   const [editionResponse, setEditionResponse] =
     useState<IEditionResponse | null>(null);
@@ -62,7 +64,11 @@ function CourseEdition() {
       .forbidden((error) => {
         Helpers.handleForbidden();
       })
-      .json((json) => {
+      .res((response) => {
+        Helpers.extractUserType(response, setUserType);
+        return response.json();
+      })
+      .then((json) => {
         setEditionResponse(json);
       })
       .catch((error) => console.log(error));
@@ -163,21 +169,28 @@ function CourseEdition() {
           <Stack direction='row'>
             <Stack>
               <ul>
-                <Popup
-                  trigger={(open) => (
-                    <Button variant='contained'>Nowy zespół</Button>
-                  )}
-                  position='right center'
-                  closeOnDocumentClick
-                  open={isOpen}
-                  onOpen={() => setIsOpen(!isOpen)}
-                >
-                  <NewTeam
-                    courseEdition={editionResponse.edition}
-                    courseName={course_name!}
-                    onFinish={fetchTeams}
-                  />
-                </Popup>
+                {(() => {
+                  if (userType !== UserType.STUDENT) {
+                    return <div></div>;
+                  }
+                  return (
+                    <Popup
+                      trigger={(open) => (
+                        <Button variant='contained'>Nowy zespół</Button>
+                      )}
+                      position='right center'
+                      closeOnDocumentClick
+                      open={isOpen}
+                      onOpen={() => setIsOpen(!isOpen)}
+                    >
+                      <NewTeam
+                        courseEdition={editionResponse.edition}
+                        courseName={course_name!}
+                        onFinish={fetchTeams}
+                      />
+                    </Popup>
+                  );
+                })()}
                 <br />
                 Lista zespołów:
                 {teamsResponse.map((team) => {
@@ -193,50 +206,71 @@ function CourseEdition() {
                   );
                 })}
               </ul>
-              <Stack direction='row' spacing='6px' alignItems='center'>
-                <p>Twój zespół: </p>
-                {(() => {
-                  if (assignedTeam?.id) {
-                    return <p>{assignedTeam!.name}</p>;
-                  }
-                  return (
-                    <Popup
-                      trigger={(open) => (
-                        <Button variant='contained'>
-                          Dołącz do <br /> zespołu
-                        </Button>
-                      )}
-                      position='right center'
-                      closeOnDocumentClick
-                      open={isOpenJoin}
-                      onOpen={() => setIsOpenJoin(!isOpenJoin)}
-                    >
-                      <JoinTeam
-                        courseEdition={editionResponse.edition}
-                        courseName={course_name!}
-                        onFinish={getAssignedTeam}
-                      />
-                    </Popup>
-                  );
-                })()}
-              </Stack>
+              {(() => {
+                if (userType !== UserType.STUDENT) {
+                  return <div></div>;
+                }
+                return (
+                  <Stack direction='row' spacing='6px' alignItems='center'>
+                    <p>Twój zespół: </p>
+                    {(() => {
+                      if (assignedTeam?.id) {
+                        return (
+                          <Link
+                            className='Assigner-link'
+                            to={`/courses/${course_name}/${edition}/teams/${assignedTeam!.id}`}
+                          >
+                            {assignedTeam!.name}
+                          </Link>
+                        );
+                      }
+                      return (
+                        <Popup
+                          trigger={(open) => (
+                            <Button variant='contained'>
+                              Dołącz do <br /> zespołu
+                            </Button>
+                          )}
+                          position='right center'
+                          closeOnDocumentClick
+                          open={isOpenJoin}
+                          onOpen={() => setIsOpenJoin(!isOpenJoin)}
+                        >
+                          <JoinTeam
+                            courseEdition={editionResponse.edition}
+                            courseName={course_name!}
+                            onFinish={getAssignedTeam}
+                          />
+                        </Popup>
+                      );
+                    })()}
+                  </Stack>
+                );
+              })()}
             </Stack>
             <ul>
-              <Popup
-                trigger={(open) => (
-                  <Button variant='contained'>Nowy temat</Button>
-                )}
-                position='right center'
-                closeOnDocumentClick
-                open={isOpenProject}
-                onOpen={() => setIsOpenProject(!isOpenProject)}
-              >
-                <NewProject
-                  courseEdition={editionResponse.edition}
-                  courseName={course_name!}
-                  onFinish={fetchProjects}
-                />
-              </Popup>
+              {(() => {
+                if (userType === UserType.STUDENT) {
+                  return <div></div>;
+                }
+                return (
+                  <Popup
+                    trigger={(open) => (
+                      <Button variant='contained'>Nowy temat</Button>
+                    )}
+                    position='right center'
+                    closeOnDocumentClick
+                    open={isOpenProject}
+                    onOpen={() => setIsOpenProject(!isOpenProject)}
+                  >
+                    <NewProject
+                      courseEdition={editionResponse.edition}
+                      courseName={course_name!}
+                      onFinish={fetchProjects}
+                    />
+                  </Popup>
+                );
+              })()}
               <br />
               Lista tematów:
               {projectsResponse.map((project) => {
@@ -255,7 +289,7 @@ function CourseEdition() {
           </Stack>
 
           <ul>
-            Lista studentów:
+            Członkowie edycji:
             {editionResponse.users.map((user) => {
               return (
                 <li key={user.id.toString()}>
@@ -268,12 +302,19 @@ function CourseEdition() {
           </ul>
 
           <br />
-          <Link
-            className='Assigner-link'
-            to={`/courses/${course_name}/${edition}/assignment-view`}
-          >
-            Przypisania tematów do zespołów
-          </Link>
+          {(() => {
+            if (userType === UserType.STUDENT) {
+              return <div></div>;
+            }
+            return (
+              <Link
+                className='Assigner-link'
+                to={`/courses/${course_name}/${edition}/assignment-view`}
+              >
+                Przypisania tematów do zespołów
+              </Link>
+            );
+          })()}
         </header>
       </div>
     );

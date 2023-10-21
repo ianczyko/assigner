@@ -44,7 +44,11 @@ public class CourseEditionsService {
     }
 
     @Transactional
-    public CourseEdition create(String courseName, String edition, Reader inputCsvReader) throws IOException {
+    public CourseEdition create(
+            String courseName,
+            String edition,
+            Integer creatorUsosId,
+            Reader inputCsvReader) throws IOException {
         var course = coursesRepository.getByName(courseName)
                 .orElseThrow(() -> new NotFoundException("%s course not found".formatted(courseName)));
         var courseEdition = CourseEdition.builder()
@@ -52,6 +56,11 @@ public class CourseEditionsService {
                 .course(course)
                 .build();
         var courseEditionSaved = coursesEditionRepository.save(courseEdition);
+
+        usersRepository.getByUsosId(creatorUsosId).ifPresent(creator -> {
+            creator.addCourseEditionAccess(courseEditionSaved);
+            usersRepository.save(creator);
+        });
 
         final CSVParser parser = new CSVParserBuilder()
                 .withSeparator(';')

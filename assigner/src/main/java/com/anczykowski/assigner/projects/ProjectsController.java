@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class ProjectsController {
     AuthUtils authUtils;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('COORDINATOR')")
     public ProjectDto newProject(
             @PathVariable String courseName,
             @PathVariable String edition,

@@ -4,6 +4,7 @@ import com.anczykowski.assigner.solver.dto.AssignOptimizationDto;
 import com.anczykowski.assigner.solver.services.SolverService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class SolverController {
     ModelMapper modelMapper;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('COORDINATOR')")
     public AssignOptimizationDto solve(
             @PathVariable String courseName,
             @PathVariable String edition
