@@ -3,6 +3,7 @@ package com.anczykowski.assigner.auth.services;
 
 import com.anczykowski.assigner.auth.dto.ProfileResponse;
 import com.anczykowski.assigner.users.UsersRepository;
+import com.anczykowski.assigner.users.models.User;
 import com.anczykowski.assigner.users.models.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -90,6 +91,7 @@ public class AuthService {
         return session;
     }
 
+    @Transactional
     public void verify(String verifier, String sessionId) {
         try {
             provider.retrieveAccessToken(consumer, verifier);
@@ -112,6 +114,14 @@ public class AuthService {
                 var user = usersRepository.getByUsosId(Integer.valueOf(profileData.getId()));
                 if (user.isPresent()) {
                     userType = user.get().getUserType().ordinal();
+                } else {
+                    usersRepository.save(User.builder()
+                            .name(profileData.getFirst_name())
+                            .surname(profileData.getLast_name())
+                            .secondName(profileData.getMiddle_names())
+                            .usosId(Integer.valueOf(profileData.getId()))
+                            .build()
+                    );
                 }
                 session.setAttribute("userType", String.valueOf(userType));
 
@@ -140,7 +150,7 @@ public class AuthService {
         var client = new OkHttpClient.Builder().addInterceptor(new SigningInterceptor(okConsumer)).build();
 
         var urlBuilder = Objects.requireNonNull(HttpUrl.parse(USER_URL)).newBuilder();
-        urlBuilder.addQueryParameter("fields", "id|first_name|last_name|student_status|staff_status");
+        urlBuilder.addQueryParameter("fields", "id|first_name|middle_names|last_name|student_status|staff_status");
 
         var request = new Request.Builder()
                 .url(urlBuilder.build())
