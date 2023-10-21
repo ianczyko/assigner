@@ -10,6 +10,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
+import moment from 'moment';
+import 'moment/locale/pl';
+moment.locale('pl');
 
 function Team() {
   const { course_name, edition, team_id } = useParams();
@@ -227,7 +230,7 @@ function Team() {
                             />
                             <Tooltip
                               title={`Kod ważny do: ${
-                                accessTokenResponse!.accessTokenExpirationDate // TODO: better date format
+                                moment(accessTokenResponse!.accessTokenExpirationDate).format("LLL")
                               }`}
                             >
                               <IconButton onClick={() => {}} color='inherit'>
