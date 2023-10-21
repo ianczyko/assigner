@@ -4,7 +4,6 @@ import wretch from 'wretch';
 import Snackbar from '@mui/material/Snackbar';
 import QueryStringAddon from 'wretch/addons/queryString';
 import './Team.css';
-import Forbidden from '../Forbidden/Forbidden';
 import { IconButton, Slider, Stack, Tooltip } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,8 +13,6 @@ import { ToastContainer } from 'react-toastify';
 
 function Team() {
   const { course_name, edition, team_id } = useParams();
-
-  const [isForbidden, setIsForbidden] = useState(false);
 
   const [isCopied, setIsCopied] = useState(false);
 
@@ -56,6 +53,7 @@ function Team() {
     name: string;
     assignedProject: IProjectResponse;
     members: Array<IUser>;
+    readonly: boolean;
   }
 
   interface IUser {
@@ -107,14 +105,11 @@ function Team() {
       `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/access-token`
     )
       .get()
-      .forbidden((error) => {
-        setIsForbidden(true);
-      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
       .forbidden((error) => {
-        Helpers.handleForbidden();
+        // do nothing, case: coordinator previewing team
       })
       .json((json) => {
         setAccessTokenResponse(json);
@@ -129,9 +124,6 @@ function Team() {
       `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/access-token`
     )
       .put()
-      .forbidden((error) => {
-        setIsForbidden(true);
-      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
@@ -161,9 +153,6 @@ function Team() {
   useEffect(() => {
     wretch(`/api/courses/${course_name}/editions/${edition}/teams/${team_id}`)
       .get()
-      .forbidden((error) => {
-        setIsForbidden(true);
-      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
@@ -183,9 +172,6 @@ function Team() {
       `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/project-ratings/view`
     )
       .get()
-      .forbidden((error) => {
-        setIsForbidden(true);
-      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
@@ -199,10 +185,6 @@ function Team() {
       .catch((error) => console.log(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, team_id]);
-
-  if (isForbidden) {
-    return <Forbidden />;
-  }
 
   if (teamResponse != null && preferenceResponse != null) {
     return (
@@ -220,6 +202,9 @@ function Team() {
                 <Stack direction='row' alignItems='center' spacing='10px'>
                   <p>Kod dostępu: </p>
                   {(() => {
+                    if (teamResponse.readonly) {
+                      return <div>*****</div>;
+                    }
                     if (accessTokenResponse?.accessToken) {
                       return (
                         <Stack
@@ -297,17 +282,25 @@ function Team() {
                           onChange={updateSliderValues(pref.project.id)}
                           min={1}
                           max={5}
+                          disabled={teamResponse.readonly}
                         />
                       </li>
                     );
                   })}
-                  <LoadingButton
-                    variant='contained'
-                    loading={submitLoading}
-                    onClick={submitPreference}
-                  >
-                    Zapisz preferencje
-                  </LoadingButton>
+                  {(() => {
+                    if (teamResponse.readonly) {
+                      return <div></div>;
+                    }
+                    return (
+                      <LoadingButton
+                        variant='contained'
+                        loading={submitLoading}
+                        onClick={submitPreference}
+                      >
+                        Zapisz preferencje
+                      </LoadingButton>
+                    );
+                  })()}
                 </ul>
               </div>
             </Stack>

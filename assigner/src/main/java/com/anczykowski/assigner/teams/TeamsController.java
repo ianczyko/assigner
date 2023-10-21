@@ -1,10 +1,7 @@
 package com.anczykowski.assigner.teams;
 
 import com.anczykowski.assigner.auth.authutils.AuthUtils;
-import com.anczykowski.assigner.teams.dto.ProjectPreferenceDto;
-import com.anczykowski.assigner.teams.dto.TeamAccessTokenDto;
-import com.anczykowski.assigner.teams.dto.TeamDetailedDto;
-import com.anczykowski.assigner.teams.dto.TeamDto;
+import com.anczykowski.assigner.teams.dto.*;
 import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.users.dto.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,10 +48,12 @@ public class TeamsController {
     }
 
     @GetMapping("/{teamId}/access-token")
+    @PreAuthorize("@authUtils.hasAccessToTeam(#teamId, #request)")
     public TeamAccessTokenDto getAccessToken(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
-            @PathVariable Integer teamId
+            @PathVariable Integer teamId,
+            HttpServletRequest request
     ) {
         var team = teamsService.get(teamId);
         return modelMapper.map(team, TeamAccessTokenDto.class);
@@ -134,7 +133,7 @@ public class TeamsController {
 
     // TODO: Write tests for this endpoint
     @GetMapping("/{teamId}/project-ratings/view")
-    @PreAuthorize("hasAuthority('COORDINATOR') && @authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
     public List<ProjectPreferenceDto> getRatingsView(
             @PathVariable String courseName,
             @PathVariable String edition,
@@ -163,12 +162,20 @@ public class TeamsController {
     }
 
     @GetMapping("/{teamId}")
-    public TeamDetailedDto getTeam(
+    public TeamDetailedWithAccessDto getTeam(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
-            @PathVariable Integer teamId
+            @PathVariable Integer teamId,
+            HttpServletRequest request
     ) {
-        return modelMapper.map(teamsService.get(teamId), TeamDetailedDto.class);
+        var teamDto = modelMapper.map(teamsService.get(teamId), TeamDetailedWithAccessDto.class);
+        var hasAccess = false;
+        try {
+            hasAccess = authUtils.hasAccessToTeam(teamId, request);
+        } catch (RuntimeException ignored) {
+        }
+        teamDto.setReadonly(!hasAccess);
+        return teamDto;
     }
 
     @GetMapping("/assigned-team") // TODO: tests
