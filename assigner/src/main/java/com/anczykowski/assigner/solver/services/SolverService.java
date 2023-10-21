@@ -7,7 +7,6 @@ import com.anczykowski.assigner.teams.TeamsService;
 import com.anczykowski.assigner.teams.models.ProjectPreference;
 import ilog.concert.IloException;
 import ilog.concert.IloIntVar;
-import ilog.concert.IloLinearNumExpr;
 import ilog.cplex.IloCplex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class SolverService {
 
             //// variables
 
-            IloIntVar[][] teams_project_assignment = new IloIntVar[T][];
+            var teams_project_assignment = new IloIntVar[T][];
             for (int i = 0; i < T; ++i) {
                 teams_project_assignment[i] = cplex.boolVarArray(P);
             }
@@ -54,7 +53,7 @@ public class SolverService {
 
             // project_team_limits_constraint
             for (int j = 0; j < P; ++j) {
-                IloLinearNumExpr column = cplex.linearNumExpr();
+                var column = cplex.linearNumExpr();
                 for (int i = 0; i < T; ++i) {
                     column.addTerm(1, teams_project_assignment[i][j]);
                 }
@@ -63,7 +62,7 @@ public class SolverService {
             }
 
             //// objective
-            IloLinearNumExpr satisfaction = cplex.linearNumExpr();
+            var satisfaction = cplex.linearNumExpr();
             for (int i = 0; i < T; ++i) {
                 for (int j = 0; j < P; ++j) {
                     var team = teams.get(i);
@@ -98,8 +97,7 @@ public class SolverService {
                 return assignOptimizationResult;
             }
         } catch (IloException e) {
-            // TODO: better error handling
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return null;
     }
