@@ -76,6 +76,14 @@ code {
   font-size: medium;
 }
 
+.Assigner-font-large {
+  font-size: large;
+}
+
+.Assigner-font-xlarge {
+  font-size: x-large;
+}
+
 
 .Toastify__toast-body {
   font-size: large;

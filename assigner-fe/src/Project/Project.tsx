@@ -4,6 +4,8 @@ import wretch from 'wretch';
 import './Project.css';
 import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
+import { Stack } from '@mui/material';
+import Forum from '../Forum/Forum';
 
 function Project() {
   const { course_name, edition, project_id } = useParams();
@@ -49,9 +51,12 @@ function Project() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
-          <p>Temat: {projectResponse.name}</p>
-          <p>Limit miejsc: {projectResponse.teamLimit.toString()}</p>
-          <p>{projectResponse.description}</p>
+          <Stack spacing='20px'>
+            <p>{projectResponse.name}</p>
+            <p>Limit miejsc: {projectResponse.teamLimit.toString()}</p>
+            <p>{projectResponse.description}</p>
+            <Forum />
+          </Stack>
         </header>
       </div>
     );
