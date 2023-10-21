@@ -2,6 +2,7 @@ package com.anczykowski.assigner.integrationTests;
 
 import com.anczykowski.assigner.auth.controllers.AuthController;
 import com.anczykowski.assigner.auth.services.AuthService;
+import com.anczykowski.assigner.users.models.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.servlet.http.Cookie;
@@ -86,6 +87,7 @@ public abstract class BaseIntegrationTests {
             session.setAttribute("accessToken", accessToken);
             session.setAttribute("accessTokenSecret", accessTokenSecret);
             session.setAttribute("usosId", usosId.toString());
+            session.setAttribute("userType", String.valueOf(UserType.COORDINATOR.ordinal()));
             sessionRepository.save(session);
         }
     }
