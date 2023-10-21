@@ -149,7 +149,7 @@ function Courses() {
   );
 
   function newCoursePopup() {
-    if (userType !== UserType.STUDENT) {
+    if (userType=== UserType.STUDENT) {
       return;
     }
     return (
