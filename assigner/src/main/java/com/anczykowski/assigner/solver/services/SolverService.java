@@ -58,8 +58,8 @@ public class SolverService {
                 for (int i = 0; i < T; ++i) {
                     column.addTerm(1, teams_project_assignment[i][j]);
                 }
-                var project_team_limit = 1; // TODO: each project should have limit as its property
-                cplex.addLe(column, project_team_limit);
+                var project = projects.get(j);
+                cplex.addLe(column, project.getTeamLimit());
             }
 
             //// objective

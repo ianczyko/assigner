@@ -26,6 +26,8 @@ public class ProjectPersistent {
 
     private String description;
 
+    private Integer teamLimit;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_edition_id")
     private CourseEditionPersistent courseEdition;

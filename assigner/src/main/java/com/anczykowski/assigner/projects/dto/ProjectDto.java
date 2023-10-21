@@ -18,6 +18,8 @@ public class ProjectDto {
     @NotBlank
     String name;
 
+    Integer teamLimit;
+
     UserSimpleDto projectManager;
 
     String description;

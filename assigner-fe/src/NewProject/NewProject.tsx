@@ -21,7 +21,11 @@ function NewProject({ courseName, courseEdition, onFinish }: NewProjectParams) {
   const onSubmit = async (data: FieldValues) => {
     wretch()
       .url(`/api/courses/${courseName}/editions/${courseEdition}/projects`)
-      .post({ name: data.name, description: data.description })
+      .post({
+        name: data.name,
+        description: data.description,
+        teamLimit: data.teamLimit,
+      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
@@ -45,9 +49,11 @@ function NewProject({ courseName, courseEdition, onFinish }: NewProjectParams) {
       />
       <label htmlFor='description'>Opis tematu</label>
       <input
-        placeholder='System ma wyznaczać wstępny przydział projektów na podstawie całkowitoliczbowego modelu optymalizacyjnego'
+        placeholder='np. System ma wyznaczać wstępny przydział projektów na podstawie całkowitoliczbowego modelu optymalizacyjnego'
         {...register('description', { required: true })}
       />
+      <label htmlFor='teamLimit'>Limit przypisanych zespołów</label>
+      <input placeholder='1' {...register('teamLimit', { required: true })} />
       <input type='submit' />
     </form>
   );

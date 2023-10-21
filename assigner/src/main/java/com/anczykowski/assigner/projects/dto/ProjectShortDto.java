@@ -17,4 +17,6 @@ public class ProjectShortDto {
     @NotBlank
     String name;
 
+    Integer teamLimit;
+
 }

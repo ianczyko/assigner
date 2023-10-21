@@ -16,6 +16,7 @@ function Project() {
   interface IProjectResponse {
     id: Number;
     name: string;
+    teamLimit: Number;
     description: string;
   }
 
@@ -49,6 +50,7 @@ function Project() {
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
           <p>Temat: {projectResponse.name}</p>
+          <p>Limit miejsc: {projectResponse.teamLimit.toString()}</p>
           <p>{projectResponse.description}</p>
         </header>
       </div>

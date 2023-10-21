@@ -17,6 +17,7 @@ public final class Project {
     private Integer id;
     private String name;
     private String description;
+    private Integer teamLimit;
     private CourseEdition courseEdition;
     private User projectManager;
     private List<ProjectForumComment> comments;
