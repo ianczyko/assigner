@@ -3,6 +3,8 @@ version: "3.9"
 services:
   assigner-db:
     image: postgres
+    ports:
+      - "5432:5432" # For development purposes expose DB port
     environment:
       POSTGRES_PASSWORD: "1234"
 
