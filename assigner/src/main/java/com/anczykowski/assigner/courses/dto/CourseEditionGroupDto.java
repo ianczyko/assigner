@@ -12,7 +12,7 @@ public class CourseEditionGroupDto {
 
     Integer id;
 
-    String edition;
+    String groupName;
 
     Set<UserDto> users;
 

@@ -40,12 +40,3 @@ public class CourseEditionGroupPersistent {
     @OneToMany(mappedBy = "courseEditionGroup")
     private List<ProjectPersistent> projects;
 }
-
-
-/*
-    /groups/{groupName}
-
-
-    @PathVariable String groupName,
-
- */

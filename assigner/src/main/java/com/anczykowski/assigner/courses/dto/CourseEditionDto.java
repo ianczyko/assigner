@@ -7,12 +7,12 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CourseDto {
+public class CourseEditionDto {
 
     Integer id;
 
-    String name;
+    String edition;
 
-    List<CourseEditionDto> courseEditions;
+    List<CourseEditionGroupShortDto> courseEditionGroups;
 
 }

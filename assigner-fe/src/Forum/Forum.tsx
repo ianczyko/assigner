@@ -12,7 +12,7 @@ import 'moment/locale/pl';
 moment.locale('pl');
 
 function Forum() {
-  const { course_name, edition, project_id } = useParams();
+  const { course_name, edition, group_name, project_id } = useParams();
 
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ function Forum() {
 
   useEffect(() => {
     wretch(
-      `/api/courses/${course_name}/editions/${edition}/projects/${project_id}/forum-comments`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project_id}/forum-comments`
     )
       .get()
       .unauthorized((error) => {
@@ -57,7 +57,7 @@ function Forum() {
   const onSubmit = async (data: FieldValues) => {
     wretch()
       .url(
-        `/api/courses/${course_name}/editions/${edition}/projects/${project_id}/forum-comments`
+        `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project_id}/forum-comments`
       )
       .post({ content: data.content })
       .unauthorized((error) => {

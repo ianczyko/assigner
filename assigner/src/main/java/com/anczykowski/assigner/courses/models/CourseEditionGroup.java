@@ -10,7 +10,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "users")
+@EqualsAndHashCode(exclude = {"users", "courseEdition"})
 public class CourseEditionGroup {
 
     Integer id;

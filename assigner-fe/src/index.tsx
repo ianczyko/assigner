@@ -26,19 +26,19 @@ root.render(
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/courses' element={<Courses />} />
         <Route
-          path='/courses/:course_name/:edition'
+          path='/courses/:course_name/:edition/:group_name'
           element={<CourseEdition />}
         />
         <Route
-          path='/courses/:course_name/:edition/assignment-view'
+          path='/courses/:course_name/:edition/:group_name/assignment-view'
           element={<AssignmentView />}
         />
         <Route
-          path='/courses/:course_name/:edition/teams/:team_id'
+          path='/courses/:course_name/:edition/:group_name/teams/:team_id'
           element={<Team />}
         />
         <Route
-          path='/courses/:course_name/:edition/projects/:project_id'
+          path='/courses/:course_name/:edition/:group_name/projects/:project_id'
           element={<Project />}
         />
         <Route path='*' element={<NotFound />} />

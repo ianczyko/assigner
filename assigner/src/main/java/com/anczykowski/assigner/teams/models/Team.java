@@ -18,8 +18,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"members", "preferences"})
-@ToString(exclude = {"members", "preferences"})
+@EqualsAndHashCode(exclude = {"members", "preferences", "courseEditionGroup", "assignedProject", "preferences", "members"})
+@ToString(exclude = {"members", "preferences", "courseEditionGroup", "assignedProject", "preferences", "members"})
 public final class Team {
     private Integer id;
     private String name;

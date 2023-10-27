@@ -9,10 +9,16 @@ import { useNavigate } from 'react-router-dom';
 interface NewTeamParams {
   courseName: string;
   courseEdition: string;
+  groupName: string;
   onFinish: Function;
 }
 
-function NewTeam({ courseName, courseEdition, onFinish }: NewTeamParams) {
+function NewTeam({
+  courseName,
+  courseEdition,
+  groupName,
+  onFinish,
+}: NewTeamParams) {
   const { register, handleSubmit } = useForm();
 
   const form = useRef(null);
@@ -20,7 +26,9 @@ function NewTeam({ courseName, courseEdition, onFinish }: NewTeamParams) {
 
   const onSubmit = async (data: FieldValues) => {
     wretch()
-      .url(`/api/courses/${courseName}/editions/${courseEdition}/teams`)
+      .url(
+        `/api/courses/${courseName}/editions/${courseEdition}/groups/${groupName}/teams`
+      )
       .post({ name: data.name })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);

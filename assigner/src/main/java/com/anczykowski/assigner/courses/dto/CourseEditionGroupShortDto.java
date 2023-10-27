@@ -9,5 +9,5 @@ public class CourseEditionGroupShortDto {
 
     Integer id;
 
-    String edition;
+    String groupName;
 }

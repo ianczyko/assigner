@@ -8,7 +8,7 @@ import { Stack } from '@mui/material';
 import Forum from '../Forum/Forum';
 
 function Project() {
-  const { course_name, edition, project_id } = useParams();
+  const { course_name, edition, group_name, project_id } = useParams();
 
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ function Project() {
 
   useEffect(() => {
     wretch(
-      `/api/courses/${course_name}/editions/${edition}/projects/${project_id}`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project_id}`
     )
       .get()
       .unauthorized((error) => {

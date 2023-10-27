@@ -2,12 +2,14 @@ package com.anczykowski.assigner.courses.models;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"course", "courseEditionGroups"})
 public class CourseEdition {
 
     Integer id;
@@ -15,4 +17,6 @@ public class CourseEdition {
     String edition;
 
     Course course;
+
+    List<CourseEditionGroup> courseEditionGroups;
 }

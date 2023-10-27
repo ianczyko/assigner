@@ -10,10 +10,16 @@ import { useNavigate } from 'react-router-dom';
 interface JoinTeamParams {
   courseName: string;
   courseEdition: string;
+  groupName: string;
   onFinish: Function;
 }
 
-function JoinTeam({ courseName, courseEdition, onFinish }: JoinTeamParams) {
+function JoinTeam({
+  courseName,
+  courseEdition,
+  groupName,
+  onFinish,
+}: JoinTeamParams) {
   const { register, handleSubmit } = useForm();
 
   const form = useRef(null);
@@ -27,7 +33,7 @@ function JoinTeam({ courseName, courseEdition, onFinish }: JoinTeamParams) {
     let actualtoken = token.split(':')[1];
     const w = wretch().addon(QueryStringAddon);
     w.url(
-      `/api/courses/${courseName}/editions/${courseEdition}/teams/${teamId}/members`
+      `/api/courses/${courseName}/editions/${courseEdition}/groups/${groupName}/teams/${teamId}/members`
     )
       .query({ 'access-token': actualtoken })
       .post()
