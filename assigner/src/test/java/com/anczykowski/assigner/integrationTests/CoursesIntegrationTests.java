@@ -36,7 +36,7 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
                 "file",
                 "students.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;12345678@pw.edu.pl".getBytes()
+                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365;grupy\nKowalski;Jan;;0;0;12345678@pw.edu.pl;\"CWI101, PRO101, WYK1\"".getBytes()
         );
         var courseEditionRequest = multipart("/courses/%s/editions".formatted(courseName))
                 .file(file)
@@ -69,7 +69,7 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
                 "students.csv",
                 MediaType.TEXT_PLAIN_VALUE,
                 // Note the usosId different from one present in authenticate()
-                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;11122233@pw.edu.pl".getBytes()
+                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365;grupy\nKowalski;Jan;;0;0;11122233@pw.edu.pl;\"CWI101, PRO101, WYK1\"".getBytes()
         );
         var courseEditionRequest = multipart("/courses/PZSP3/editions")
                 .file(file)

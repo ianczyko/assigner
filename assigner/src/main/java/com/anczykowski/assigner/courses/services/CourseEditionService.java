@@ -78,12 +78,14 @@ public class CourseEditionService {
                 var first_name_header = getHeaderLocation(line, "imie");
                 var second_name_header = getHeaderLocation(line, "imie2");
                 var usos_email_header = getHeaderLocation(line, "login_office365");
+                var groups_header = getHeaderLocation(line, "grupy");
                 while ((line = csvReader.readNext()) != null) {
                     var surname = line[surname_header];
                     var first_name = line[first_name_header];
                     var second_name = line[second_name_header];
                     var usos_email = line[usos_email_header];
                     var usosId = Integer.valueOf(getUsosIdFromEmail(usos_email));
+                    var groups = line[groups_header];
                     var user = User.builder()
                             .name(first_name)
                             .surname(surname)
@@ -92,16 +94,17 @@ public class CourseEditionService {
                             .build();
                     var userFetched = usersService.createOrGet(user);
 
-                    var groupName = "PRO_101"; // TODO: get from csv
-                    var courseEditionGroup = courseEditionGroupsService.createOrGet(courseName, edition, groupName);
-
-                    usersRepository.getByUsosId(creatorUsosId).ifPresent(creator -> {
-                        // TODO: grant access to creator
-//                        creator.addCourseEditionGroupAccess(courseEditionGroup);
-//                        usersRepository.save(creator);
+                    var groupPrefix = "PRO"; // TODO: move project-wise
+                    Arrays.stream(groups.split(", ")).filter(g -> g.startsWith(groupPrefix)).findAny().ifPresent(groupName -> {
+                        var courseEditionGroup = courseEditionGroupsService.createOrGet(courseName, edition, groupName);
+                        userFetched.addCourseEditionGroupAccess(courseEditionGroup);
+                        usersRepository.getByUsosId(creatorUsosId).ifPresent(creator -> {
+                            // TODO: grant access to creator
+                            // creator.addCourseEditionGroupAccess(courseEditionGroup);
+                            // usersRepository.save(creator);
+                        });
                     });
 
-                    userFetched.addCourseEditionGroupAccess(courseEditionGroup);
                     usersRepository.save(userFetched);
                 }
             } catch (CsvValidationException e) {
