@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.projects;
 
-import com.anczykowski.assigner.courses.services.CourseEditionsService;
+import com.anczykowski.assigner.courses.services.CourseEditionGroupsService;
 import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.projects.models.ProjectForumComment;
@@ -18,20 +18,20 @@ public class ProjectsService {
 
     final ProjectsRepository projectsRepository;
 
-    final CourseEditionsService courseEditionsService;
+    final CourseEditionGroupsService courseEditionGroupsService;
 
     final UsersRepository usersRepository; // TODO: maybe use service here?
 
     final ProjectForumCommentsRepository projectForumCommentsRepository;
 
     @Transactional
-    public Project create(String courseName, String edition, Project project) {
-        var courseEdition = courseEditionsService.get(courseName, edition);
+    public Project create(String courseName, String edition, String groupName, Project project) {
+        var courseEditionGroup = courseEditionGroupsService.get(courseName, edition, groupName);
         if (project.getProjectManager() != null) {
             var projectManager = usersRepository.get(project.getProjectManager().getId());
             project.setProjectManager(projectManager);
         }
-        project.setCourseEdition(courseEdition);
+        project.setCourseEditionGroup(courseEditionGroup);
         return projectsRepository.save(project);
     }
 
@@ -39,9 +39,9 @@ public class ProjectsService {
         return projectsRepository.get(projectId);
     }
 
-    public List<Project> getProjects(String courseName, String edition) {
-        var courseEdition = courseEditionsService.get(courseName, edition);
-        return projectsRepository.getAll(courseEdition);
+    public List<Project> getProjects(String courseName, String edition, String groupName) {
+        var courseEditionGroup = courseEditionGroupsService.get(courseName, edition, groupName);
+        return projectsRepository.getAll(courseEditionGroup);
     }
 
     @Transactional

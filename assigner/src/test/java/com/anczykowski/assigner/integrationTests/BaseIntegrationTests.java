@@ -66,7 +66,9 @@ public abstract class BaseIntegrationTests {
 
     protected final String edition = "21l";
 
-    protected final String editionPath = "/courses/%s/editions/%s".formatted(courseName, edition);
+    protected final String groupName = "PRO_101";
+
+    protected final String editionGroupPath = "/courses/%s/editions/%s/groups/%s".formatted(courseName, edition, groupName);
 
     protected final Integer testUserUsosId = 12345678;
 
@@ -139,7 +141,7 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupTeam() throws Exception {
-        var request = post(editionPath + "/teams")
+        var request = post(editionGroupPath + "/teams")
                 .content(new JSONObject().put("name", "team1").toString());
 
         var result = mockMvc.perform(request)
@@ -150,7 +152,7 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupSecondTeam() throws Exception {
-        var request = post(editionPath + "/teams")
+        var request = post(editionGroupPath + "/teams")
                 .content(new JSONObject().put("name", "team2").toString());
 
         var result = mockMvc.perform(request)
@@ -161,7 +163,7 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupProject() throws Exception {
-        var request = post(editionPath + "/projects")
+        var request = post(editionGroupPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name1")
                         .put("teamLimit", 1)
@@ -176,7 +178,7 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupSecondProject() throws Exception {
-        var request = post(editionPath + "/projects")
+        var request = post(editionGroupPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name2")
                         .put("teamLimit", 1)

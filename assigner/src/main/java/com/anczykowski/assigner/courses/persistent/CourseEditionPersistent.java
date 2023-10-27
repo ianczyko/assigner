@@ -1,15 +1,11 @@
 package com.anczykowski.assigner.courses.persistent;
 
-import com.anczykowski.assigner.projects.persistent.ProjectPersistent;
-import com.anczykowski.assigner.teams.persistent.TeamPersistent;
-import com.anczykowski.assigner.users.persistent.UserPersistent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "course_edition")
@@ -28,15 +24,8 @@ public class CourseEditionPersistent {
     @JoinColumn(name = "course_id")
     private CoursePersistent course;
 
-    @ManyToMany(
-            mappedBy = "courseEditionsAccess"
-    )
-    private Set<UserPersistent> users;
-
-
     @OneToMany(mappedBy = "courseEdition")
-    private List<TeamPersistent> teams;
+    @OrderBy("groupName")
+    private List<CourseEditionGroupPersistent> courseEditionGroups;
 
-    @OneToMany(mappedBy = "courseEdition")
-    private List<ProjectPersistent> projects;
 }

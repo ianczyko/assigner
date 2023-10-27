@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class CourseEditionDto {
+public class CourseEditionGroupDto {
 
     Integer id;
 

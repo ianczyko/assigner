@@ -14,7 +14,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         authenticate();
         setupCourseAndCourseEdition();
 
-        var request = post(editionPath + "/projects")
+        var request = post(editionGroupPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name1")
                         .put("teamLimit", 1)
@@ -34,7 +34,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         setupCourseAndCourseEdition();
         setupProject();
 
-        var request = get(editionPath + "/projects");
+        var request = get(editionGroupPath + "/projects");
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -48,7 +48,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         authenticate();
         setupCourseAndCourseEdition();
 
-        var request = post(editionPath + "/projects")
+        var request = post(editionGroupPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name1")
                         .put("teamLimit", 1)
@@ -72,7 +72,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         setupCourseAndCourseEdition();
         setupProject();
 
-        var request = post("%s/projects/%d/forum-comments".formatted(editionPath, projectId))
+        var request = post("%s/projects/%d/forum-comments".formatted(editionGroupPath, projectId))
                 .content(new JSONObject()
                         .put("content", "comment_content")
                         .toString());
@@ -91,7 +91,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         setupCourseAndCourseEdition();
         setupProject();
 
-        var request = post("%s/projects/%d/forum-comments".formatted(editionPath, projectId))
+        var request = post("%s/projects/%d/forum-comments".formatted(editionGroupPath, projectId))
                 .content(new JSONObject()
                         .put("content", "comment_content")
                         .toString());
@@ -99,7 +99,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        var getRequest = get("%s/projects/%d/forum-comments".formatted(editionPath, projectId));
+        var getRequest = get("%s/projects/%d/forum-comments".formatted(editionGroupPath, projectId));
 
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())

@@ -38,7 +38,7 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
                 MediaType.TEXT_PLAIN_VALUE,
                 "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;12345678@pw.edu.pl".getBytes()
         );
-        var courseEditionRequest = multipart("/courses/PZSP3/editions")
+        var courseEditionRequest = multipart("/courses/%s/editions".formatted(courseName))
                 .file(file)
                 .param("edition", "21l")
                 .cookie(cookie);
@@ -47,8 +47,8 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(json().node("edition").isEqualTo("21l"));
 
-        var getCourseEditionRequest = get("/courses/PZSP3/editions/21l");
-        mockMvc.perform(getCourseEditionRequest)
+        var getCourseEditionGroupRequest = get(editionGroupPath);
+        mockMvc.perform(getCourseEditionGroupRequest)
                 .andExpect(status().isOk())
                 .andExpect(json().node("users[0].usosId").isEqualTo("12345678"))
                 .andExpect(json().node("users[0].name").isEqualTo("Jan"))
@@ -58,7 +58,7 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
 
     @Test
     @DirtiesContext
-    void forbiddenAccessOnCourseEdition() throws Exception {
+    void forbiddenAccessOnCourseEditionGroup() throws Exception {
         authenticate();
         var request = post("/courses").param("name", "PZSP3");
         mockMvc.perform(request)
@@ -80,8 +80,8 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(json().node("edition").isEqualTo("21l"));
 
-        var getCourseEditionRequest = get("/courses/PZSP3/editions/21l");
-        mockMvc.perform(getCourseEditionRequest)
+        var getCourseEditionGroupRequest = get(editionGroupPath);
+        mockMvc.perform(getCourseEditionGroupRequest)
                 .andExpect(status().isForbidden())
         ;
     }

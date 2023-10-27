@@ -1,7 +1,9 @@
 package com.anczykowski.assigner.courses.services;
 
 import com.anczykowski.assigner.courses.models.CourseEdition;
-import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
+import com.anczykowski.assigner.courses.models.CourseEditionGroup;
+import com.anczykowski.assigner.courses.repositories.CourseEditionGroupRepository;
+import com.anczykowski.assigner.courses.repositories.CourseEditionRepository;
 import com.anczykowski.assigner.courses.repositories.CoursesRepository;
 import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.users.UsersRepository;
@@ -25,15 +27,19 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class CourseEditionsService {
+public class CourseEditionService {
 
     UsersService usersService;
+
+    CourseEditionGroupsService courseEditionGroupsService;
 
     UsersRepository usersRepository;
 
     CoursesRepository coursesRepository;
 
-    CoursesEditionRepository coursesEditionRepository;
+    CourseEditionRepository coursesEditionRepository;
+
+    CourseEditionGroupRepository courseEditionGroupRepository;
 
     private int getHeaderLocation(String[] headers, String columnName) {
         return Arrays.asList(headers).indexOf(columnName);
@@ -56,11 +62,6 @@ public class CourseEditionsService {
                 .course(course)
                 .build();
         var courseEditionSaved = coursesEditionRepository.save(courseEdition);
-
-        usersRepository.getByUsosId(creatorUsosId).ifPresent(creator -> {
-            creator.addCourseEditionAccess(courseEditionSaved);
-            usersRepository.save(creator);
-        });
 
         final CSVParser parser = new CSVParserBuilder()
                 .withSeparator(';')
@@ -90,7 +91,17 @@ public class CourseEditionsService {
                             .usosId(usosId)
                             .build();
                     var userFetched = usersService.createOrGet(user);
-                    userFetched.addCourseEditionAccess(courseEditionSaved);
+
+                    var groupName = "PRO_101"; // TODO: get from csv
+                    var courseEditionGroup = courseEditionGroupsService.createOrGet(courseName, edition, groupName);
+
+                    usersRepository.getByUsosId(creatorUsosId).ifPresent(creator -> {
+                        // TODO: grant access to creator
+//                        creator.addCourseEditionGroupAccess(courseEditionGroup);
+//                        usersRepository.save(creator);
+                    });
+
+                    userFetched.addCourseEditionGroupAccess(courseEditionGroup);
                     usersRepository.save(userFetched);
                 }
             } catch (CsvValidationException e) {
@@ -100,12 +111,12 @@ public class CourseEditionsService {
         return courseEditionSaved;
     }
 
-    public List<CourseEdition> getAll(String courseName) {
-        return coursesEditionRepository.getAll(courseName);
+    public List<CourseEditionGroup> getAll(String courseName) {
+        return courseEditionGroupRepository.getAll(courseName);
     }
 
-    public CourseEdition get(String courseName, String edition) {
-        return coursesEditionRepository.get(courseName, edition)
+    public CourseEditionGroup get(String courseName, String edition, String groupName) {
+        return courseEditionGroupRepository.get(courseName, edition, groupName)
                 .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 }

@@ -26,10 +26,10 @@ public class SolverService {
     final TeamsRepository teamsRepository;
 
     @Transactional
-    public AssignOptimizationResult assignProjects(String courseName, String edition) {
+    public AssignOptimizationResult assignProjects(String courseName, String edition, String groupName) {
 
-        var teams = teamsService.getAll(courseName, edition);
-        var projects = projectsService.getProjects(courseName, edition);
+        var teams = teamsService.getAll(courseName, edition, groupName);
+        var projects = projectsService.getProjects(courseName, edition, groupName);
 
         try (IloCplex cplex = new IloCplex()) {
             cplex.setOut(null);

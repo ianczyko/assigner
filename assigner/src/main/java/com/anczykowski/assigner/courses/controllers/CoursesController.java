@@ -2,9 +2,10 @@ package com.anczykowski.assigner.courses.controllers;
 
 import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.courses.dto.CourseDto;
-import com.anczykowski.assigner.courses.dto.CourseEditionDto;
-import com.anczykowski.assigner.courses.dto.CourseEditionShortDto;
-import com.anczykowski.assigner.courses.services.CourseEditionsService;
+import com.anczykowski.assigner.courses.dto.CourseEditionGroupDto;
+import com.anczykowski.assigner.courses.dto.CourseEditionGroupShortDto;
+import com.anczykowski.assigner.courses.services.CourseEditionGroupsService;
+import com.anczykowski.assigner.courses.services.CourseEditionService;
 import com.anczykowski.assigner.courses.services.CoursesService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,9 @@ public class CoursesController {
 
     CoursesService coursesService;
 
-    CourseEditionsService courseEditionsService;
+    CourseEditionGroupsService courseEditionGroupsService;
+
+    CourseEditionService courseEditionsService;
 
     AuthUtils authUtils;
 
@@ -49,7 +52,7 @@ public class CoursesController {
 
     @PostMapping("/{courseName}/editions")
     @PreAuthorize("hasAuthority('COORDINATOR')")
-    public CourseEditionShortDto newCourseEdition(
+    public CourseEditionGroupShortDto newCourseEdition(
             @PathVariable String courseName,
             @RequestParam String edition,
             @RequestParam(value = "file") MultipartFile file,
@@ -64,7 +67,7 @@ public class CoursesController {
             );
             return modelMapper.map(
                     courseEditionsService.create(courseName, edition, usosId, inputCsvBufferedReader),
-                    CourseEditionShortDto.class
+                    CourseEditionGroupShortDto.class
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -72,21 +75,22 @@ public class CoursesController {
     }
 
     @GetMapping("/{courseName}/editions")
-    public List<CourseEditionDto> getCourseEditions(@PathVariable String courseName) {
-        return courseEditionsService.getAll(courseName)
+    public List<CourseEditionGroupDto> getCourseEditionGroups(@PathVariable String courseName) {
+        return courseEditionGroupsService.getAll(courseName)
                 .stream()
-                .map(c -> modelMapper.map(c, CourseEditionDto.class))
+                .map(c -> modelMapper.map(c, CourseEditionGroupDto.class))
                 .toList();
     }
 
-    @GetMapping("/{courseName}/editions/{edition}")
-    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
-    public CourseEditionDto getCourseEdition(
+    @GetMapping("/{courseName}/editions/{edition}/groups/{groupName}")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
+    public CourseEditionGroupDto getCourseEditionGroup(
             HttpServletRequest request,
             @PathVariable String courseName,
-            @PathVariable String edition
+            @PathVariable String edition,
+            @PathVariable String groupName
     ) {
-        return modelMapper.map(courseEditionsService.get(courseName, edition), CourseEditionDto.class);
+        return modelMapper.map(courseEditionGroupsService.get(courseName, edition, groupName), CourseEditionGroupDto.class);
     }
 
 }

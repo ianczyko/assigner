@@ -1,7 +1,7 @@
 package com.anczykowski.assigner.courses.persistent;
 
 import com.anczykowski.assigner.courses.models.CourseEdition;
-import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
+import com.anczykowski.assigner.courses.repositories.CourseEditionRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,9 +15,9 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class CoursesEditionRepositoryPersistent implements CoursesEditionRepository {
+public class CourseEditionsRepositoryPersistent implements CourseEditionRepository {
 
-    CoursesEditionRepositoryPersistentImpl repositoryImpl;
+    CourseEditionsRepositoryPersistentImpl repositoryImpl;
 
     ModelMapper modelMapper;
 
@@ -42,18 +42,10 @@ public class CoursesEditionRepositoryPersistent implements CoursesEditionReposit
         return repositoryImpl.findByCourseNameAndEdition(courseName, edition)
                 .map(ce -> modelMapper.map(ce, CourseEdition.class));
     }
-
-    @Override
-    public boolean checkIfUserHasAccessToCourseEdition(String courseName, String edition, Integer usosId) {
-        return repositoryImpl.existsByCourseNameAndEditionAndUsersUsosId(courseName, edition, usosId);
-    }
 }
 
 @Component
-interface CoursesEditionRepositoryPersistentImpl extends JpaRepository<CourseEditionPersistent, Integer> {
-
-    boolean existsByCourseNameAndEditionAndUsersUsosId(String course_name, String edition, Integer users_usosId);
-
+interface CourseEditionsRepositoryPersistentImpl extends JpaRepository<CourseEditionPersistent, Integer> {
     List<CourseEditionPersistent> findByCourseName(String courseName);
 
     Optional<CourseEditionPersistent> findByCourseNameAndEdition(String courseName, String edition);

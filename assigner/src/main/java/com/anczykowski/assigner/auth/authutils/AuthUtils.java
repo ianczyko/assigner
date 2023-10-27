@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.auth.authutils;
 
-import com.anczykowski.assigner.courses.repositories.CoursesEditionRepository;
+import com.anczykowski.assigner.courses.repositories.CourseEditionGroupRepository;
 import com.anczykowski.assigner.error.ForbiddenException;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,14 +21,24 @@ public class AuthUtils {
 
     private final MapSessionRepository sessionRepository;
 
-    private final CoursesEditionRepository coursesEditionRepository;
+    private final CourseEditionGroupRepository courseEditionGroupRepository;
 
     private final TeamsRepository teamsRepository;
 
-    public boolean hasAccessToCourseEdition(String courseName, String edition, HttpServletRequest request) {
+    public boolean hasAccessToCourseEditionGroup(
+            String courseName,
+            String edition,
+            String groupName,
+            HttpServletRequest request
+    ) {
         var usosId = getUsosId(request);
         if (usosId == null) return false;
-        if (coursesEditionRepository.checkIfUserHasAccessToCourseEdition(courseName, edition, usosId)) {
+        if (courseEditionGroupRepository.checkIfUserHasAccessToCourseEditionGroup(
+                courseName,
+                edition,
+                groupName,
+                usosId
+        )) {
             return true;
         }
         throw new ForbiddenException("User has no access to requested course edition");

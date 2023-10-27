@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.teams.persistent;
 
-import com.anczykowski.assigner.courses.models.CourseEdition;
+import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import com.anczykowski.assigner.teams.models.Team;
 import lombok.AllArgsConstructor;
@@ -30,8 +30,8 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
     }
 
     @Override
-    public List<Team> getAll(CourseEdition courseEdition) {
-        return repositoryImpl.findByCourseEdition_Id(courseEdition.getId())
+    public List<Team> getAll(CourseEditionGroup courseEdition) {
+        return repositoryImpl.findByCourseEditionGroup_Id(courseEdition.getId())
                 .stream()
                 .map(c -> modelMapper.map(c, Team.class))
                 .toList();
@@ -45,5 +45,5 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
 
 @Component
 interface TeamsRepositoryPersistentImpl extends JpaRepository<TeamPersistent, Integer> {
-    List<TeamPersistent> findByCourseEdition_Id(Integer courseEditionId);
+    List<TeamPersistent> findByCourseEditionGroup_Id(Integer courseEditionId);
 }

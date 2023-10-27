@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/courses/{courseName}/editions/{edition}/teams")
+@RequestMapping("/courses/{courseName}/editions/{edition}/groups/{groupName}/teams")
 public class TeamsController {
 
     ModelMapper modelMapper;
@@ -28,12 +28,13 @@ public class TeamsController {
     public TeamDto newTeam(
             @PathVariable String courseName,
             @PathVariable String edition,
+            @PathVariable String groupName,
             @Valid @RequestBody final TeamDto teamDto,
             HttpServletRequest request
     ) {
         var usosId = authUtils.getUsosId(request);
         var team = modelMapper.map(teamDto, Team.class);
-        var createdTeam = teamsService.create(courseName, edition, team, usosId);
+        var createdTeam = teamsService.create(courseName, edition, groupName, team, usosId);
         return modelMapper.map(createdTeam, TeamDto.class);
     }
 
@@ -60,10 +61,11 @@ public class TeamsController {
     }
 
     @PostMapping("/{teamId}/members")
-    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public List<UserDto> addTeamMember(
-            @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable String groupName,
             @PathVariable Integer teamId,
             @RequestParam(name = "access-token") Integer accessToken,
             HttpServletRequest request
@@ -76,10 +78,11 @@ public class TeamsController {
     }
 
     @GetMapping("/{teamId}/members")
-    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public List<UserDto> getTeamMembers(
-            @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable String groupName,
             @PathVariable Integer teamId,
             HttpServletRequest request
     ) {
@@ -104,11 +107,12 @@ public class TeamsController {
     }
 
     @PutMapping("/{teamId}/assigned-project")
-    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     // TODO: PreAuth of coordinator (elevated access)
     public TeamDto assignProjectToTeam(
-            @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable String groupName,
             @PathVariable Integer teamId,
             @RequestParam(name = "project-id") Integer projectId,
             HttpServletRequest request
@@ -118,10 +122,11 @@ public class TeamsController {
     }
 
     @GetMapping("/{teamId}/project-ratings")
-    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public List<ProjectPreferenceDto> getRatings(
-            @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable String groupName,
             @PathVariable Integer teamId,
             HttpServletRequest request
     ) {
@@ -133,14 +138,15 @@ public class TeamsController {
 
     // TODO: Write tests for this endpoint
     @GetMapping("/{teamId}/project-ratings/view")
-    @PreAuthorize("@authUtils.hasAccessToCourseEdition(#courseName, #edition, #request)")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public List<ProjectPreferenceDto> getRatingsView(
             @PathVariable String courseName,
             @PathVariable String edition,
+            @PathVariable String groupName,
             @PathVariable Integer teamId,
             HttpServletRequest request
     ) {
-        return teamsService.getRatingsView(courseName, edition, teamId)
+        return teamsService.getRatingsView(courseName, edition, groupName, teamId)
                 .stream()
                 .map(c -> modelMapper.map(c, ProjectPreferenceDto.class))
                 .toList();
@@ -149,9 +155,10 @@ public class TeamsController {
     @GetMapping
     public List<TeamDto> getTeams(
             @PathVariable String courseName,
-            @PathVariable String edition
+            @PathVariable String edition,
+            @PathVariable String groupName
     ) {
-        return teamsService.getAll(courseName, edition)
+        return teamsService.getAll(courseName, edition, groupName)
                 .stream()
                 .map(c -> {
                     var mapped = modelMapper.map(c, TeamDto.class);
@@ -181,11 +188,12 @@ public class TeamsController {
     @GetMapping("/assigned-team") // TODO: tests
     public TeamDetailedDto getAssignedTeam(
             @SuppressWarnings("unused") @PathVariable String courseName,
-            @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable String groupName,
             HttpServletRequest request
     ) {
         var usosId = authUtils.getUsosId(request);
-        return teamsService.getAssignedTeam(edition, usosId)
+        return teamsService.getAssignedTeam(groupName, usosId)
                 .map(team -> modelMapper.map(team, TeamDetailedDto.class))
                 .orElse(new TeamDetailedDto());
     }

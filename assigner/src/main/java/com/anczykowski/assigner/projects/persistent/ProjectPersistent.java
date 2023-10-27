@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.projects.persistent;
 
-import com.anczykowski.assigner.courses.persistent.CourseEditionPersistent;
+import com.anczykowski.assigner.courses.persistent.CourseEditionGroupPersistent;
 import com.anczykowski.assigner.teams.persistent.ProjectPreferencePersistent;
 import com.anczykowski.assigner.teams.persistent.TeamPersistent;
 import com.anczykowski.assigner.users.persistent.UserPersistent;
@@ -30,7 +30,7 @@ public class ProjectPersistent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_edition_id")
-    private CourseEditionPersistent courseEdition;
+    private CourseEditionGroupPersistent courseEditionGroup;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_manager_id")
