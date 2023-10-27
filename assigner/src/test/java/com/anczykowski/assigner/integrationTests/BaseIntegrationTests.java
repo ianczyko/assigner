@@ -164,6 +164,7 @@ public abstract class BaseIntegrationTests {
         var request = post(editionPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name1")
+                        .put("teamLimit", 1)
                         .put("description", "desc1")
                         .toString());
 
@@ -178,6 +179,7 @@ public abstract class BaseIntegrationTests {
         var request = post(editionPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name2")
+                        .put("teamLimit", 1)
                         .put("description", "desc2")
                         .toString());
 

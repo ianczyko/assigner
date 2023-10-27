@@ -17,6 +17,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         var request = post(editionPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name1")
+                        .put("teamLimit", 1)
                         .put("description", "desc1")
                         .toString());
 
@@ -50,6 +51,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
         var request = post(editionPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name1")
+                        .put("teamLimit", 1)
                         .put("description", "desc1")
                         .put("projectManager", new JSONObject()
                                 .put("id", 1))
