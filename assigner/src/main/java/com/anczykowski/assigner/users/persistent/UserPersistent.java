@@ -35,11 +35,11 @@ public class UserPersistent {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "course_edition_access",
+            name = "course_edition_group_access",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "course_edition_id")
     )
-    private Set<CourseEditionGroupPersistent> courseEditionsAccess;
+    private Set<CourseEditionGroupPersistent> courseEditionGroupsAccess;
 
     @OneToMany(mappedBy = "leader")
     private List<TeamPersistent> teamsLead;

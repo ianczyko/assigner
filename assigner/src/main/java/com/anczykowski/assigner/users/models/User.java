@@ -11,7 +11,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "courseEditionsAccess")
+@EqualsAndHashCode(exclude = "courseEditionGroupsAccess")
 public final class User {
     private Integer id;
     private String name;
@@ -20,7 +20,7 @@ public final class User {
     private Integer usosId;
     @Builder.Default
     private UserType userType = UserType.STUDENT;
-    private Set<CourseEditionGroup> courseEditionsAccess;
+    private Set<CourseEditionGroup> courseEditionGroupsAccess;
 
     @Override
     public String toString() {
@@ -28,7 +28,7 @@ public final class User {
     }
 
     public void addCourseEditionGroupAccess(CourseEditionGroup courseEdition) {
-        if (courseEditionsAccess == null) courseEditionsAccess = new HashSet<>();
-        courseEditionsAccess.add(courseEdition);
+        if (courseEditionGroupsAccess == null) courseEditionGroupsAccess = new HashSet<>();
+        courseEditionGroupsAccess.add(courseEdition);
     }
 }

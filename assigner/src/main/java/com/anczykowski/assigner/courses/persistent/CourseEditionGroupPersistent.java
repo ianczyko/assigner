@@ -29,7 +29,7 @@ public class CourseEditionGroupPersistent {
     private CourseEditionPersistent courseEdition;
 
     @ManyToMany(
-            mappedBy = "courseEditionsAccess"
+            mappedBy = "courseEditionGroupsAccess"
     )
     private Set<UserPersistent> users;
 
