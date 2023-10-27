@@ -5,8 +5,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,10 +22,13 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SessionFilter extends OncePerRequestFilter {
 
-    MapSessionRepository sessionRepository;
+    final MapSessionRepository sessionRepository;
+
+    @Value("${disable.auth:false}")
+    private Boolean disableAuth;
 
     @Override
     protected void doFilterInternal(
@@ -39,7 +43,20 @@ public class SessionFilter extends OncePerRequestFilter {
             var endpoint = requestURI.substring(contextPath.length());
             if (endpoint.equals("/auth")) {
                 filterChain.doFilter(request, response);
-            } else {
+            }
+            else if(disableAuth){
+                var authorities = new ArrayList<GrantedAuthority>();
+                authorities.add(new SimpleGrantedAuthority(UserType.COORDINATOR.toString()));
+                SecurityContextHolder.getContext().setAuthentication(
+                        new UsernamePasswordAuthenticationToken(
+                                123456,
+                                null,
+                                authorities
+                        )
+                );
+                filterChain.doFilter(request, response);
+            }
+            else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
             return;
