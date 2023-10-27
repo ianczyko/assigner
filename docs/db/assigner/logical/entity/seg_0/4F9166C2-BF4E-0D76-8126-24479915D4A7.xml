@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="3910E71E-D4DE-9D35-DC6D-734653AB7617" name="Project">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4F9166C2-BF4E-0D76-8126-24479915D4A7" name="Course Edition">
 <createdBy>iaPC</createdBy>
-<createdTime>2023-08-05 14:08:09 UTC</createdTime>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
 <ownerDesignName>assigner</ownerDesignName>
 <engineerTo>
 <item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
@@ -15,9 +15,9 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="Project Id" id="0A56A082-BB69-13B9-BBD7-DF69E59E7590">
+<Attribute name="Course Edition Id" id="85BC4BB0-75CA-0697-20ED-B67D4A5E10DA">
 <createdBy>iaPC</createdBy>
-<createdTime>2023-08-05 14:57:08 UTC</createdTime>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
 <ownerDesignName>assigner</ownerDesignName>
 <engineerTo>
 <item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
@@ -25,19 +25,9 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="Name" id="B7268CDB-4CAD-9F7A-2B12-413A7C0E028C">
+<Attribute name="Name" id="887CDC91-7C5B-94D7-489A-2409EEEDD303">
 <createdBy>iaPC</createdBy>
-<createdTime>2023-08-05 14:57:13 UTC</createdTime>
-<ownerDesignName>assigner</ownerDesignName>
-<engineerTo>
-<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
-</engineerTo>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="Description" id="823888DF-D48A-4830-5AE3-C879EC21F5C7">
-<createdBy>iaPC</createdBy>
-<createdTime>2023-08-05 14:57:16 UTC</createdTime>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
 <ownerDesignName>assigner</ownerDesignName>
 <engineerTo>
 <item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
@@ -46,30 +36,31 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="Course Edition Group Id" id="1D22BED9-D1C4-646C-9F22-C1EF1D85DB04">
+<Attribute name="Course Id" id="389FD5BE-FD24-4212-97ED-BC833C9BBAE9">
 <createdBy>iaPC</createdBy>
-<createdTime>2023-08-06 13:19:50 UTC</createdTime>
-<generatorID>F2BD3ED2-FE8B-3A3B-15B6-D9642669314C</generatorID>
+<createdTime>2023-10-27 14:47:44 UTC</createdTime>
+<generatorID>489D4D57-F8DA-F08F-0C8B-2D6EAC348289</generatorID>
 <ownerDesignName>assigner</ownerDesignName>
 <engineerTo>
 <item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
 </engineerTo>
-<referedAttribute>3E8C8046-8573-E08A-63BC-FC2C465E8D8E</referedAttribute>
-<use>0</use>
+<referedAttribute>A5E0412F-A47F-8D7F-C782-5275721C8F1B</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="70AEA29F-4EA2-61B7-301F-5ECE81088E8F" name="Project PK">
+<identifier id="7F072F1B-7924-16CB-EF6A-E7A9766F89E2" name="Course Edition PK">
 <createdBy>iaPC</createdBy>
-<createdTime>2023-08-05 14:57:12 UTC</createdTime>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
 <ownerDesignName>assigner</ownerDesignName>
 <engineerTo>
 <item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>0A56A082-BB69-13B9-BBD7-DF69E59E7590</attributeRef>
+<attributeRef>85BC4BB0-75CA-0697-20ED-B67D4A5E10DA</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>
