@@ -61,7 +61,7 @@ public class CourseEditionService {
                 .edition(edition)
                 .course(course)
                 .build();
-        var courseEditionSaved = coursesEditionRepository.save(courseEdition);
+        coursesEditionRepository.save(courseEdition);
 
         final CSVParser parser = new CSVParserBuilder()
                 .withSeparator(';')
@@ -111,7 +111,8 @@ public class CourseEditionService {
                 throw new RuntimeException(e);
             }
         }
-        return courseEditionSaved;
+        return coursesEditionRepository.get(courseName, edition)
+                .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 
     public List<CourseEditionGroup> getAll(String courseName) {

@@ -2,8 +2,8 @@ package com.anczykowski.assigner.courses.controllers;
 
 import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.courses.dto.CourseDto;
+import com.anczykowski.assigner.courses.dto.CourseEditionDto;
 import com.anczykowski.assigner.courses.dto.CourseEditionGroupDto;
-import com.anczykowski.assigner.courses.dto.CourseEditionGroupShortDto;
 import com.anczykowski.assigner.courses.services.CourseEditionGroupsService;
 import com.anczykowski.assigner.courses.services.CourseEditionService;
 import com.anczykowski.assigner.courses.services.CoursesService;
@@ -52,7 +52,7 @@ public class CoursesController {
 
     @PostMapping("/{courseName}/editions")
     @PreAuthorize("hasAuthority('COORDINATOR')")
-    public CourseEditionGroupShortDto newCourseEdition(
+    public CourseEditionDto newCourseEdition(
             @PathVariable String courseName,
             @RequestParam String edition,
             @RequestParam(value = "file") MultipartFile file,
@@ -67,7 +67,7 @@ public class CoursesController {
             );
             return modelMapper.map(
                     courseEditionsService.create(courseName, edition, usosId, inputCsvBufferedReader),
-                    CourseEditionGroupShortDto.class
+                    CourseEditionDto.class
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
