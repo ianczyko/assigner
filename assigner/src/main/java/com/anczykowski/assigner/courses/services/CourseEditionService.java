@@ -98,11 +98,6 @@ public class CourseEditionService {
                     Arrays.stream(groups.split(", ")).filter(g -> g.startsWith(groupPrefix)).findAny().ifPresent(groupName -> {
                         var courseEditionGroup = courseEditionGroupsService.createOrGet(courseName, edition, groupName);
                         userFetched.addCourseEditionGroupAccess(courseEditionGroup);
-                        usersRepository.getByUsosId(creatorUsosId).ifPresent(creator -> {
-                            // TODO: grant access to creator
-                            // creator.addCourseEditionGroupAccess(courseEditionGroup);
-                            // usersRepository.save(creator);
-                        });
                     });
 
                     usersRepository.save(userFetched);

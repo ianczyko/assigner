@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.session.MapSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,14 @@ public class AuthUtils {
                 groupName,
                 usosId
         )) {
+            return true;
+        }
+        if (SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .stream().map(Object::toString).toList().contains("COORDINATOR")
+        ) {
             return true;
         }
         throw new ForbiddenException("User has no access to requested course edition");
