@@ -9,7 +9,7 @@ import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 
 function AssignmentView() {
-  const { course_name, edition } = useParams();
+  const { course_name, edition, group_name } = useParams();
 
   const [isForbidden, setIsForbidden] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -36,7 +36,7 @@ function AssignmentView() {
     setSubmitLoading(true);
     await wretch()
       .url(
-        `/api/courses/${course_name}/editions/${edition}/team-project-assignment`
+        `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/team-project-assignment`
       )
       .post()
       .unauthorized((error) => {
@@ -61,7 +61,7 @@ function AssignmentView() {
   }
 
   function fetchTeams() {
-    return wretch(`/api/courses/${course_name}/editions/${edition}/teams`)
+    return wretch(`/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams`)
       .get()
       .forbidden((error) => {
         console.log(error); // TODO: better error handling
@@ -105,7 +105,7 @@ function AssignmentView() {
                       zespół:{' '}
                       <Link
                         className='Assigner-link'
-                        to={`/courses/${course_name}/${edition}/teams/${team.id}`}
+                        to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
                       >
                         {team.name}
                       </Link>{' '}
@@ -115,7 +115,7 @@ function AssignmentView() {
                       ) : (
                         <Link
                           className='Assigner-link'
-                          to={`/courses/${course_name}/${edition}/projects/${team.assignedProject.id}`}
+                          to={`/courses/${course_name}/${edition}/${group_name}/projects/${team.assignedProject.id}`}
                         >
                           {team.assignedProject.name}
                         </Link>

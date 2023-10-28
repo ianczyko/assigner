@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.teams.models;
 
-import com.anczykowski.assigner.courses.models.CourseEdition;
+import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.users.models.User;
 import com.google.common.math.IntMath;
@@ -18,12 +18,12 @@ import java.util.concurrent.ThreadLocalRandom;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"members", "preferences"})
-@ToString(exclude = {"members", "preferences"})
+@EqualsAndHashCode(exclude = {"members", "preferences", "courseEditionGroup", "assignedProject", "preferences", "members"})
+@ToString(exclude = {"members", "preferences", "courseEditionGroup", "assignedProject", "preferences", "members"})
 public final class Team {
     private Integer id;
     private String name;
-    private CourseEdition courseEdition;
+    private CourseEditionGroup courseEditionGroup;
     private Integer accessToken;
     private LocalDateTime accessTokenExpirationDate;
     private Project assignedProject;

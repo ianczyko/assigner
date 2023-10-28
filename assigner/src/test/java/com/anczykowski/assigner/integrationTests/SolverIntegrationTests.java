@@ -20,7 +20,7 @@ public class SolverIntegrationTests extends BaseIntegrationTests {
         // user #1 / team #1
         setupTeam();
 
-        var rateProjectRequest = put("%s/teams/%d/project-ratings".formatted(editionPath, teamId))
+        var rateProjectRequest = put("%s/teams/%d/project-ratings".formatted(editionGroupPath, teamId))
                 .param("rating", "5")
                 .param("project-id", projectId.toString());
 
@@ -30,14 +30,14 @@ public class SolverIntegrationTests extends BaseIntegrationTests {
         authenticate(testUser2UsosId);
         setupSecondTeam();
 
-        var rateSecondProjectRequest = put("%s/teams/%d/project-ratings".formatted(editionPath, secondTeamId))
+        var rateSecondProjectRequest = put("%s/teams/%d/project-ratings".formatted(editionGroupPath, secondTeamId))
                 .param("rating", "5")
                 .param("project-id", secondProjectId.toString());
 
         mockMvc.perform(rateSecondProjectRequest).andExpect(status().isOk());
 
 
-        var assignRequest = post("%s/team-project-assignment".formatted(editionPath));
+        var assignRequest = post("%s/team-project-assignment".formatted(editionGroupPath));
 
         var assignmentResponse = mockMvc.perform(assignRequest)
                 .andExpect(status().isOk())

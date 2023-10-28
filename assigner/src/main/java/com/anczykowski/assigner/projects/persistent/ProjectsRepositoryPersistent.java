@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.projects.persistent;
 
-import com.anczykowski.assigner.courses.models.CourseEdition;
+import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.projects.ProjectsRepository;
 import com.anczykowski.assigner.projects.models.Project;
 import lombok.AllArgsConstructor;
@@ -35,8 +35,8 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
     }
 
     @Override
-    public List<Project> getAll(CourseEdition courseEdition) {
-        return repositoryImpl.findByCourseEdition_Id(courseEdition.getId())
+    public List<Project> getAll(CourseEditionGroup courseEditionGroup) {
+        return repositoryImpl.findByCourseEditionGroup_Id(courseEditionGroup.getId())
                 .stream()
                 .map(c -> modelMapper.map(c, Project.class))
                 .toList();
@@ -45,5 +45,5 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
 
 @Component
 interface ProjectsRepositoryPersistentImpl extends JpaRepository<ProjectPersistent, Integer> {
-    List<ProjectPersistent> findByCourseEdition_Id(Integer courseEditionId);
+    List<ProjectPersistent> findByCourseEditionGroup_Id(Integer courseEditionGroupId);
 }

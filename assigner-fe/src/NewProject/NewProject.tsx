@@ -9,10 +9,16 @@ import { useNavigate } from 'react-router-dom';
 interface NewProjectParams {
   courseName: string;
   courseEdition: string;
+  groupName: string;
   onFinish: Function;
 }
 
-function NewProject({ courseName, courseEdition, onFinish }: NewProjectParams) {
+function NewProject({
+  courseName,
+  courseEdition,
+  groupName,
+  onFinish,
+}: NewProjectParams) {
   const { register, handleSubmit } = useForm();
 
   const form = useRef(null);
@@ -20,7 +26,9 @@ function NewProject({ courseName, courseEdition, onFinish }: NewProjectParams) {
 
   const onSubmit = async (data: FieldValues) => {
     wretch()
-      .url(`/api/courses/${courseName}/editions/${courseEdition}/projects`)
+      .url(
+        `/api/courses/${courseName}/editions/${courseEdition}/groups/${groupName}/projects`
+      )
       .post({
         name: data.name,
         description: data.description,

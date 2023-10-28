@@ -66,7 +66,9 @@ public abstract class BaseIntegrationTests {
 
     protected final String edition = "21l";
 
-    protected final String editionPath = "/courses/%s/editions/%s".formatted(courseName, edition);
+    protected final String groupName = "PRO101";
+
+    protected final String editionGroupPath = "/courses/%s/editions/%s/groups/%s".formatted(courseName, edition, groupName);
 
     protected final Integer testUserUsosId = 12345678;
 
@@ -126,7 +128,7 @@ public abstract class BaseIntegrationTests {
                 "file",
                 "students.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365\nKowalski;Jan;;0;0;%d@pw.edu.pl\nKowalski2;Jan2;;0;0;%d@pw.edu.pl".formatted(testUserUsosId, testUser2UsosId).getBytes()
+                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365;grupy\nKowalski;Jan;;0;0;%d@pw.edu.pl;\"CWI101, PRO101, WYK1\"\nKowalski2;Jan2;;0;0;%d@pw.edu.pl;\"CWI101, PRO101, WYK1\"".formatted(testUserUsosId, testUser2UsosId).getBytes()
         );
         var courseEditionRequest = multipart("/courses/PZSP3/editions")
                 .file(file)
@@ -139,7 +141,7 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupTeam() throws Exception {
-        var request = post(editionPath + "/teams")
+        var request = post(editionGroupPath + "/teams")
                 .content(new JSONObject().put("name", "team1").toString());
 
         var result = mockMvc.perform(request)
@@ -150,7 +152,7 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupSecondTeam() throws Exception {
-        var request = post(editionPath + "/teams")
+        var request = post(editionGroupPath + "/teams")
                 .content(new JSONObject().put("name", "team2").toString());
 
         var result = mockMvc.perform(request)
@@ -161,9 +163,10 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupProject() throws Exception {
-        var request = post(editionPath + "/projects")
+        var request = post(editionGroupPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name1")
+                        .put("teamLimit", 1)
                         .put("description", "desc1")
                         .toString());
 
@@ -175,9 +178,10 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void setupSecondProject() throws Exception {
-        var request = post(editionPath + "/projects")
+        var request = post(editionGroupPath + "/projects")
                 .content(new JSONObject()
                         .put("name", "name2")
+                        .put("teamLimit", 1)
                         .put("description", "desc2")
                         .toString());
 

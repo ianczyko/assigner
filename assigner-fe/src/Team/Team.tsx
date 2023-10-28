@@ -15,7 +15,7 @@ import 'moment/locale/pl';
 moment.locale('pl');
 
 function Team() {
-  const { course_name, edition, team_id } = useParams();
+  const { course_name, edition, group_name, team_id } = useParams();
 
   const [isCopied, setIsCopied] = useState(false);
 
@@ -78,7 +78,7 @@ function Team() {
       ) {
         const w = wretch().addon(QueryStringAddon);
         w.url(
-          `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/project-ratings`
+          `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}/project-ratings`
         )
           .query({
             'project-id': pref.project.id,
@@ -105,7 +105,7 @@ function Team() {
 
   function getAccessToken() {
     wretch(
-      `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/access-token`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}/access-token`
     )
       .get()
       .unauthorized((error) => {
@@ -124,7 +124,7 @@ function Team() {
   async function generateAccessToken() {
     setSubmitLoadingAccessToken(true);
     await wretch(
-      `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/access-token`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}/access-token`
     )
       .put()
       .unauthorized((error) => {
@@ -154,7 +154,7 @@ function Team() {
   }, [course_name, edition, team_id]);
 
   useEffect(() => {
-    wretch(`/api/courses/${course_name}/editions/${edition}/teams/${team_id}`)
+    wretch(`/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}`)
       .get()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
@@ -172,7 +172,7 @@ function Team() {
 
   useEffect(() => {
     wretch(
-      `/api/courses/${course_name}/editions/${edition}/teams/${team_id}/project-ratings/view`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}/project-ratings/view`
     )
       .get()
       .unauthorized((error) => {

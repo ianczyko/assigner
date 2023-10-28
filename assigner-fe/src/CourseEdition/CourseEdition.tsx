@@ -12,7 +12,7 @@ import Helpers, { UserType } from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 
 function CourseEdition() {
-  const { course_name, edition } = useParams();
+  const { course_name, edition, group_name } = useParams();
 
   const [isForbidden, setIsForbidden] = useState(false);
 
@@ -53,7 +53,9 @@ function CourseEdition() {
   }
 
   useEffect(() => {
-    wretch(`/api/courses/${course_name}/editions/${edition}`)
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}`
+    )
       .get()
       .forbidden((error) => {
         setIsForbidden(true);
@@ -77,7 +79,7 @@ function CourseEdition() {
 
   function getAssignedTeam() {
     wretch(
-      `/api/courses/${course_name}/editions/${edition}/teams/assigned-team`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/assigned-team`
     )
       .get()
       .forbidden((error) => {
@@ -101,7 +103,9 @@ function CourseEdition() {
   }, [course_name, edition]);
 
   function fetchTeams() {
-    wretch(`/api/courses/${course_name}/editions/${edition}/teams`)
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams`
+    )
       .get()
       .forbidden((error) => {
         console.log(error); // TODO: better error handling
@@ -126,7 +130,9 @@ function CourseEdition() {
   }, []);
 
   function fetchProjects() {
-    wretch(`/api/courses/${course_name}/editions/${edition}/projects`)
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects`
+    )
       .get()
       .forbidden((error) => {
         console.log(error); // TODO: better error handling
@@ -184,8 +190,9 @@ function CourseEdition() {
                       onOpen={() => setIsOpen(!isOpen)}
                     >
                       <NewTeam
-                        courseEdition={editionResponse.edition}
+                        courseEdition={edition!}
                         courseName={course_name!}
+                        groupName={group_name!}
                         onFinish={fetchTeams}
                       />
                     </Popup>
@@ -198,7 +205,7 @@ function CourseEdition() {
                     <li key={team.id.toString()}>
                       <Link
                         className='Assigner-link'
-                        to={`/courses/${course_name}/${edition}/teams/${team.id}`}
+                        to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
                       >
                         {team.name}
                       </Link>
@@ -218,7 +225,9 @@ function CourseEdition() {
                         return (
                           <Link
                             className='Assigner-link'
-                            to={`/courses/${course_name}/${edition}/teams/${assignedTeam!.id}`}
+                            to={`/courses/${course_name}/${edition}/${group_name}/teams/${
+                              assignedTeam!.id
+                            }`}
                           >
                             {assignedTeam!.name}
                           </Link>
@@ -237,8 +246,9 @@ function CourseEdition() {
                           onOpen={() => setIsOpenJoin(!isOpenJoin)}
                         >
                           <JoinTeam
-                            courseEdition={editionResponse.edition}
+                            courseEdition={edition!}
                             courseName={course_name!}
+                            groupName={group_name!}
                             onFinish={getAssignedTeam}
                           />
                         </Popup>
@@ -264,8 +274,9 @@ function CourseEdition() {
                     onOpen={() => setIsOpenProject(!isOpenProject)}
                   >
                     <NewProject
-                      courseEdition={editionResponse.edition}
+                      courseEdition={edition!}
                       courseName={course_name!}
+                      groupName={group_name!}
                       onFinish={fetchProjects}
                     />
                   </Popup>
@@ -278,7 +289,7 @@ function CourseEdition() {
                   <li key={project.id.toString()}>
                     <Link
                       className='Assigner-link'
-                      to={`/courses/${course_name}/${edition}/projects/${project.id}`}
+                      to={`/courses/${course_name}/${edition}/${group_name}/projects/${project.id}`}
                     >
                       {project.name}
                     </Link>
@@ -309,7 +320,7 @@ function CourseEdition() {
             return (
               <Link
                 className='Assigner-link'
-                to={`/courses/${course_name}/${edition}/assignment-view`}
+                to={`/courses/${course_name}/${edition}/${group_name}/assignment-view`}
               >
                 Przypisania tematów do zespołów
               </Link>

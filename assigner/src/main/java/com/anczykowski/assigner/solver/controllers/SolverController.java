@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/courses/{courseName}/editions/{edition}/team-project-assignment")
+@RequestMapping("/courses/{courseName}/editions/{edition}/groups/{groupName}/team-project-assignment")
 public class SolverController {
 
     SolverService solverService;
@@ -23,9 +23,10 @@ public class SolverController {
     @PreAuthorize("hasAuthority('COORDINATOR')")
     public AssignOptimizationDto solve(
             @PathVariable String courseName,
-            @PathVariable String edition
+            @PathVariable String edition,
+            @PathVariable String groupName
     ) {
-        var assignOptimizationResult = solverService.assignProjects(courseName, edition);
+        var assignOptimizationResult = solverService.assignProjects(courseName, edition, groupName);
         return modelMapper.map(assignOptimizationResult, AssignOptimizationDto.class);
     }
 }

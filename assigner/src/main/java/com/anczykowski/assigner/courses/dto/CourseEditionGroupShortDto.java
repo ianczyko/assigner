@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CourseEditionShortDto {
+public class CourseEditionGroupShortDto {
 
     Integer id;
 
-    String edition;
+    String groupName;
 }

@@ -28,6 +28,12 @@ function Courses() {
   interface ICourseEdition {
     id: string;
     edition: string;
+    courseEditionGroups: Array<ICourseEditionGroup>;
+  }
+
+  interface ICourseEditionGroup {
+    id: string;
+    groupName: string;
   }
 
   function fetchCourses() {
@@ -106,17 +112,30 @@ function Courses() {
                     {course.courseEditions.map((courseEdition) => {
                       return (
                         <li key={courseEdition.id}>
-                          <Link
-                            className='Assigner-link'
-                            to={
-                              '/courses/' +
-                              course.name +
-                              '/' +
-                              courseEdition.edition
-                            }
-                          >
-                            {courseEdition.edition}
-                          </Link>
+                          {courseEdition.edition}
+                          <ul>
+                            {courseEdition.courseEditionGroups.map(
+                              (courseEditionGroup) => {
+                                return (
+                                  <li key={courseEditionGroup.id}>
+                                    <Link
+                                      className='Assigner-link'
+                                      to={
+                                        '/courses/' +
+                                        course.name +
+                                        '/' +
+                                        courseEdition.edition +
+                                        '/' +
+                                        courseEditionGroup.groupName
+                                      }
+                                    >
+                                      {courseEditionGroup.groupName}
+                                    </Link>
+                                  </li>
+                                );
+                              }
+                            )}
+                          </ul>
                         </li>
                       );
                     })}
@@ -149,7 +168,7 @@ function Courses() {
   );
 
   function newCoursePopup() {
-    if (userType=== UserType.STUDENT) {
+    if (userType === UserType.STUDENT) {
       return;
     }
     return (

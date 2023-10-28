@@ -1,8 +1,8 @@
 package com.anczykowski.assigner.teams;
 
-import com.anczykowski.assigner.courses.services.CourseEditionsService;
-import com.anczykowski.assigner.error.NotFoundException;
+import com.anczykowski.assigner.courses.services.CourseEditionGroupsService;
 import com.anczykowski.assigner.error.ForbiddenException;
+import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.projects.ProjectsService;
 import com.anczykowski.assigner.teams.models.ProjectPreference;
 import com.anczykowski.assigner.teams.models.ProjectPreferenceId;
@@ -26,7 +26,7 @@ public class TeamsService {
 
     final TeamsRepository teamsRepository;
 
-    final CourseEditionsService courseEditionsService;
+    final CourseEditionGroupsService courseEditionsService;
 
     final ProjectsService projectsService;
 
@@ -43,19 +43,25 @@ public class TeamsService {
     int tokenValidDays;
 
     @Transactional
-    public Team create(String courseName, String edition, Team team, Integer leaderUsosId) {
+    public Team create(
+            String courseName,
+            String edition,
+            String groupName,
+            Team team,
+            Integer leaderUsosId
+    ) {
         var leader = usersRepository.getByUsosId(leaderUsosId)
                 .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(leaderUsosId)));
         team.setLeader(leader);
         team.addMember(leader);
 
-        var courseEdition = courseEditionsService.get(courseName, edition);
-        team.setCourseEdition(courseEdition);
+        var courseEdition = courseEditionsService.get(courseName, edition, groupName);
+        team.setCourseEditionGroup(courseEdition);
         return teamsRepository.save(team);
     }
 
-    public List<Team> getAll(String courseName, String edition) {
-        var courseEdition = courseEditionsService.get(courseName, edition);
+    public List<Team> getAll(String courseName, String edition, String groupName) {
+        var courseEdition = courseEditionsService.get(courseName, edition, groupName);
         return teamsRepository.getAll(courseEdition);
     }
 
@@ -114,14 +120,19 @@ public class TeamsService {
         return teamsRepository.save(team);
     }
 
-    public List<ProjectPreference> getRatingsView(String courseName, String edition, Integer teamId) {
+    public List<ProjectPreference> getRatingsView(
+            String courseName,
+            String edition,
+            String groupName,
+            Integer teamId
+    ) {
         var team = teamsRepository.get(teamId);
         var projectPreferenceMap = team.getPreferences().stream().collect(Collectors.toMap(
                 item -> item.getProject().getId(),
                 item -> item)
         );
 
-        var projects = projectsService.getProjects(courseName, edition);
+        var projects = projectsService.getProjects(courseName, edition, groupName);
         return projects.stream().map(
                 project -> projectPreferenceMap.getOrDefault(project.getId(), ProjectPreference.builder()
                         .rating(DEFAULT_RATING)
@@ -132,8 +143,8 @@ public class TeamsService {
         ).toList();
     }
 
-    public Optional<Team> getAssignedTeam(String edition, Integer usosId) {
-        var accesses =  usersRepository.getAssignedTeamByUsosId(usosId);
-        return accesses.stream().filter(acc -> acc.getCourseEdition().getEdition().equals(edition)).findAny();
+    public Optional<Team> getAssignedTeam(String groupName, Integer usosId) { // TODO: group name is not unique globally, this is suspicious
+        var accesses = usersRepository.getAssignedTeamByUsosId(usosId);
+        return accesses.stream().filter(acc -> acc.getCourseEditionGroup().getGroupName().equals(groupName)).findAny();
     }
 }

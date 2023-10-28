@@ -14,7 +14,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
         authenticate();
         setupCourseAndCourseEdition();
 
-        var request = post(editionPath + "/teams")
+        var request = post(editionGroupPath + "/teams")
                 .content(new JSONObject().put("name", "test1").toString());
 
         mockMvc.perform(request)
@@ -29,7 +29,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
         setupCourseAndCourseEdition();
         setupTeam();
 
-        var accessTokenRequest = put("%s/teams/%d/access-token".formatted(editionPath, teamId));
+        var accessTokenRequest = put("%s/teams/%d/access-token".formatted(editionGroupPath, teamId));
 
         var accessTokenResult = mockMvc.perform(accessTokenRequest)
                 .andExpect(status().isOk())
@@ -38,7 +38,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
                 .andReturn();
 
         var accessToken = getFromResult(accessTokenResult, "accessToken");
-        var getAccessTokenRequest = get("%s/teams/%d/access-token".formatted(editionPath, teamId));
+        var getAccessTokenRequest = get("%s/teams/%d/access-token".formatted(editionGroupPath, teamId));
 
         mockMvc.perform(getAccessTokenRequest)
                 .andExpect(status().isOk())
@@ -53,7 +53,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
         setupCourseAndCourseEdition();
         setupTeam();
 
-        var accessTokenRequest = put("%s/teams/%d/access-token".formatted(editionPath, teamId));
+        var accessTokenRequest = put("%s/teams/%d/access-token".formatted(editionGroupPath, teamId));
 
         var accessTokenResult = mockMvc.perform(accessTokenRequest)
                 .andExpect(status().isOk())
@@ -64,13 +64,13 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
         authenticate(testUser2UsosId);
 
-        var addTeamMemberRequest = post("%s/teams/%d/members".formatted(editionPath, teamId))
+        var addTeamMemberRequest = post("%s/teams/%d/members".formatted(editionGroupPath, teamId))
                 .param("access-token", accessToken.toString());
 
         mockMvc.perform(addTeamMemberRequest)
                 .andExpect(status().isOk());
 
-        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionPath, teamId));
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionGroupPath, teamId));
 
         mockMvc.perform(getTeamMemberRequest)
                 .andExpect(status().isOk())
@@ -89,7 +89,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
         setupTeam();
         setupProject();
 
-        var request = put("%s/teams/%d/project-ratings".formatted(editionPath, teamId))
+        var request = put("%s/teams/%d/project-ratings".formatted(editionGroupPath, teamId))
                 .param("rating", "3")
                 .param("project-id", projectId.toString());
 
@@ -106,7 +106,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
         setupTeam();
         setupProject();
 
-        var request = put("%s/teams/%d/assigned-project".formatted(editionPath, teamId))
+        var request = put("%s/teams/%d/assigned-project".formatted(editionGroupPath, teamId))
                 .param("project-id", projectId.toString());
 
         mockMvc.perform(request)
@@ -122,7 +122,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
         setupTeam();
         setupProject();
 
-        var request = put("%s/teams/%d/project-ratings".formatted(editionPath, teamId))
+        var request = put("%s/teams/%d/project-ratings".formatted(editionGroupPath, teamId))
                 .param("rating", "3")
                 .param("project-id", projectId.toString());
 
@@ -130,7 +130,7 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(json().node("rating").isEqualTo(3));
 
-        var getRequest = get("%s/teams/%d/project-ratings".formatted(editionPath, teamId));
+        var getRequest = get("%s/teams/%d/project-ratings".formatted(editionGroupPath, teamId));
 
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())

@@ -1,6 +1,6 @@
 package com.anczykowski.assigner.projects;
 
-import com.anczykowski.assigner.courses.models.CourseEdition;
+import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.projects.models.Project;
 
 import java.util.List;
@@ -10,5 +10,5 @@ public interface ProjectsRepository {
 
     Project get(Integer projectId);
 
-    List<Project> getAll(CourseEdition courseEdition);
+    List<Project> getAll(CourseEditionGroup courseEditionGroup);
 }

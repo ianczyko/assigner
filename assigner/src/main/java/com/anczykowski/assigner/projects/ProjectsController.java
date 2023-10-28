@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/courses/{courseName}/editions/{edition}/projects")
+@RequestMapping("/courses/{courseName}/editions/{edition}/groups/{groupName}/projects")
 public class ProjectsController {
 
     ModelMapper modelMapper;
@@ -30,19 +30,21 @@ public class ProjectsController {
     public ProjectDto newProject(
             @PathVariable String courseName,
             @PathVariable String edition,
+            @PathVariable String groupName,
             @Valid @RequestBody final ProjectDto projectDto
     ) {
         var project = modelMapper.map(projectDto, Project.class);
-        var createdProject = projectsService.create(courseName, edition, project);
+        var createdProject = projectsService.create(courseName, edition, groupName, project);
         return modelMapper.map(createdProject, ProjectDto.class);
     }
 
     @GetMapping
     public List<ProjectDto> getProjects(
             @PathVariable String courseName,
-            @PathVariable String edition
+            @PathVariable String edition,
+            @PathVariable String groupName
     ) {
-        return projectsService.getProjects(courseName, edition)
+        return projectsService.getProjects(courseName, edition, groupName)
                 .stream()
                 .map(c -> modelMapper.map(c, ProjectDto.class))
                 .toList();

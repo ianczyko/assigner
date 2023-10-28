@@ -21,7 +21,6 @@ public class CoursePersistent {
     private String name;
 
     @OneToMany(mappedBy = "course")
-    @OrderBy("edition")
     private List<CourseEditionPersistent> courseEditions;
 
 }

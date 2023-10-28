@@ -13,6 +13,6 @@ public class CourseDto {
 
     String name;
 
-    List<CourseEditionShortDto> courseEditions;
+    List<CourseEditionDto> courseEditions;
 
 }

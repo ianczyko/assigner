@@ -15,7 +15,7 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="Course Edition Id" id="63049FBC-3244-9BF4-DC32-9F94F4BCD2BE">
+<Attribute name="Course Edition Group Id" id="63049FBC-3244-9BF4-DC32-9F94F4BCD2BE">
 <createdBy>iaPC</createdBy>
 <createdTime>2023-08-05 14:48:11 UTC</createdTime>
 <generatorID>09271CFC-CA7C-E411-E136-C8E4E5E09BB0</generatorID>
