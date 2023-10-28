@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.integrationTests;
 
+import com.anczykowski.assigner.users.models.UserType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -63,7 +64,6 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
         var request = post("/courses").param("name", "PZSP3");
         mockMvc.perform(request)
                 .andExpect(status().isOk());
-
         var file = new MockMultipartFile(
                 "file",
                 "students.csv",
@@ -80,6 +80,8 @@ public class CoursesIntegrationTests extends BaseIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(json().node("edition").isEqualTo("21l"));
 
+
+        authenticate(testUserUsosId, UserType.STUDENT);
         var getCourseEditionGroupRequest = get(editionGroupPath);
         mockMvc.perform(getCourseEditionGroupRequest)
                 .andExpect(status().isForbidden())

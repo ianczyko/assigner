@@ -81,7 +81,7 @@ public abstract class BaseIntegrationTests {
         return session;
     }
 
-    private void verify(Integer usosId) {
+    private void verify(Integer usosId, UserType userType) {
         var accessToken = "100";
         var accessTokenSecret = "101";
         var session = sessionRepository.findById(cookie.getValue());
@@ -89,7 +89,7 @@ public abstract class BaseIntegrationTests {
             session.setAttribute("accessToken", accessToken);
             session.setAttribute("accessTokenSecret", accessTokenSecret);
             session.setAttribute("usosId", usosId.toString());
-            session.setAttribute("userType", String.valueOf(UserType.COORDINATOR.ordinal()));
+            session.setAttribute("userType", String.valueOf(userType.ordinal()));
             sessionRepository.save(session);
         }
     }
@@ -100,10 +100,14 @@ public abstract class BaseIntegrationTests {
     }
 
     protected void authenticate(Integer usosId) throws Exception {
+        authenticate(usosId, UserType.COORDINATOR);
+    }
+
+    protected void authenticate(Integer usosId, UserType userType) throws Exception {
         cookie = null;
         Mockito.when(authService.createSession()).thenAnswer((Answer<MapSession>) invocation -> createSession());
         doAnswer(invocation -> {
-            verify(usosId);
+            verify(usosId, userType);
             return null;
         }).when(authService).verify(any(String.class), any(String.class));
 
