@@ -35,7 +35,7 @@ function Forum() {
     surname: string;
   }
 
-  useEffect(() => {
+  function fetchComments() {
     wretch(
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project_id}/forum-comments`
     )
@@ -51,6 +51,10 @@ function Forum() {
         console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    fetchComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, project_id]);
 
@@ -67,8 +71,7 @@ function Forum() {
         Helpers.handleForbidden();
       })
       .res((res) => {
-        console.log(res); // TODO: remove me
-        // onFinish();
+        fetchComments();
       })
       .catch((error) => console.log(error));
   };
