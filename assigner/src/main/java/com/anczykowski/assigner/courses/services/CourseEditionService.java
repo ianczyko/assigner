@@ -53,7 +53,6 @@ public class CourseEditionService {
     public CourseEdition create(
             String courseName,
             String edition,
-            Integer creatorUsosId,
             Reader inputCsvReader) throws IOException {
         var course = coursesRepository.getByName(courseName)
                 .orElseThrow(() -> new NotFoundException("%s course not found".formatted(courseName)));

@@ -55,10 +55,8 @@ public class CoursesController {
     public CourseEditionDto newCourseEdition(
             @PathVariable String courseName,
             @RequestParam String edition,
-            @RequestParam(value = "file") MultipartFile file,
-            HttpServletRequest request
+            @RequestParam(value = "file") MultipartFile file
     ) {
-        var usosId = authUtils.getUsosId(request);
         try (var fileStream = file.getInputStream()) {
             var inputCsvBufferedReader = new BufferedReader(
                     new InputStreamReader(
@@ -66,7 +64,7 @@ public class CoursesController {
                     )
             );
             return modelMapper.map(
-                    courseEditionsService.create(courseName, edition, usosId, inputCsvBufferedReader),
+                    courseEditionsService.create(courseName, edition, inputCsvBufferedReader),
                     CourseEditionDto.class
             );
         } catch (IOException e) {
