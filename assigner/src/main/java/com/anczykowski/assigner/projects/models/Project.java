@@ -24,8 +24,8 @@ public final class Project {
     private List<ProjectForumComment> comments;
     private List<Team> assignedTeams;
 
-    public Integer getFinalAssignmentsCount() {
-        return assignedTeams.stream()
+    public Integer getEffectiveLimit() {
+        return teamLimit - assignedTeams.stream()
                 .filter(Team::getIsAssignmentFinal)
                 .mapToInt(i -> 1)
                 .sum();

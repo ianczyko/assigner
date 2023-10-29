@@ -28,7 +28,9 @@ public class SolverService {
     @Transactional
     public AssignOptimizationResult assignProjects(String courseName, String edition, String groupName) {
 
-        var teams = teamsService.getAll(courseName, edition, groupName);
+        var allTeams = teamsService.getAll(courseName, edition, groupName);
+        var teams = allTeams.stream().filter(team -> !team.getIsAssignmentFinal()).toList();
+
         var projects = projectsService.getProjects(courseName, edition, groupName);
 
         try (IloCplex cplex = new IloCplex()) {
@@ -58,7 +60,7 @@ public class SolverService {
                     column.addTerm(1, teams_project_assignment[i][j]);
                 }
                 var project = projects.get(j);
-                cplex.addLe(column, project.getTeamLimit());
+                cplex.addLe(column, project.getEffectiveLimit());
             }
 
             //// objective
