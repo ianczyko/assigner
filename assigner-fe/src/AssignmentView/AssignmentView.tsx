@@ -1,10 +1,11 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
+import QueryStringAddon from 'wretch/addons/queryString';
 import './AssignmentView.css';
 import Forbidden from '../Forbidden/Forbidden';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Stack } from '@mui/material';
+import { Checkbox, Stack } from '@mui/material';
 import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 
@@ -24,6 +25,7 @@ function AssignmentView() {
     name: string;
     assignedProject: IProjectResponse;
     happiness: number;
+    isAssignmentFinal: boolean;
   }
 
   interface IProjectResponse {
@@ -54,6 +56,30 @@ function AssignmentView() {
     setSubmitLoading(false);
   }
 
+  const handleTeamIsAssignmentFinalChange = (team: ITeamResponse) => () => {
+    const w = wretch().addon(QueryStringAddon);
+    return w
+      .url(
+        `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team.id}/assignment-final`
+      )
+      .query({ 'is-final': !team.isAssignmentFinal })
+      .put()
+      .forbidden((error) => {
+        console.log(error); // TODO: better error handling
+        setIsForbidden(true);
+      })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .json((json) => {
+        fetchTeams();
+      })
+      .catch((error) => console.log(error));
+  };
+
   function getColor(val: number) {
     const red = Math.round(255 * (1 - val));
     const green = Math.round(255 * val);
@@ -61,7 +87,9 @@ function AssignmentView() {
   }
 
   function fetchTeams() {
-    return wretch(`/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams`)
+    return wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams`
+    )
       .get()
       .forbidden((error) => {
         console.log(error); // TODO: better error handling
@@ -131,6 +159,15 @@ function AssignmentView() {
                             backgroundColor: getColor(team.happiness / 5.0),
                           }}
                         ></div>
+                        <div>
+                          <Checkbox
+                            checked={team.isAssignmentFinal}
+                            onChange={handleTeamIsAssignmentFinalChange(team)}
+                            sx={{
+                              color: 'white',
+                            }}
+                          />
+                        </div>
                       </Stack>
                     ) : (
                       <div></div>

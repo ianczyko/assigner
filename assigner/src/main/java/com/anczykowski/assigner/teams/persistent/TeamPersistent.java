@@ -37,6 +37,8 @@ public class TeamPersistent {
     @JoinColumn(name = "assigned_project_id")
     private ProjectPersistent assignedProject;
 
+    private Boolean isAssignmentFinal;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_edition_id")
     private CourseEditionGroupPersistent courseEditionGroup;

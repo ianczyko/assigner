@@ -27,6 +27,8 @@ public final class Team {
     private Integer accessToken;
     private LocalDateTime accessTokenExpirationDate;
     private Project assignedProject;
+    @Builder.Default
+    private Boolean isAssignmentFinal = false;
     private User leader;
     @Builder.Default
     private Set<User> members = new HashSet<>();

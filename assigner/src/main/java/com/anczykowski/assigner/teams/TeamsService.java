@@ -147,4 +147,11 @@ public class TeamsService {
         var accesses = usersRepository.getAssignedTeamByUsosId(usosId);
         return accesses.stream().filter(acc -> acc.getCourseEditionGroup().getGroupName().equals(groupName)).findAny();
     }
+
+    @Transactional
+    public Team setIsAssignmentFinal(Integer teamId, Boolean isApproved) {
+        var team = teamsRepository.get(teamId);
+        team.setIsAssignmentFinal(isApproved);
+        return teamsRepository.save(team);
+    }
 }

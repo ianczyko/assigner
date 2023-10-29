@@ -23,6 +23,8 @@ public class TeamDetailedDto {
 
     ProjectShortDto assignedProject;
 
+    Boolean isAssignmentFinal;
+
     Set<UserSimpleDto> members;
 
 }

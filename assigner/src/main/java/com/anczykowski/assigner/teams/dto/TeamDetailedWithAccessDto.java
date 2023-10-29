@@ -23,6 +23,8 @@ public class TeamDetailedWithAccessDto {
 
     ProjectShortDto assignedProject;
 
+    Boolean isAssignmentFinal;
+
     Set<UserSimpleDto> members;
 
     Boolean readonly;

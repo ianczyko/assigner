@@ -197,4 +197,16 @@ public class TeamsController {
                 .map(team -> modelMapper.map(team, TeamDetailedDto.class))
                 .orElse(new TeamDetailedDto());
     }
+
+    @PutMapping("/{teamId}/assignment-final")
+    public TeamDetailedWithAccessDto setIsAssignmentFinal(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @PathVariable Integer teamId,
+            @RequestParam(name = "is-final") Boolean isFinal
+    ) {
+        return modelMapper.map(teamsService.setIsAssignmentFinal(teamId, isFinal), TeamDetailedWithAccessDto.class);
+    }
+
 }
