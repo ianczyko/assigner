@@ -143,6 +143,9 @@ function AssignmentView() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
+          <p>
+            {course_name} / {edition} / {group_name}
+          </p>
           <h4>Obecne przypisania zespołów do projektów:</h4>
           <ul>
             <ThemeProvider theme={darkTheme}>

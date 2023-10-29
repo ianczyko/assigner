@@ -34,7 +34,7 @@ function CourseEdition() {
 
   interface IEditionResponse {
     id: Number;
-    edition: string;
+    groupName: string;
     users: Array<IUser>;
   }
 
@@ -169,7 +169,7 @@ function CourseEdition() {
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
           <p>
-            Kurs {course_name}, edycja: {editionResponse.edition}
+            {course_name} / {edition} / {group_name}
           </p>
 
           <Stack direction='row'>

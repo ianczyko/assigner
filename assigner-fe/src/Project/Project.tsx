@@ -52,7 +52,9 @@ function Project() {
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
           <Stack spacing='20px'>
-            <p>{projectResponse.name}</p>
+            <p>
+              {course_name} / {edition} / {group_name} / {projectResponse.name}
+            </p>
             <p>Limit miejsc: {projectResponse.teamLimit.toString()}</p>
             <p>{projectResponse.description}</p>
             <Forum />

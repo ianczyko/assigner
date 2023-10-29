@@ -154,7 +154,9 @@ function Team() {
   }, [course_name, edition, team_id]);
 
   useEffect(() => {
-    wretch(`/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}`)
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}`
+    )
       .get()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
@@ -195,7 +197,9 @@ function Team() {
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
           <div className='Assigner-align-left'>
-            <p style={{ textAlign: 'center' }}>Zespół: {teamResponse.name}</p>
+            <p style={{ textAlign: 'center' }}>
+              {course_name} / {edition} / {group_name} / {teamResponse.name}
+            </p>
             <Stack direction='row' alignItems='center' spacing='30px'>
               <div>
                 <p>
@@ -229,9 +233,9 @@ function Team() {
                               message='Skopiowano do schowka.'
                             />
                             <Tooltip
-                              title={`Kod ważny do: ${
-                                moment(accessTokenResponse!.accessTokenExpirationDate).format("LLL")
-                              }`}
+                              title={`Kod ważny do: ${moment(
+                                accessTokenResponse!.accessTokenExpirationDate
+                              ).format('LLL')}`}
                             >
                               <IconButton onClick={() => {}} color='inherit'>
                                 <FontAwesomeIcon icon={faQuestionCircle} />
