@@ -31,7 +31,7 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
 
     @Override
     public List<Team> getAll(CourseEditionGroup courseEdition) {
-        return repositoryImpl.findByCourseEditionGroup_Id(courseEdition.getId())
+        return repositoryImpl.findByCourseEditionGroup_IdOrderById(courseEdition.getId())
                 .stream()
                 .map(c -> modelMapper.map(c, Team.class))
                 .toList();
@@ -45,5 +45,5 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
 
 @Component
 interface TeamsRepositoryPersistentImpl extends JpaRepository<TeamPersistent, Integer> {
-    List<TeamPersistent> findByCourseEditionGroup_Id(Integer courseEditionId);
+    List<TeamPersistent> findByCourseEditionGroup_IdOrderById(Integer courseEditionId);
 }

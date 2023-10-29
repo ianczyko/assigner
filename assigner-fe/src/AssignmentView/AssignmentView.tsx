@@ -5,9 +5,25 @@ import QueryStringAddon from 'wretch/addons/queryString';
 import './AssignmentView.css';
 import Forbidden from '../Forbidden/Forbidden';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Checkbox, Stack } from '@mui/material';
+import {
+  Checkbox,
+  IconButton,
+  Stack,
+  ThemeProvider,
+  Tooltip,
+  createTheme,
+} from '@mui/material';
 import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 function AssignmentView() {
   const { course_name, edition, group_name } = useParams();
@@ -116,66 +132,119 @@ function AssignmentView() {
     return <Forbidden />;
   }
 
-  console.log(teamsResponse);
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
+
   if (teamsResponse != null) {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
+          <h4>Obecne przypisania zespołów do projektów:</h4>
           <ul>
-            Obecne przypisania <br />
-            zespołów do projektów:
-            {teamsResponse.map((team) => {
-              return (
-                <li key={team.id.toString()}>
-                  <Stack direction='row' alignItems='center' spacing='10px'>
-                    <div>
-                      zespół:{' '}
-                      <Link
-                        className='Assigner-link'
-                        to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
-                      >
-                        {team.name}
-                      </Link>{' '}
-                      - temat:{' '}
-                      {team.assignedProject == null ? (
-                        'brak'
-                      ) : (
-                        <Link
-                          className='Assigner-link'
-                          to={`/courses/${course_name}/${edition}/${group_name}/projects/${team.assignedProject.id}`}
+            <ThemeProvider theme={darkTheme}>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Zespół</TableCell>
+                      <TableCell align='right'>Przypisany temat</TableCell>
+                      <TableCell align='right'>Zadowolenie</TableCell>
+                      <TableCell align='right'>
+                        <Stack
+                          direction='row'
+                          justifyContent='right'
+                          alignItems='center'
+                          spacing='1px'
                         >
-                          {team.assignedProject.name}
-                        </Link>
-                      )}{' '}
-                    </div>
-                    {team.happiness ? (
-                      <Stack direction='row' alignItems='center' spacing='10px'>
-                        <div>- zadowolenie: {team.happiness}/5</div>
-                        <div
-                          style={{
-                            width: '1em',
-                            height: '1em',
-                            backgroundColor: getColor(team.happiness / 5.0),
-                          }}
-                        ></div>
-                        <div>
-                          <Checkbox
-                            checked={team.isAssignmentFinal}
-                            onChange={handleTeamIsAssignmentFinalChange(team)}
-                            sx={{
-                              color: 'white',
-                            }}
-                          />
-                        </div>
-                      </Stack>
-                    ) : (
-                      <div></div>
-                    )}
-                  </Stack>
-                </li>
-              );
-            })}
+                          <p>Zatwierdź przypisanie </p>
+                          <Tooltip title='Zatwierdzone przypisania nie są aktualizowane przez model optymalizacyjny.'>
+                            <IconButton
+                              onClick={() => {}}
+                              color='inherit'
+                              size='small'
+                            >
+                              <FontAwesomeIcon icon={faQuestionCircle} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {teamsResponse.map((team) => (
+                      <TableRow
+                        key={team.id}
+                        sx={{
+                          '&:last-child td, &:last-child th': { border: 0 },
+                        }}
+                      >
+                        <TableCell component='th' scope='row'>
+                          <Link
+                            className='Assigner-link'
+                            to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
+                          >
+                            {team.name}
+                          </Link>
+                        </TableCell>
+                        <TableCell align='right'>
+                          {team.assignedProject == null ? (
+                            '-'
+                          ) : (
+                            <Link
+                              className='Assigner-link'
+                              to={`/courses/${course_name}/${edition}/${group_name}/projects/${team.assignedProject.id}`}
+                            >
+                              {team.assignedProject.name}
+                            </Link>
+                          )}
+                        </TableCell>
+                        <TableCell align='right'>
+                          {team.happiness ? (
+                            <Stack
+                              direction='row'
+                              justifyContent='right'
+                              alignItems='center'
+                              spacing='10px'
+                            >
+                              <div>{team.happiness}/5</div>
+                              <div
+                                style={{
+                                  width: '1em',
+                                  height: '1em',
+                                  backgroundColor: getColor(
+                                    team.happiness / 5.0
+                                  ),
+                                }}
+                              ></div>
+                            </Stack>
+                          ) : (
+                            '-'
+                          )}
+                        </TableCell>
+                        <TableCell align='right'>
+                          {team.assignedProject == null ? (
+                            '-'
+                          ) : (
+                            <Checkbox
+                              checked={team.isAssignmentFinal}
+                              onChange={handleTeamIsAssignmentFinalChange(team)}
+                              sx={{
+                                color: 'white',
+                                padding: 0,
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </ThemeProvider>
           </ul>
           <LoadingButton
             variant='contained'
