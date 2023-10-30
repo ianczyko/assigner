@@ -8,7 +8,12 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "course_edition")
+@Table(
+        name = "course_edition",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"course_id", "edition"})
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor

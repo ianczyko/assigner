@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "course_edition_group")
+@Table(name = "course_edition_group",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"course_edition_id", "group_name"})
+        })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,6 +25,7 @@ public class CourseEditionGroupPersistent {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "group_name")
     private String groupName;
 
     @ManyToOne(fetch = FetchType.LAZY)

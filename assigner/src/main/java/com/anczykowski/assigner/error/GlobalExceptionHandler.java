@@ -2,6 +2,7 @@ package com.anczykowski.assigner.error;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.MappingException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,6 +23,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> notFoundByIdException(EntityNotFoundException ex, WebRequest request) {
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorResponseEntity, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+        var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
+        if (ex.getCause() != null
+                && ex.getCause().getCause() != null
+        ) {
+            errorResponseEntity = new ErrorResponseEntity(ex.getCause().getCause().getMessage(), request.getDescription(false));
+        }
+        return new ResponseEntity<>(errorResponseEntity, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MappingException.class)
