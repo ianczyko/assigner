@@ -4,11 +4,21 @@ import wretch from 'wretch';
 import Snackbar from '@mui/material/Snackbar';
 import QueryStringAddon from 'wretch/addons/queryString';
 import './Team.css';
-import { IconButton, Slider, Stack, Tooltip } from '@mui/material';
+import {
+  IconButton,
+  Slider,
+  Stack,
+  Tooltip,
+  ThemeProvider,
+  createTheme,
+} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import Helpers from '../Common/Helpers';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Helpers, { UserType } from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment';
 import 'moment/locale/pl';
@@ -28,10 +38,15 @@ function Team() {
   >({});
 
   const [teamResponse, setTeamResponse] = useState<ITeamResponse | null>(null);
+  const [userType, setUserType] = useState<UserType>(UserType.STUDENT);
   const [accessTokenResponse, setAccessTokenResponse] =
     useState<IAccessTokenResponse | null>(null);
+  const [projectsResponse, setProjectsResponse] =
+    useState<Array<ITeamResponse> | null>(null);
   const [preferenceResponse, setPreferenceResponse] =
     useState<Array<IPreferenceResponse> | null>(null);
+
+  const [assignedProject, setAssignedProject] = useState('');
 
   const navigate = useNavigate();
 
@@ -88,9 +103,7 @@ function Team() {
           .unauthorized((error) => {
             Helpers.handleUnathorised(navigate);
           })
-          .res((res) => {
-            console.log(res); // TODO: remove me
-          })
+          .res((res) => {})
           .catch((error) => console.log(error));
       }
     });
@@ -116,7 +129,6 @@ function Team() {
       })
       .json((json) => {
         setAccessTokenResponse(json);
-        console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
   }
@@ -135,7 +147,6 @@ function Team() {
       })
       .json((json) => {
         setAccessTokenResponse(json);
-        console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
     setSubmitLoadingAccessToken(false);
@@ -164,9 +175,13 @@ function Team() {
       .forbidden((error) => {
         Helpers.handleForbidden();
       })
-      .json((json) => {
+      .res((response) => {
+        Helpers.extractUserType(response, setUserType);
+        return response.json();
+      })
+      .then((json) => {
+        setAssignedProject(json.assignedProject?.id?.toString() ?? '');
         setTeamResponse(json);
-        console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,13 +200,59 @@ function Team() {
       })
       .json((json) => {
         setPreferenceResponse(json);
-        console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, team_id]);
 
-  if (teamResponse != null && preferenceResponse != null) {
+  useEffect(() => {
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects`
+    )
+      .get()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .json((json) => {
+        setProjectsResponse(json);
+      })
+      .catch((error) => console.log(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [course_name, edition]);
+
+  const handleAssignmentChange = (event: SelectChangeEvent) => {
+    const w = wretch().addon(QueryStringAddon);
+    w.url(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}/assigned-project`
+    )
+      .query({ 'project-id': event.target.value })
+      .put()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .json((json) => {
+        setAssignedProject(json.assignedProject?.id?.toString() ?? '');
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
+
+  if (
+    teamResponse != null &&
+    preferenceResponse != null &&
+    projectsResponse != null
+  ) {
     return (
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
@@ -202,10 +263,39 @@ function Team() {
             </p>
             <Stack direction='row' alignItems='center' spacing='30px'>
               <div>
-                <p>
-                  Przypisany temat:{' '}
-                  {teamResponse.assignedProject?.name ?? 'brak'}
-                </p>
+                <Stack direction='row' alignItems='center' spacing='15px'>
+                  <p>Przypisany temat:</p>
+                  <ThemeProvider theme={darkTheme}>
+                    <FormControl
+                      variant='standard'
+                      sx={{ minWidth: 120, paddingTop: '2px' }}
+                    >
+                      <Select
+                        value={assignedProject}
+                        onChange={handleAssignmentChange}
+                        label='Przypisany projekt'
+                        disabled={userType !== UserType.COORDINATOR}
+                        sx={{
+                          '& .MuiSelect-select': {
+                            paddingLeft: 2,
+                          },
+                        }}
+                      >
+                        <MenuItem value=''>
+                          <em>Brak</em>
+                        </MenuItem>
+                        {projectsResponse!.map((project) => {
+                          return (
+                            <MenuItem key={project.id} value={project.id}>
+                              {project.name}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </ThemeProvider>
+                </Stack>
+
                 <Stack direction='row' alignItems='center' spacing='10px'>
                   <p>Kod dostępu: </p>
                   {(() => {

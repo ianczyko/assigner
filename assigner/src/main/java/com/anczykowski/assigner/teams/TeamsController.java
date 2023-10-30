@@ -114,7 +114,7 @@ public class TeamsController {
             @PathVariable String edition,
             @PathVariable String groupName,
             @PathVariable Integer teamId,
-            @RequestParam(name = "project-id") Integer projectId,
+            @RequestParam(name = "project-id", required = false) Integer projectId,
             HttpServletRequest request
     ) {
         var team = teamsService.assignProject(teamId, projectId);

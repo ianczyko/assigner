@@ -113,9 +113,10 @@ public class TeamsService {
         return team.getPreferences();
     }
 
+    @Transactional
     public Team assignProject(Integer teamId, Integer projectId) {
         var team = teamsRepository.get(teamId);
-        var project = projectsService.get(projectId);
+        var project = projectId == null ? null : projectsService.get(projectId);
         team.setAssignedProject(project);
         return teamsRepository.save(team);
     }
