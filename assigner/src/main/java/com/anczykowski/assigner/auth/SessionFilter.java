@@ -36,15 +36,16 @@ public class SessionFilter extends OncePerRequestFilter {
             @NotNull HttpServletResponse response,
             @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
+        var requestURI = request.getRequestURI();
+        var contextPath = request.getContextPath();
+        var endpoint = requestURI.substring(contextPath.length());
+        if (endpoint.equals("/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         var cookie = WebUtils.getCookie(request, "SESSION");
         if (cookie == null) {
-            var requestURI = request.getRequestURI();
-            var contextPath = request.getContextPath();
-            var endpoint = requestURI.substring(contextPath.length());
-            if (endpoint.equals("/auth")) {
-                filterChain.doFilter(request, response);
-            }
-            else if(disableAuth){
+            if(disableAuth){
                 var authorities = new ArrayList<GrantedAuthority>();
                 authorities.add(new SimpleGrantedAuthority(UserType.COORDINATOR.toString()));
                 SecurityContextHolder.getContext().setAuthentication(
