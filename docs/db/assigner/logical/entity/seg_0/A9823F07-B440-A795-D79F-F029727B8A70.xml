@@ -60,6 +60,39 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="Access Token" id="FA7DBC90-BE68-8E1F-2C68-2AA2BCF80BEA">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-11-01 12:57:13 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Access Token Expiration Date" id="5C60AF3E-1DAD-9180-FF3A-C989977785CA">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-11-01 12:57:26 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Is Assignment Final" id="86672CEB-C196-5A52-E321-43890A5F26A9">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-11-01 12:57:32 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="0DB0142E-B392-0224-F87F-90697C55E754" name="Team PK">

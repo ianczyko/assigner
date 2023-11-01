@@ -67,6 +67,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="User Type" id="C0CF1FC4-F094-E99B-345F-E4AB677108E8">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-11-01 12:52:46 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="8005E88B-8B74-59F2-F3E2-DCCF0847BFE9" name="User PK">
