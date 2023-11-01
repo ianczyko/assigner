@@ -2,11 +2,11 @@ package com.anczykowski.assigner.auth.services;
 
 
 import com.anczykowski.assigner.auth.dto.ProfileResponse;
+import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
 import com.anczykowski.assigner.users.models.UserType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -16,7 +16,9 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import okhttp3.*;
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.session.MapSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,9 @@ import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -51,9 +55,11 @@ public class AuthService {
     @Value("${consumer.secret}")
     private String consumerSecret;
 
-    private OAuthConsumer consumer;
+    PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, Pair<OAuthConsumer, OAuthProvider>>
+            expirationPolicy = new PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<>(
+            8, TimeUnit.HOURS);
 
-    private OAuthProvider provider;
+    PassiveExpiringMap<String, Pair<OAuthConsumer, OAuthProvider>> consumerProviderMap = new PassiveExpiringMap<>(expirationPolicy, new HashMap<>());
 
     public AuthService(
             MapSessionRepository sessionRepository,
@@ -67,14 +73,12 @@ public class AuthService {
 
     UsersRepository usersRepository;
 
-    @PostConstruct
-    private void postConstruct() {
-        consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
-        provider = new DefaultOAuthProvider(REQUEST_TOKEN_URL, ACCESS_TOKEN_URL, AUTHORIZATION_URL);
-    }
-
-    public String getToken(String callbackUrl) {
+    public String getToken(String callbackUrl, String sessionId) {
         try {
+            var consumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
+            var provider = new DefaultOAuthProvider(REQUEST_TOKEN_URL, ACCESS_TOKEN_URL, AUTHORIZATION_URL);
+            consumerProviderMap.put(sessionId, Pair.of(consumer, provider));
+
             return provider.retrieveRequestToken(consumer, callbackUrl);
         } catch (OAuthMessageSignerException |
                  OAuthNotAuthorizedException |
@@ -94,11 +98,19 @@ public class AuthService {
     @Transactional
     public void verify(String verifier, String sessionId) {
         try {
+
+            var consumerAndProvider = consumerProviderMap.get(sessionId);
+            if (consumerAndProvider == null) {
+                throw new NotFoundException("Verify called on expired OAuth consumer/provider");
+            }
+            var consumer = consumerAndProvider.getFirst();
+            var provider = consumerAndProvider.getSecond();
+
             provider.retrieveAccessToken(consumer, verifier);
 
             var accessToken = consumer.getToken();
             var accessTokenSecret = consumer.getTokenSecret();
-            var profileData = getProfileData(accessToken, accessTokenSecret);
+            var profileData = getProfileData(accessToken, accessTokenSecret, sessionId);
 
             var session = sessionRepository.findById(sessionId);
 
@@ -140,10 +152,16 @@ public class AuthService {
         String accessToken = session.getAttribute("accessToken");
         String accessTokenSecret = session.getAttribute("accessTokenSecret");
         if (accessToken == null) throw new RuntimeException();
-        return getProfileData(accessToken, accessTokenSecret);
+        return getProfileData(accessToken, accessTokenSecret, sessionId);
     }
 
-    private ProfileResponse getProfileData(String accessToken, String accessTokenSecret) {
+    private ProfileResponse getProfileData(String accessToken, String accessTokenSecret, String sessionId) {
+        var consumerAndProvider = consumerProviderMap.get(sessionId);
+        if (consumerAndProvider == null) {
+            throw new NotFoundException("getProfileData called on expired OAuth consumer/provider");
+        }
+        var consumer = consumerAndProvider.getFirst();
+
         consumer.setTokenWithSecret(accessToken, accessTokenSecret);
         var okConsumer = new OkHttpOAuthConsumer(consumerKey, consumerSecret);
         okConsumer.setTokenWithSecret(accessToken, accessTokenSecret);

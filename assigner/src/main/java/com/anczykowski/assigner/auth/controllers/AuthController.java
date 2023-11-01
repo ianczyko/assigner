@@ -25,8 +25,8 @@ public class AuthController {
 
     @PostMapping("/auth")
     public AuthResponse auth(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
-        var authorizeUrl = authService.getToken(authRequest.getCallbackUrl());
         var session = authService.createSession();
+        var authorizeUrl = authService.getToken(authRequest.getCallbackUrl(), session.getId());
         var cookie = new Cookie("SESSION", session.getId());
         cookie.setHttpOnly(true);
         var minute = 60;
