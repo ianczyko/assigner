@@ -53,16 +53,14 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
                         .put("name", "name1")
                         .put("teamLimit", 1)
                         .put("description", "desc1")
-                        .put("projectManager", new JSONObject()
-                                .put("id", 1))
+                        .put("projectManager", "Bill")
                         .toString());
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(json().node("name").isEqualTo("name1"))
                 .andExpect(json().node("description").isEqualTo("desc1"))
-                .andExpect(json().node("projectManager.id").isEqualTo(1))
-                .andExpect(json().node("projectManager.name").isNotNull());
+                .andExpect(json().node("projectManager").isEqualTo("Bill"));
     }
 
     @Test

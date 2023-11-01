@@ -27,10 +27,6 @@ public class ProjectsService {
     @Transactional
     public Project create(String courseName, String edition, String groupName, Project project) {
         var courseEditionGroup = courseEditionGroupsService.get(courseName, edition, groupName);
-        if (project.getProjectManager() != null) {
-            var projectManager = usersRepository.get(project.getProjectManager().getId());
-            project.setProjectManager(projectManager);
-        }
         project.setCourseEditionGroup(courseEditionGroup);
         return projectsRepository.save(project);
     }

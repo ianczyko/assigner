@@ -19,6 +19,7 @@ function Project() {
     id: Number;
     name: string;
     teamLimit: Number;
+    projectManager: string;
     description: string;
   }
 
@@ -55,6 +56,7 @@ function Project() {
             <p>
               {course_name} / {edition} / {group_name} / {projectResponse.name}
             </p>
+            <p>Opiekun projektu: {projectResponse.projectManager}</p>
             <p>Limit miejsc: {projectResponse.teamLimit.toString()}</p>
             <p>{projectResponse.description}</p>
             <Forum />

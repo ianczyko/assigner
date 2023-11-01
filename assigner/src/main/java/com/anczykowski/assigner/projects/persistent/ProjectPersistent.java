@@ -3,7 +3,6 @@ package com.anczykowski.assigner.projects.persistent;
 import com.anczykowski.assigner.courses.persistent.CourseEditionGroupPersistent;
 import com.anczykowski.assigner.teams.persistent.ProjectPreferencePersistent;
 import com.anczykowski.assigner.teams.persistent.TeamPersistent;
-import com.anczykowski.assigner.users.persistent.UserPersistent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +31,7 @@ public class ProjectPersistent {
     @JoinColumn(name = "course_edition_id")
     private CourseEditionGroupPersistent courseEditionGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_manager_id")
-    private UserPersistent projectManager;
+    private String projectManager;
 
     @OneToMany(mappedBy = "assignedProject")
     private List<TeamPersistent> assignedTeams;
