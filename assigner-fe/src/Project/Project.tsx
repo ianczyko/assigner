@@ -23,9 +23,10 @@ function Project() {
     useState<IProjectResponse | null>(null);
 
   interface IProjectResponse {
-    id: Number;
+    id: number;
     name: string;
-    teamLimit: Number;
+    teamLimit: number;
+    finalAssignedTeamsCount: number;
     projectManager: string;
     description: string;
   }
@@ -69,7 +70,8 @@ function Project() {
                   <TableRow>
                     <TableCell>Nazwa tematu</TableCell>
                     <TableCell>Opiekun Tematu</TableCell>
-                    <TableCell>Limit miejsc</TableCell>
+                    <TableCell align='right'>Limit miejsc</TableCell>
+                    <TableCell align='right'>Ilość przypisań</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -79,8 +81,11 @@ function Project() {
                   >
                     <TableCell>{projectResponse.name}</TableCell>
                     <TableCell>{projectResponse.projectManager}</TableCell>
-                    <TableCell>
-                      {projectResponse.teamLimit.toString()}
+                    <TableCell align='right'>
+                      {projectResponse.teamLimit}
+                    </TableCell>
+                    <TableCell align='right'>
+                      {projectResponse.finalAssignedTeamsCount}
                     </TableCell>
                   </TableRow>
                 </TableBody>

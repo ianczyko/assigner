@@ -25,4 +25,6 @@ public class ProjectDto {
 
     String description;
 
+    Integer finalAssignedTeamsCount;
+
 }
