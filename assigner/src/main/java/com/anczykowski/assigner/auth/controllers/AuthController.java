@@ -29,6 +29,7 @@ public class AuthController {
         var authorizeUrl = authService.getToken(authRequest.getCallbackUrl(), session.getId());
         var cookie = new Cookie("SESSION", session.getId());
         cookie.setHttpOnly(true);
+        cookie.setAttribute("SameSite", "Strict");
         var minute = 60;
         var hour = 60 * minute;
         cookie.setMaxAge(6 * hour);
