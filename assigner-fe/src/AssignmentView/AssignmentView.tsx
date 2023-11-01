@@ -5,14 +5,7 @@ import QueryStringAddon from 'wretch/addons/queryString';
 import './AssignmentView.css';
 import Forbidden from '../Forbidden/Forbidden';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {
-  Checkbox,
-  IconButton,
-  Stack,
-  ThemeProvider,
-  Tooltip,
-  createTheme,
-} from '@mui/material';
+import { Checkbox, IconButton, Stack, Tooltip } from '@mui/material';
 import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 import Table from '@mui/material/Table';
@@ -132,12 +125,6 @@ function AssignmentView() {
     return <Forbidden />;
   }
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-  });
-
   if (teamsResponse != null) {
     return (
       <div className='Assigner-center-container'>
@@ -148,106 +135,102 @@ function AssignmentView() {
           </p>
           <h4>Obecne przypisania zespołów do projektów:</h4>
           <ul>
-            <ThemeProvider theme={darkTheme}>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Zespół</TableCell>
-                      <TableCell align='right'>Przypisany temat</TableCell>
-                      <TableCell align='right'>Zadowolenie</TableCell>
-                      <TableCell align='right'>
-                        <Stack
-                          direction='row'
-                          justifyContent='right'
-                          alignItems='center'
-                          spacing='1px'
-                        >
-                          <p>Zatwierdź przypisanie </p>
-                          <Tooltip title='Zatwierdzone przypisania nie są aktualizowane przez model optymalizacyjny.'>
-                            <IconButton
-                              onClick={() => {}}
-                              color='inherit'
-                              size='small'
-                            >
-                              <FontAwesomeIcon icon={faQuestionCircle} />
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {teamsResponse.map((team) => (
-                      <TableRow
-                        key={team.id}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                        }}
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Zespół</TableCell>
+                    <TableCell align='right'>Przypisany temat</TableCell>
+                    <TableCell align='right'>Zadowolenie</TableCell>
+                    <TableCell align='right'>
+                      <Stack
+                        direction='row'
+                        justifyContent='right'
+                        alignItems='center'
+                        spacing='1px'
                       >
-                        <TableCell component='th' scope='row'>
+                        <p>Zatwierdź przypisanie </p>
+                        <Tooltip title='Zatwierdzone przypisania nie są aktualizowane przez model optymalizacyjny.'>
+                          <IconButton
+                            onClick={() => {}}
+                            color='inherit'
+                            size='small'
+                          >
+                            <FontAwesomeIcon icon={faQuestionCircle} />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {teamsResponse.map((team) => (
+                    <TableRow
+                      key={team.id}
+                      sx={{
+                        '&:last-child td, &:last-child th': { border: 0 },
+                      }}
+                    >
+                      <TableCell component='th' scope='row'>
+                        <Link
+                          className='Assigner-link'
+                          to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
+                        >
+                          {team.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell align='right'>
+                        {team.assignedProject == null ? (
+                          '-'
+                        ) : (
                           <Link
                             className='Assigner-link'
-                            to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
+                            to={`/courses/${course_name}/${edition}/${group_name}/projects/${team.assignedProject.id}`}
                           >
-                            {team.name}
+                            {team.assignedProject.name}
                           </Link>
-                        </TableCell>
-                        <TableCell align='right'>
-                          {team.assignedProject == null ? (
-                            '-'
-                          ) : (
-                            <Link
-                              className='Assigner-link'
-                              to={`/courses/${course_name}/${edition}/${group_name}/projects/${team.assignedProject.id}`}
-                            >
-                              {team.assignedProject.name}
-                            </Link>
-                          )}
-                        </TableCell>
-                        <TableCell align='right'>
-                          {team.happiness ? (
-                            <Stack
-                              direction='row'
-                              justifyContent='right'
-                              alignItems='center'
-                              spacing='10px'
-                            >
-                              <div>{team.happiness}/5</div>
-                              <div
-                                style={{
-                                  width: '1em',
-                                  height: '1em',
-                                  backgroundColor: getColor(
-                                    team.happiness / 5.0
-                                  ),
-                                }}
-                              ></div>
-                            </Stack>
-                          ) : (
-                            '-'
-                          )}
-                        </TableCell>
-                        <TableCell align='right'>
-                          {team.assignedProject == null ? (
-                            '-'
-                          ) : (
-                            <Checkbox
-                              checked={team.isAssignmentFinal}
-                              onChange={handleTeamIsAssignmentFinalChange(team)}
-                              sx={{
-                                color: 'white',
-                                padding: 0,
+                        )}
+                      </TableCell>
+                      <TableCell align='right'>
+                        {team.happiness ? (
+                          <Stack
+                            direction='row'
+                            justifyContent='right'
+                            alignItems='center'
+                            spacing='10px'
+                          >
+                            <div>{team.happiness}/5</div>
+                            <div
+                              style={{
+                                width: '1em',
+                                height: '1em',
+                                backgroundColor: getColor(team.happiness / 5.0),
                               }}
-                            />
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </ThemeProvider>
+                            ></div>
+                          </Stack>
+                        ) : (
+                          '-'
+                        )}
+                      </TableCell>
+                      <TableCell align='right'>
+                        {team.assignedProject == null ? (
+                          '-'
+                        ) : (
+                          <Checkbox
+                            checked={team.isAssignmentFinal}
+                            onChange={handleTeamIsAssignmentFinalChange(team)}
+                            sx={{
+                              color: 'white',
+                              padding: 0,
+                            }}
+                          />
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </ul>
           <LoadingButton
             variant='contained'
