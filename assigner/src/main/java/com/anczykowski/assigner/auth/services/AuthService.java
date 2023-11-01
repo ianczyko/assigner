@@ -61,6 +61,10 @@ public class AuthService {
 
     PassiveExpiringMap<String, Pair<OAuthConsumer, OAuthProvider>> consumerProviderMap = new PassiveExpiringMap<>(expirationPolicy, new HashMap<>());
 
+    MapSessionRepository sessionRepository;
+
+    UsersRepository usersRepository;
+
     public AuthService(
             MapSessionRepository sessionRepository,
             UsersRepository usersRepository
@@ -68,10 +72,6 @@ public class AuthService {
         this.sessionRepository = sessionRepository;
         this.usersRepository = usersRepository;
     }
-
-    MapSessionRepository sessionRepository;
-
-    UsersRepository usersRepository;
 
     public String getToken(String callbackUrl, String sessionId) {
         try {

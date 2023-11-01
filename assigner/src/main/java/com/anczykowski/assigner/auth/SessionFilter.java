@@ -45,7 +45,7 @@ public class SessionFilter extends OncePerRequestFilter {
         }
         var cookie = WebUtils.getCookie(request, "SESSION");
         if (cookie == null) {
-            if(disableAuth){
+            if (disableAuth) {
                 var authorities = new ArrayList<GrantedAuthority>();
                 authorities.add(new SimpleGrantedAuthority(UserType.COORDINATOR.toString()));
                 SecurityContextHolder.getContext().setAuthentication(
@@ -56,8 +56,7 @@ public class SessionFilter extends OncePerRequestFilter {
                         )
                 );
                 filterChain.doFilter(request, response);
-            }
-            else {
+            } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
             return;

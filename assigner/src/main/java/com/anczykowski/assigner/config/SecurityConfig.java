@@ -1,8 +1,8 @@
 package com.anczykowski.assigner.config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import com.anczykowski.assigner.auth.CustomLogoutHandler;
+import com.anczykowski.assigner.auth.SessionFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +16,8 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
-import com.anczykowski.assigner.auth.CustomLogoutHandler;
-import com.anczykowski.assigner.auth.SessionFilter;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -40,20 +39,20 @@ public class SecurityConfig {
         var patternsToPermitListArr = patternsToPermit.toArray(String[]::new);
         var logoutSuccessHandler = new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK);
         http
-            .cors().disable()
-            .csrf().disable()
-            .authorizeHttpRequests()
-            .requestMatchers(patternsToPermitListArr).permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .addFilterBefore(sessionFilter, BasicAuthenticationFilter.class)
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .logout().logoutUrl("/logout")
-            .addLogoutHandler(customLogoutHandler)
-            .logoutSuccessHandler(logoutSuccessHandler)
-            .deleteCookies("SESSION", "JSESSIONID").invalidateHttpSession(true);
+                .cors().disable()
+                .csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers(patternsToPermitListArr).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(sessionFilter, BasicAuthenticationFilter.class)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .logout().logoutUrl("/logout")
+                .addLogoutHandler(customLogoutHandler)
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .deleteCookies("SESSION", "JSESSIONID").invalidateHttpSession(true);
         return http.build();
     }
 }
