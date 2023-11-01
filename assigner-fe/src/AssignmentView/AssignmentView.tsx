@@ -136,7 +136,7 @@ function AssignmentView() {
           <h4>Obecne przypisania zespołów do projektów:</h4>
           <ul>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+              <Table sx={{ minWidth: 630 }} aria-label='simple table'>
                 <TableHead>
                   <TableRow>
                     <TableCell>Zespół</TableCell>
