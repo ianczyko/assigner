@@ -6,6 +6,13 @@ import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 import { Stack } from '@mui/material';
 import Forum from '../Forum/Forum';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 function Project() {
   const { course_name, edition, group_name, project_id } = useParams();
@@ -56,8 +63,30 @@ function Project() {
             <p>
               {course_name} / {edition} / {group_name} / {projectResponse.name}
             </p>
-            <p>Opiekun projektu: {projectResponse.projectManager}</p>
-            <p>Limit miejsc: {projectResponse.teamLimit.toString()}</p>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 550 }} aria-label='simple table'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nazwa tematu</TableCell>
+                    <TableCell>Opiekun Tematu</TableCell>
+                    <TableCell>Limit miejsc</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow
+                    key={projectResponse.name}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell>{projectResponse.name}</TableCell>
+                    <TableCell>{projectResponse.projectManager}</TableCell>
+                    <TableCell>
+                      {projectResponse.teamLimit.toString()}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+
             <p>{projectResponse.description}</p>
             <Forum />
           </Stack>
