@@ -10,6 +10,13 @@ import NewProject from '../NewProject/NewProject';
 import JoinTeam from '../JoinTeam/JoinTeam';
 import Helpers, { UserType } from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 function CourseEdition() {
   const { course_name, edition, group_name } = useParams();
@@ -33,23 +40,23 @@ function CourseEdition() {
   const navigate = useNavigate();
 
   interface IEditionResponse {
-    id: Number;
+    id: number;
     groupName: string;
     users: Array<IUser>;
   }
 
   interface ITeamResponse {
-    id: Number;
+    id: number;
     name: string;
-    assignedProject: any; // TODO: define when needed
+    members: Array<IUser>;
   }
 
   interface IUser {
-    id: Number;
+    id: number;
     name: string;
     secondName: string | null;
     surname: string;
-    usosId: Number;
+    usosId: number;
   }
 
   useEffect(() => {
@@ -148,6 +155,14 @@ function CourseEdition() {
         setProjectsResponse(json);
       })
       .catch((error) => console.log(error));
+  }
+
+  function getAssignedTeamOf(usosId: number) {
+    let userTeams = teamsResponse?.filter(
+      (t) => t.members.filter((m) => m.id === usosId).length
+    );
+    if (userTeams == null || userTeams.length <= 1) return null;
+    return userTeams[0];
   }
 
   useEffect(() => {
@@ -298,18 +313,37 @@ function CourseEdition() {
               })}
             </ul>
           </Stack>
-
+          <h4>Lista studentów:</h4>
           <ul>
-            Członkowie edycji:
-            {editionResponse.users.map((user) => {
-              return (
-                <li key={user.id.toString()}>
-                  <p className='Assigner-font-medium Assigner-no-margin'>
-                    {user.name} {user.surname} {user.usosId.toString()}
-                  </p>
-                </li>
-              );
-            })}
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 550 }} aria-label='simple table'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Imię</TableCell>
+                    <TableCell>Nazwisko</TableCell>
+                    <TableCell>Zespół</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {editionResponse.users.map((user) => {
+                    return (
+                      <TableRow
+                        key={user.id.toString()}
+                        sx={{
+                          '&:last-child td, &:last-child th': { border: 0 },
+                        }}
+                      >
+                        <TableCell>{user.name}</TableCell>
+                        <TableCell>{user.surname}</TableCell>
+                        <TableCell>
+                          {getAssignedTeamOf(user.id)?.name ?? '-'}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </ul>
 
           <br />
