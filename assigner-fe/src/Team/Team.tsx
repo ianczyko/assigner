@@ -365,7 +365,7 @@ function Team() {
                       <li key={pref.project.id} className='Assigner-no-padding'>
                         <Link
                           className='Assigner-link'
-                          to={`/courses/${course_name}/${edition}/projects/${pref.project.id}`}
+                          to={`/courses/${course_name}/${edition}/${group_name}/projects/${pref.project.id}`}
                         >
                           {pref.project.name}
                         </Link>
