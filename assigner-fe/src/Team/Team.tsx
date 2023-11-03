@@ -4,14 +4,7 @@ import wretch from 'wretch';
 import Snackbar from '@mui/material/Snackbar';
 import QueryStringAddon from 'wretch/addons/queryString';
 import './Team.css';
-import {
-  IconButton,
-  Slider,
-  Stack,
-  Tooltip,
-  ThemeProvider,
-  createTheme,
-} from '@mui/material';
+import { IconButton, Slider, Stack, Tooltip } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
@@ -242,12 +235,6 @@ function Team() {
       .catch((error) => console.log(error));
   };
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-  });
-
   if (
     teamResponse != null &&
     preferenceResponse != null &&
@@ -265,35 +252,33 @@ function Team() {
               <div>
                 <Stack direction='row' alignItems='center' spacing='15px'>
                   <p>Przypisany temat:</p>
-                  <ThemeProvider theme={darkTheme}>
-                    <FormControl
-                      variant='standard'
-                      sx={{ minWidth: 120, paddingTop: '2px' }}
+                  <FormControl
+                    variant='standard'
+                    sx={{ minWidth: 120, paddingTop: '2px' }}
+                  >
+                    <Select
+                      value={assignedProject}
+                      onChange={handleAssignmentChange}
+                      label='Przypisany projekt'
+                      disabled={userType !== UserType.COORDINATOR}
+                      sx={{
+                        '& .MuiSelect-select': {
+                          paddingLeft: 2,
+                        },
+                      }}
                     >
-                      <Select
-                        value={assignedProject}
-                        onChange={handleAssignmentChange}
-                        label='Przypisany projekt'
-                        disabled={userType !== UserType.COORDINATOR}
-                        sx={{
-                          '& .MuiSelect-select': {
-                            paddingLeft: 2,
-                          },
-                        }}
-                      >
-                        <MenuItem value=''>
-                          <em>Brak</em>
-                        </MenuItem>
-                        {projectsResponse!.map((project) => {
-                          return (
-                            <MenuItem key={project.id} value={project.id}>
-                              {project.name}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  </ThemeProvider>
+                      <MenuItem value=''>
+                        <em>Brak</em>
+                      </MenuItem>
+                      {projectsResponse!.map((project) => {
+                        return (
+                          <MenuItem key={project.id} value={project.id}>
+                            {project.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
                 </Stack>
 
                 <Stack direction='row' alignItems='center' spacing='10px'>
