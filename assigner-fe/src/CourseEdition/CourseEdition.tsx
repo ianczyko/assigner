@@ -361,13 +361,14 @@ function CourseEdition() {
               <Table sx={{ minWidth: 550 }} aria-label='simple table'>
                 <TableHead>
                   <TableRow>
+                    <TableCell></TableCell>
                     <TableCell>Imię</TableCell>
                     <TableCell>Nazwisko</TableCell>
                     <TableCell>Zespół</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {editionResponse.users.map((user) => {
+                  {editionResponse.users.map((user, index) => {
                     return (
                       <TableRow
                         key={user.id.toString()}
@@ -375,6 +376,7 @@ function CourseEdition() {
                           '&:last-child td, &:last-child th': { border: 0 },
                         }}
                       >
+                        <TableCell>{index + 1}</TableCell>
                         <TableCell>{user.name}</TableCell>
                         <TableCell>{user.surname}</TableCell>
                         <TableCell>
