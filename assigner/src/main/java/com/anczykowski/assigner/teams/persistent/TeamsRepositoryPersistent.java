@@ -3,6 +3,8 @@ package com.anczykowski.assigner.teams.persistent;
 import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.users.UsersRepository;
+import com.anczykowski.assigner.users.models.User;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +20,8 @@ import java.util.List;
 public class TeamsRepositoryPersistent implements TeamsRepository {
 
     TeamsRepositoryPersistentImpl repositoryImpl;
+
+    UsersRepository usersRepository;
 
     ModelMapper modelMapper;
 
@@ -40,6 +44,26 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
     @Override
     public Team get(Integer teamId) {
         return modelMapper.map(repositoryImpl.getReferenceById(teamId), Team.class);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Team addMemberToTeam(Integer teamId, User user) {
+        var teamPersistent = repositoryImpl.getReferenceById(teamId);
+        var userPersistent = usersRepository.getUserReferenceById(user.getId());
+        teamPersistent.getMembers().add(userPersistent);
+        var teamPersistentSaved = repositoryImpl.save(teamPersistent);
+        return modelMapper.map(teamPersistentSaved, Team.class);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Team removeMemberFromTeam(Integer teamId, User user) {
+        var teamPersistent = repositoryImpl.getReferenceById(teamId);
+        var userPersistent = usersRepository.getUserReferenceById(user.getId());
+        teamPersistent.getMembers().remove(userPersistent);
+        var teamPersistentSaved = repositoryImpl.save(teamPersistent);
+        return modelMapper.map(teamPersistentSaved, Team.class);
     }
 }
 

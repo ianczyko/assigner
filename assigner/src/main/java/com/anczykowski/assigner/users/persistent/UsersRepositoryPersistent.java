@@ -51,6 +51,11 @@ public class UsersRepositoryPersistent implements UsersRepository {
                         .collect(Collectors.toList())
                 ).orElse(new ArrayList<>());
     }
+
+    @Override
+    public UserPersistent getUserReferenceById(Integer id) {
+        return repositoryImpl.getReferenceById(id);
+    }
 }
 
 @Component

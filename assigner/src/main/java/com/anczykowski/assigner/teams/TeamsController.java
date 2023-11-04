@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,6 +76,20 @@ public class TeamsController {
                 .stream()
                 .map(c -> modelMapper.map(c, UserDto.class))
                 .toList();
+    }
+
+    @PutMapping("/manual-team-assign")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public ResponseEntity<Void> manualTeamAssign(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @RequestParam(name = "team-id", required = false) Integer teamId,
+            @RequestParam(name = "previous-team-id", required = false) Integer previousTeamId,
+            @RequestParam Integer usosId
+    ) {
+        teamsService.manualTeamAssign(usosId, teamId, previousTeamId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{teamId}/members")

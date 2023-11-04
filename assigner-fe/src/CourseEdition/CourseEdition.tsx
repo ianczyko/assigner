@@ -1,10 +1,18 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
+import QueryStringAddon from 'wretch/addons/queryString';
 import './CourseEdition.css';
 import Forbidden from '../Forbidden/Forbidden';
 import Popup from 'reactjs-popup';
-import { Button, Stack } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+} from '@mui/material';
 import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
 import JoinTeam from '../JoinTeam/JoinTeam';
@@ -33,6 +41,8 @@ function CourseEdition() {
   const [projectsResponse, setProjectsResponse] =
     useState<Array<ITeamResponse> | null>(null);
 
+  const [assignedTeams, setAssignedTeams] = useState<any>({});
+
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenJoin, setIsOpenJoin] = useState(false);
   const [isOpenProject, setIsOpenProject] = useState(false);
@@ -59,8 +69,8 @@ function CourseEdition() {
     usosId: number;
   }
 
-  useEffect(() => {
-    wretch(
+  function getGroup() {
+    return wretch(
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}`
     )
       .get()
@@ -81,8 +91,22 @@ function CourseEdition() {
         setEditionResponse(json);
       })
       .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    getGroup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition]);
+
+  useEffect(() => {
+    if (editionResponse == null) return;
+    if (teamsResponse == null) return;
+    editionResponse.users.forEach((user: IUser) => {
+      let userTeam = getAssignedTeamOf(user.id)?.id ?? '';
+      setAssignedTeams((prev: any) => ({ ...prev, [user.id]: userTeam }));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editionResponse, teamsResponse]);
 
   function getAssignedTeam() {
     wretch(
@@ -157,11 +181,11 @@ function CourseEdition() {
       .catch((error) => console.log(error));
   }
 
-  function getAssignedTeamOf(usosId: number) {
+  function getAssignedTeamOf(userId: number) {
     let userTeams = teamsResponse?.filter(
-      (t) => t.members.filter((m) => m.id === usosId).length
+      (t) => t.members.filter((m) => m.id === userId).length
     );
-    if (userTeams == null || userTeams.length <= 1) return null;
+    if (userTeams == null || userTeams.length < 1) return null;
     return userTeams[0];
   }
 
@@ -169,6 +193,30 @@ function CourseEdition() {
     fetchProjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleTeamAssignmentChange =
+    (user: IUser) => (event: SelectChangeEvent) => {
+      const w = wretch().addon(QueryStringAddon);
+      w.url(
+        `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/manual-team-assign`
+      )
+        .query({
+          'team-id': event.target.value,
+          'previous-team-id': getAssignedTeamOf(user.id)?.id,
+          usosId: user.usosId,
+        })
+        .put()
+        .unauthorized((error) => {
+          Helpers.handleUnathorised(navigate);
+        })
+        .forbidden((error) => {
+          Helpers.handleForbidden();
+        })
+        .res((res) => {
+          fetchTeams();
+        })
+        .catch((error) => console.log(error));
+    };
 
   if (isForbidden) {
     return <Forbidden />;
@@ -336,7 +384,39 @@ function CourseEdition() {
                         <TableCell>{user.name}</TableCell>
                         <TableCell>{user.surname}</TableCell>
                         <TableCell>
-                          {getAssignedTeamOf(user.id)?.name ?? '-'}
+                          {(() => {
+                            if (userType === UserType.STUDENT) {
+                              return getAssignedTeamOf(user.id)?.name ?? '-';
+                            }
+                            return (
+                              <FormControl
+                                variant='standard'
+                                sx={{ minWidth: 120, paddingTop: '2px' }}
+                              >
+                                <Select
+                                  value={assignedTeams[user.id] ?? ''}
+                                  onChange={handleTeamAssignmentChange(user)}
+                                  label='Przypisany zespół'
+                                  sx={{
+                                    '& .MuiSelect-select': {
+                                      paddingLeft: 2,
+                                    },
+                                  }}
+                                >
+                                  <MenuItem value=''>
+                                    <em>Brak</em>
+                                  </MenuItem>
+                                  {teamsResponse!.map((team) => {
+                                    return (
+                                      <MenuItem key={team.id} value={team.id}>
+                                        {team.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            );
+                          })()}
                         </TableCell>
                       </TableRow>
                     );

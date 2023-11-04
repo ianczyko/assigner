@@ -43,7 +43,7 @@ public class TeamPersistent {
     @JoinColumn(name = "course_edition_id")
     private CourseEditionGroupPersistent courseEditionGroup;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "team_members",
             joinColumns = @JoinColumn(name = "team_id"),

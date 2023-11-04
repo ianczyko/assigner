@@ -85,9 +85,8 @@ public class TeamsService {
         var member = usersRepository.getByUsosId(usosId)
                 .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
 
-        team.addMember(member);
-        teamsRepository.save(team);
-        return team.getMembers();
+        var teamSaved = teamsRepository.addMemberToTeam(teamId, member);
+        return teamSaved.getMembers();
     }
 
     public Set<User> getTeamMembers(Integer teamId) {
@@ -154,5 +153,21 @@ public class TeamsService {
         var team = teamsRepository.get(teamId);
         team.setIsAssignmentFinal(isApproved);
         return teamsRepository.save(team);
+    }
+
+    // TODO: tests
+    @Transactional
+    public void manualTeamAssign(Integer usosId, Integer teamId, Integer previousTeamId) {
+
+        var user = usersRepository.getByUsosId(usosId)
+                .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
+
+        if (previousTeamId != null) {
+            teamsRepository.removeMemberFromTeam(previousTeamId, user);
+        }
+
+        if (teamId != null) {
+            teamsRepository.addMemberToTeam(teamId, user);
+        }
     }
 }
