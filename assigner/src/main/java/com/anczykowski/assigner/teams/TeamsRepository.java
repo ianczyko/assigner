@@ -15,5 +15,6 @@ public interface TeamsRepository {
 
     Team addMemberToTeam(Integer teamId, User user);
 
+    @SuppressWarnings("UnusedReturnValue")
     Team removeMemberFromTeam(Integer teamId, User user);
 }
