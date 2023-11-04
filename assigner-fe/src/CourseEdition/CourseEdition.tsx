@@ -198,14 +198,14 @@ function CourseEdition() {
     (user: IUser) => (event: SelectChangeEvent) => {
       const w = wretch().addon(QueryStringAddon);
       w.url(
-        `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/manual-team-assign`
+        `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/manual-reassignment`
       )
         .query({
           'team-id': event.target.value,
           'previous-team-id': getAssignedTeamOf(user.id)?.id,
           usosId: user.usosId,
         })
-        .put()
+        .post()
         .unauthorized((error) => {
           Helpers.handleUnathorised(navigate);
         })

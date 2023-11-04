@@ -79,7 +79,7 @@ public class TeamsController {
                 .toList();
     }
 
-    @PutMapping("/manual-team-assign")
+    @PostMapping("/manual-reassignment")
     @PreAuthorize("hasAuthority('COORDINATOR')")
     public ResponseEntity<Void> manualTeamAssign(
             @SuppressWarnings("unused") @PathVariable String courseName,
