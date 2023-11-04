@@ -30,10 +30,6 @@ public class TeamPersistent {
     private LocalDateTime accessTokenExpirationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leader_id")
-    private UserPersistent leader;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_project_id")
     private ProjectPersistent assignedProject;
 

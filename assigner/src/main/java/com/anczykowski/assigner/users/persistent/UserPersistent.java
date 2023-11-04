@@ -41,9 +41,6 @@ public class UserPersistent {
     )
     private Set<CourseEditionGroupPersistent> courseEditionGroupsAccess;
 
-    @OneToMany(mappedBy = "leader")
-    private List<TeamPersistent> teamsLead;
-
     @ManyToMany(mappedBy = "members")
     private List<TeamPersistent> teamAccesses;
 

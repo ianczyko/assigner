@@ -29,7 +29,6 @@ public final class Team {
     private Project assignedProject;
     @Builder.Default
     private Boolean isAssignmentFinal = false;
-    private User leader;
     @Builder.Default
     private Set<User> members = new HashSet<>();
     @Builder.Default
