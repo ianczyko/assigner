@@ -28,8 +28,8 @@ public class CourseEditionGroupsService {
 
     CourseEditionGroupRepository courseEditionGroupRepository;
 
-    public List<CourseEditionGroup> getAll(String courseName) {
-        return courseEditionGroupRepository.getAll(courseName);
+    public List<CourseEditionGroup> getAll(String courseName, String edition) {
+        return courseEditionGroupRepository.getAll(courseName, edition);
     }
 
     public CourseEditionGroup get(String courseName, String edition, String groupName) {
@@ -37,6 +37,7 @@ public class CourseEditionGroupsService {
                 .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 
+    @Transactional
     public CourseEditionGroup createOrGet(String courseName, String edition, String groupName) {
         var existingCourseEditionGroup = courseEditionGroupRepository.get(courseName, edition, groupName);
         return existingCourseEditionGroup.orElseGet(() -> {
@@ -47,5 +48,28 @@ public class CourseEditionGroupsService {
                     .groupName(groupName)
                     .build());
         });
+    }
+
+    @Transactional
+    public void reassignUser(Integer usosId, String groupFromName, String groupToName, String courseName, String edition) {
+        var user = usersRepository.getByUsosId(usosId)
+                .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
+        var groupFrom = courseEditionGroupRepository.get(courseName, edition, groupFromName)
+                .orElseThrow(() -> new NotFoundException("%s %s %s course edition group not found".formatted(courseName, edition, groupFromName)));
+        var groupTo = courseEditionGroupRepository.get(courseName, edition, groupToName)
+                .orElseThrow(() -> new NotFoundException("%s %s %s course edition group not found".formatted(courseName, edition, groupFromName)));
+
+
+        // groupTo.getUsers().add(user);
+
+        groupFrom.getUsers().remove(user);
+        user.getCourseEditionGroupsAccess().remove(groupFrom);
+
+        user.getCourseEditionGroupsAccess().add(groupTo);
+
+        courseEditionGroupRepository.save(groupFrom);
+        usersRepository.save(user);
+
+        // courseEditionGroupRepository.save(groupTo);
     }
 }

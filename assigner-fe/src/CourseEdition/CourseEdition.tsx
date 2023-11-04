@@ -8,10 +8,12 @@ import Popup from 'reactjs-popup';
 import {
   Button,
   FormControl,
+  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
   Stack,
+  Tooltip,
 } from '@mui/material';
 import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
@@ -25,6 +27,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
 function CourseEdition() {
   const { course_name, edition, group_name } = useParams();
@@ -38,6 +42,8 @@ function CourseEdition() {
   const [assignedTeam, setAssignedTeam] = useState<ITeamResponse | null>(null);
   const [teamsResponse, setTeamsResponse] =
     useState<Array<ITeamResponse> | null>(null);
+  const [groupsResponse, setGroupsResponse] =
+    useState<Array<IEditionResponse> | null>(null);
   const [projectsResponse, setProjectsResponse] =
     useState<Array<ITeamResponse> | null>(null);
 
@@ -69,8 +75,33 @@ function CourseEdition() {
     usosId: number;
   }
 
+  function fetchGroups() {
+    wretch(`/api/courses/${course_name}/editions/${edition}/groups`)
+      .get()
+      .forbidden((error) => {
+        console.log(error); // TODO: better error handling
+        setIsForbidden(true);
+      })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .json((json) => {
+        setGroupsResponse(json);
+      })
+      .catch((error) => console.log(error));
+    getAssignedTeam();
+  }
+
+  useEffect(() => {
+    fetchGroups();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function getGroup() {
-    return wretch(
+    wretch(
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}`
     )
       .get()
@@ -218,6 +249,30 @@ function CourseEdition() {
         .catch((error) => console.log(error));
     };
 
+  const handleGroupAssignmentChange =
+    (user: IUser) => (event: SelectChangeEvent) => {
+      const w = wretch().addon(QueryStringAddon);
+      w.url(
+        `/api/courses/${course_name}/editions/${edition}/groups/user-reassignment`
+      )
+        .query({
+          'group-from': group_name,
+          'group-to': event.target.value,
+          usosId: user.usosId,
+        })
+        .post()
+        .unauthorized((error) => {
+          Helpers.handleUnathorised(navigate);
+        })
+        .forbidden((error) => {
+          Helpers.handleForbidden();
+        })
+        .res((res) => {
+          getGroup();
+        })
+        .catch((error) => console.log(error));
+    };
+
   if (isForbidden) {
     return <Forbidden />;
   }
@@ -358,13 +413,34 @@ function CourseEdition() {
           <h4>Lista studentów:</h4>
           <ul>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 550 }} aria-label='simple table'>
+              <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
                     <TableCell>Imię</TableCell>
                     <TableCell>Nazwisko</TableCell>
                     <TableCell>Zespół</TableCell>
+                    {userType !== UserType.STUDENT && (
+                      <TableCell>
+                        <Stack
+                          direction='row'
+                          justifyContent='left'
+                          alignItems='center'
+                          spacing='1px'
+                        >
+                          <p>Grupa</p>
+                          <Tooltip title='Jest to funkcjonalność przepisywania studentów do innych grup. Jeśli zmiana grupy jest zablokowana, należy w pierwszej kolejności usunąć osobę z zespołu w kolumnie Zespół.'>
+                            <IconButton
+                              onClick={() => {}}
+                              color='inherit'
+                              size='small'
+                            >
+                              <FontAwesomeIcon icon={faQuestionCircle} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -414,6 +490,37 @@ function CourseEdition() {
                             );
                           })()}
                         </TableCell>
+                        {userType !== UserType.STUDENT && (
+                          <TableCell>
+                            <FormControl
+                              variant='standard'
+                              sx={{ minWidth: 120, paddingTop: '2px' }}
+                            >
+                              <Select
+                                value={group_name}
+                                onChange={handleGroupAssignmentChange(user)}
+                                label='Przypisana grupa'
+                                disabled={assignedTeams[user.id] !== ''}
+                                sx={{
+                                  '& .MuiSelect-select': {
+                                    paddingLeft: 2,
+                                  },
+                                }}
+                              >
+                                {groupsResponse!.map((group) => {
+                                  return (
+                                    <MenuItem
+                                      key={group.groupName}
+                                      value={group.groupName}
+                                    >
+                                      {group.groupName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
+                          </TableCell>
+                        )}
                       </TableRow>
                     );
                   })}

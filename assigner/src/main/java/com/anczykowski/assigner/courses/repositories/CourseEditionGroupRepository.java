@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface CourseEditionGroupRepository {
     CourseEditionGroup save(CourseEditionGroup course);
 
-    List<CourseEditionGroup> getAll(String courseName);
+    List<CourseEditionGroup> getAll(String courseName, String edition);
 
     Optional<CourseEditionGroup> get(
             String courseName,

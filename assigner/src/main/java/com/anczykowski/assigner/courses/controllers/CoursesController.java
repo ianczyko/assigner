@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.input.BOMInputStream;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,12 +73,28 @@ public class CoursesController {
         }
     }
 
-    @GetMapping("/{courseName}/editions")
-    public List<CourseEditionGroupDto> getCourseEditionGroups(@PathVariable String courseName) {
-        return courseEditionGroupsService.getAll(courseName)
+    @GetMapping("/{courseName}/editions/{edition}/groups")
+    public List<CourseEditionGroupDto> getCourseEditionGroups(
+            @PathVariable String courseName,
+            @PathVariable String edition
+    ) {
+        return courseEditionGroupsService.getAll(courseName, edition)
                 .stream()
                 .map(c -> modelMapper.map(c, CourseEditionGroupDto.class))
                 .toList();
+    }
+
+    @PostMapping("/{courseName}/editions/{edition}/groups/user-reassignment")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public ResponseEntity<Void> manualTeamAssign(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @RequestParam(name = "group-from") String groupFrom,
+            @RequestParam(name = "group-to") String groupTo,
+            @RequestParam Integer usosId
+    ) {
+        courseEditionGroupsService.reassignUser(usosId, groupFrom, groupTo, courseName, edition);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{courseName}/editions/{edition}/groups/{groupName}")

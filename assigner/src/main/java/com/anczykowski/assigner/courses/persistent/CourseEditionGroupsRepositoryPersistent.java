@@ -30,8 +30,8 @@ public class CourseEditionGroupsRepositoryPersistent implements CourseEditionGro
     }
 
     @Override
-    public List<CourseEditionGroup> getAll(String courseName) {
-        return repositoryImpl.findByCourseEditionCourseName(courseName)
+    public List<CourseEditionGroup> getAll(String courseName, String edition) {
+        return repositoryImpl.findByCourseEditionCourseNameAndCourseEditionEdition(courseName, edition)
                 .stream()
                 .map(c -> modelMapper.map(c, CourseEditionGroup.class))
                 .toList();
@@ -77,7 +77,7 @@ interface CourseEditionGroupsRepositoryPersistentImpl extends JpaRepository<Cour
             Integer users_usosId
     );
 
-    List<CourseEditionGroupPersistent> findByCourseEditionCourseName(String courseName);
+    List<CourseEditionGroupPersistent> findByCourseEditionCourseNameAndCourseEditionEdition(String courseName, String edition);
 
     Optional<CourseEditionGroupPersistent> findByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
             String courseName,

@@ -1,7 +1,6 @@
 package com.anczykowski.assigner.courses.services;
 
 import com.anczykowski.assigner.courses.models.CourseEdition;
-import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.courses.repositories.CourseEditionGroupRepository;
 import com.anczykowski.assigner.courses.repositories.CourseEditionRepository;
 import com.anczykowski.assigner.courses.repositories.CoursesRepository;
@@ -109,12 +108,12 @@ public class CourseEditionService {
                 .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 
-    public List<CourseEditionGroup> getAll(String courseName) {
-        return courseEditionGroupRepository.getAll(courseName);
+    public List<CourseEdition> getAll(String courseName) {
+        return coursesEditionRepository.getAll(courseName);
     }
 
-    public CourseEditionGroup get(String courseName, String edition, String groupName) {
-        return courseEditionGroupRepository.get(courseName, edition, groupName)
+    public CourseEdition get(String courseName, String edition, String groupName) {
+        return coursesEditionRepository.get(courseName, edition)
                 .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 }
