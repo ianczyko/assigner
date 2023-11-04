@@ -238,29 +238,23 @@ function CourseEdition() {
           <Stack direction='row'>
             <Stack>
               <ul>
-                {(() => {
-                  if (userType !== UserType.STUDENT) {
-                    return <div></div>;
-                  }
-                  return (
-                    <Popup
-                      trigger={(open) => (
-                        <Button variant='contained'>Nowy zespół</Button>
-                      )}
-                      position='right center'
-                      closeOnDocumentClick
-                      open={isOpen}
-                      onOpen={() => setIsOpen(!isOpen)}
-                    >
-                      <NewTeam
-                        courseEdition={edition!}
-                        courseName={course_name!}
-                        groupName={group_name!}
-                        onFinish={fetchTeams}
-                      />
-                    </Popup>
-                  );
-                })()}
+                <Popup
+                  trigger={(open) => (
+                    <Button variant='contained'>Nowy zespół</Button>
+                  )}
+                  position='right center'
+                  closeOnDocumentClick
+                  open={isOpen}
+                  onOpen={() => setIsOpen(!isOpen)}
+                >
+                  <NewTeam
+                    courseEdition={edition!}
+                    courseName={course_name!}
+                    groupName={group_name!}
+                    addCreator={userType === UserType.STUDENT}
+                    onFinish={fetchTeams}
+                  />
+                </Popup>
                 <br />
                 Lista zespołów:
                 {teamsResponse.map((team) => {

@@ -31,11 +31,12 @@ public class TeamsController {
             @PathVariable String edition,
             @PathVariable String groupName,
             @Valid @RequestBody final TeamDto teamDto,
+            @RequestParam(name = "add-creator", defaultValue = "true") Boolean addCreator,
             HttpServletRequest request
     ) {
         var usosId = authUtils.getUsosId(request);
         var team = modelMapper.map(teamDto, Team.class);
-        var createdTeam = teamsService.create(courseName, edition, groupName, team, usosId);
+        var createdTeam = teamsService.create(courseName, edition, groupName, team, usosId, addCreator);
         return modelMapper.map(createdTeam, TeamDto.class);
     }
 

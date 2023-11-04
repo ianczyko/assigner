@@ -48,11 +48,14 @@ public class TeamsService {
             String edition,
             String groupName,
             Team team,
-            Integer creatorUsosId
-    ) {
-        var creator = usersRepository.getByUsosId(creatorUsosId)
-                .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(creatorUsosId)));
-        team.addMember(creator);
+            Integer creatorUsosId,
+            Boolean addCreator) {
+
+        if (addCreator) {
+            var creator = usersRepository.getByUsosId(creatorUsosId)
+                    .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(creatorUsosId)));
+            team.addMember(creator);
+        }
 
         var courseEdition = courseEditionsService.get(courseName, edition, groupName);
         team.setCourseEditionGroup(courseEdition);
