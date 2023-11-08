@@ -153,9 +153,11 @@ function Team() {
   }
 
   useEffect(() => {
-    getAccessToken();
+    if (teamResponse != null && !teamResponse.readonly) {
+      getAccessToken();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [course_name, edition, team_id]);
+  }, [teamResponse]);
 
   useEffect(() => {
     wretch(
