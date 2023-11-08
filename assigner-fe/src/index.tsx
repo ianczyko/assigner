@@ -5,7 +5,7 @@ import Home from './Home/Home';
 import Dashboard from './Dashboard/Dashboard';
 import Callback from './Callback/Callback';
 import Courses from './Courses/Courses';
-import CourseEdition from './CourseEdition/CourseEdition';
+import CourseEditionGroup from './CourseEditionGroup/CourseEditionGroup';
 import NotFound from './NotFound/NotFound';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
@@ -39,7 +39,7 @@ root.render(
           <Route path='/courses' element={<Courses />} />
           <Route
             path='/courses/:course_name/:edition/:group_name'
-            element={<CourseEdition />}
+            element={<CourseEditionGroup />}
           />
           <Route
             path='/courses/:course_name/:edition/:group_name/assignment-view'

@@ -22,16 +22,16 @@ function Courses() {
   interface ICourse {
     id: number;
     name: string;
-    courseEditions: Array<ICourseEdition>;
-  }
-
-  interface ICourseEdition {
-    id: string;
-    edition: string;
-    courseEditionGroups: Array<ICourseEditionGroup>;
+    courseEditions: Array<ICourseEditionGroup>;
   }
 
   interface ICourseEditionGroup {
+    id: string;
+    edition: string;
+    courseEditionGroups: Array<ICourseEditionGroupGroup>;
+  }
+
+  interface ICourseEditionGroupGroup {
     id: string;
     groupName: string;
   }

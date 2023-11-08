@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
 import QueryStringAddon from 'wretch/addons/queryString';
-import './CourseEdition.css';
+import './CourseEditionGroup.css';
 import Forbidden from '../Forbidden/Forbidden';
 import Popup from 'reactjs-popup';
 import {
@@ -30,7 +30,7 @@ import Paper from '@mui/material/Paper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-function CourseEdition() {
+function CourseEditionGroup() {
   const { course_name, edition, group_name } = useParams();
 
   const [isForbidden, setIsForbidden] = useState(false);
@@ -538,4 +538,4 @@ function CourseEdition() {
   );
 }
 
-export default CourseEdition;
+export default CourseEditionGroup;
