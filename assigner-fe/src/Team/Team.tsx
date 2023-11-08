@@ -254,33 +254,41 @@ function Team() {
               <div>
                 <Stack direction='row' alignItems='center' spacing='15px'>
                   <p>Przypisany temat:</p>
-                  <FormControl
-                    variant='standard'
-                    sx={{ minWidth: 120, paddingTop: '2px' }}
-                  >
-                    <Select
-                      value={assignedProject}
-                      onChange={handleAssignmentChange}
-                      label='Przypisany projekt'
-                      disabled={userType !== UserType.COORDINATOR}
-                      sx={{
-                        '& .MuiSelect-select': {
-                          paddingLeft: 2,
-                        },
-                      }}
+                  {userType !== UserType.COORDINATOR ? (
+                    <p>
+                      {teamResponse.assignedProject
+                        ? teamResponse.assignedProject.name
+                        : 'brak'}
+                    </p>
+                  ) : (
+                    <FormControl
+                      variant='standard'
+                      sx={{ minWidth: 120, paddingTop: '2px' }}
                     >
-                      <MenuItem value=''>
-                        <em>Brak</em>
-                      </MenuItem>
-                      {projectsResponse!.map((project) => {
-                        return (
-                          <MenuItem key={project.id} value={project.id}>
-                            {project.name}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
+                      <Select
+                        value={assignedProject}
+                        onChange={handleAssignmentChange}
+                        label='Przypisany projekt'
+                        disabled={userType !== UserType.COORDINATOR}
+                        sx={{
+                          '& .MuiSelect-select': {
+                            paddingLeft: 2,
+                          },
+                        }}
+                      >
+                        <MenuItem value=''>
+                          <em>Brak</em>
+                        </MenuItem>
+                        {projectsResponse!.map((project) => {
+                          return (
+                            <MenuItem key={project.id} value={project.id}>
+                              {project.name}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  )}
                 </Stack>
 
                 <Stack direction='row' alignItems='center' spacing='10px'>
