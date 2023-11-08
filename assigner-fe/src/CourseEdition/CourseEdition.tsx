@@ -327,75 +327,61 @@ function CourseEdition() {
                   );
                 })}
               </ul>
-              {(() => {
-                if (userType !== UserType.STUDENT) {
-                  return <div></div>;
-                }
-                return (
-                  <Stack direction='row' spacing='6px' alignItems='center'>
-                    <p>Twój zespół: </p>
-                    {(() => {
-                      if (assignedTeam?.id) {
-                        return (
-                          <Link
-                            className='Assigner-link'
-                            to={`/courses/${course_name}/${edition}/${group_name}/teams/${
-                              assignedTeam!.id
-                            }`}
-                          >
-                            {assignedTeam!.name}
-                          </Link>
-                        );
-                      }
-                      return (
-                        <Popup
-                          trigger={(open) => (
-                            <Button variant='contained'>
-                              Dołącz do <br /> zespołu
-                            </Button>
-                          )}
-                          position='right center'
-                          closeOnDocumentClick
-                          open={isOpenJoin}
-                          onOpen={() => setIsOpenJoin(!isOpenJoin)}
-                        >
-                          <JoinTeam
-                            courseEdition={edition!}
-                            courseName={course_name!}
-                            groupName={group_name!}
-                            onFinish={getAssignedTeam}
-                          />
-                        </Popup>
-                      );
-                    })()}
-                  </Stack>
-                );
-              })()}
+
+              {userType === UserType.STUDENT && (
+                <Stack direction='row' spacing='6px' alignItems='center'>
+                  <p>Twój zespół: </p>
+                  {assignedTeam?.id ? (
+                    <Link
+                      className='Assigner-link'
+                      to={`/courses/${course_name}/${edition}/${group_name}/teams/${
+                        assignedTeam!.id
+                      }`}
+                    >
+                      {assignedTeam!.name}
+                    </Link>
+                  ) : (
+                    <Popup
+                      trigger={(open) => (
+                        <Button variant='contained'>
+                          Dołącz do <br /> zespołu
+                        </Button>
+                      )}
+                      position='right center'
+                      closeOnDocumentClick
+                      open={isOpenJoin}
+                      onOpen={() => setIsOpenJoin(!isOpenJoin)}
+                    >
+                      <JoinTeam
+                        courseEdition={edition!}
+                        courseName={course_name!}
+                        groupName={group_name!}
+                        onFinish={getAssignedTeam}
+                      />
+                    </Popup>
+                  )}
+                </Stack>
+              )}
             </Stack>
             <ul>
-              {(() => {
-                if (userType === UserType.STUDENT) {
-                  return <div></div>;
-                }
-                return (
-                  <Popup
-                    trigger={(open) => (
-                      <Button variant='contained'>Nowy temat</Button>
-                    )}
-                    position='right center'
-                    closeOnDocumentClick
-                    open={isOpenProject}
-                    onOpen={() => setIsOpenProject(!isOpenProject)}
-                  >
-                    <NewProject
-                      courseEdition={edition!}
-                      courseName={course_name!}
-                      groupName={group_name!}
-                      onFinish={fetchProjects}
-                    />
-                  </Popup>
-                );
-              })()}
+              {userType !== UserType.STUDENT && (
+                <Popup
+                  trigger={(open) => (
+                    <Button variant='contained'>Nowy temat</Button>
+                  )}
+                  position='right center'
+                  closeOnDocumentClick
+                  open={isOpenProject}
+                  onOpen={() => setIsOpenProject(!isOpenProject)}
+                >
+                  <NewProject
+                    courseEdition={edition!}
+                    courseName={course_name!}
+                    groupName={group_name!}
+                    onFinish={fetchProjects}
+                  />
+                </Popup>
+              )}
               <br />
               Lista tematów:
               {projectsResponse.map((project) => {
@@ -458,39 +444,36 @@ function CourseEdition() {
                         <TableCell>{user.name}</TableCell>
                         <TableCell>{user.surname}</TableCell>
                         <TableCell>
-                          {(() => {
-                            if (userType === UserType.STUDENT) {
-                              return getAssignedTeamOf(user.id)?.name ?? '-';
-                            }
-                            return (
-                              <FormControl
-                                variant='standard'
-                                sx={{ minWidth: 120, paddingTop: '2px' }}
+                          {userType === UserType.STUDENT ? (
+                            getAssignedTeamOf(user.id)?.name ?? '-'
+                          ) : (
+                            <FormControl
+                              variant='standard'
+                              sx={{ minWidth: 120, paddingTop: '2px' }}
+                            >
+                              <Select
+                                value={assignedTeams[user.id] ?? ''}
+                                onChange={handleTeamAssignmentChange(user)}
+                                label='Przypisany zespół'
+                                sx={{
+                                  '& .MuiSelect-select': {
+                                    paddingLeft: 2,
+                                  },
+                                }}
                               >
-                                <Select
-                                  value={assignedTeams[user.id] ?? ''}
-                                  onChange={handleTeamAssignmentChange(user)}
-                                  label='Przypisany zespół'
-                                  sx={{
-                                    '& .MuiSelect-select': {
-                                      paddingLeft: 2,
-                                    },
-                                  }}
-                                >
-                                  <MenuItem value=''>
-                                    <em>Brak</em>
-                                  </MenuItem>
-                                  {teamsResponse!.map((team) => {
-                                    return (
-                                      <MenuItem key={team.id} value={team.id}>
-                                        {team.name}
-                                      </MenuItem>
-                                    );
-                                  })}
-                                </Select>
-                              </FormControl>
-                            );
-                          })()}
+                                <MenuItem value=''>
+                                  <em>Brak</em>
+                                </MenuItem>
+                                {teamsResponse!.map((team) => {
+                                  return (
+                                    <MenuItem key={team.id} value={team.id}>
+                                      {team.name}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
+                          )}
                         </TableCell>
                         {userType !== UserType.STUDENT && (
                           <TableCell>
@@ -532,19 +515,14 @@ function CourseEdition() {
           </ul>
 
           <br />
-          {(() => {
-            if (userType === UserType.STUDENT) {
-              return <div></div>;
-            }
-            return (
-              <Link
-                className='Assigner-link'
-                to={`/courses/${course_name}/${edition}/${group_name}/assignment-view`}
-              >
-                Przypisania tematów do zespołów
-              </Link>
-            );
-          })()}
+          {userType !== UserType.STUDENT && (
+            <Link
+              className='Assigner-link'
+              to={`/courses/${course_name}/${edition}/${group_name}/assignment-view`}
+            >
+              Przypisania tematów do zespołów
+            </Link>
+          )}
         </header>
       </div>
     );

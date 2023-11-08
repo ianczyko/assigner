@@ -369,20 +369,15 @@ function Team() {
                       </li>
                     );
                   })}
-                  {(() => {
-                    if (teamResponse.readonly) {
-                      return <div></div>;
-                    }
-                    return (
-                      <LoadingButton
-                        variant='contained'
-                        loading={submitLoading}
-                        onClick={submitPreference}
-                      >
-                        Zapisz preferencje
-                      </LoadingButton>
-                    );
-                  })()}
+                  {!teamResponse.readonly && (
+                    <LoadingButton
+                      variant='contained'
+                      loading={submitLoading}
+                      onClick={submitPreference}
+                    >
+                      Zapisz preferencje
+                    </LoadingButton>
+                  )}
                 </ul>
               </div>
             </Stack>

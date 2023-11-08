@@ -80,32 +80,27 @@ function Courses() {
                   <div className='Assigner-row-parent'>
                     <div className='Assigner-row-child'>{course.name}</div>
                     <div className='Assigner-row-child'>
-                      {(() => {
-                        if (userType === UserType.STUDENT) {
-                          return <div></div>;
-                        }
-                        return (
-                          <Popup
-                            trigger={(open) => (
-                              <Button variant='contained'>Nowa edycja</Button>
-                            )}
-                            position='right center'
-                            closeOnDocumentClick
-                            open={isOpenDict[course.id]}
-                            onOpen={() => {
-                              setIsOpenDict({
-                                ...isOpenDict,
-                                [course.id]: !isOpenDict[course.id],
-                              });
-                            }}
-                          >
-                            <NewCourseEdition
-                              courseName={course.name}
-                              onFinish={fetchCourses}
-                            />
-                          </Popup>
-                        );
-                      })()}
+                      {userType !== UserType.STUDENT && (
+                        <Popup
+                          trigger={(open) => (
+                            <Button variant='contained'>Nowa edycja</Button>
+                          )}
+                          position='right center'
+                          closeOnDocumentClick
+                          open={isOpenDict[course.id]}
+                          onOpen={() => {
+                            setIsOpenDict({
+                              ...isOpenDict,
+                              [course.id]: !isOpenDict[course.id],
+                            });
+                          }}
+                        >
+                          <NewCourseEdition
+                            courseName={course.name}
+                            onFinish={fetchCourses}
+                          />
+                        </Popup>
+                      )}
                     </div>
                   </div>
                   <ul>
