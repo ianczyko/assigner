@@ -52,11 +52,17 @@ function Dashboard() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
-          <Stack spacing='20px'>
+          <Stack alignItems='center' spacing='20px'>
             <p>
               {profile.id} - {profile.first_name} - {profile.last_name}
             </p>
-            <Button variant='contained' onClick={handleLogout}>
+            <Button
+              variant='contained'
+              onClick={handleLogout}
+              sx={{
+                width: '100px',
+              }}
+            >
               Wyloguj
             </Button>
             <Link className='Assigner-link' to='/courses'>
