@@ -13,6 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import CustomNavigator from '../CustomNavigator/CustomNavigator';
 
 function Project() {
   const { course_name, edition, group_name, project_id } = useParams();
@@ -60,10 +61,14 @@ function Project() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
+          <CustomNavigator
+            course_name={course_name}
+            edition={edition}
+            group_name={group_name}
+            project_name={projectResponse.name}
+            project_id={projectResponse.id}
+          />
           <Stack spacing='20px'>
-            <p>
-              {course_name} / {edition} / {group_name} / {projectResponse.name}
-            </p>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 550 }} aria-label='simple table'>
                 <TableHead>

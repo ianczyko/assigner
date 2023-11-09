@@ -15,6 +15,7 @@ import Helpers, { UserType } from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 import moment from 'moment';
 import 'moment/locale/pl';
+import CustomNavigator from '../CustomNavigator/CustomNavigator';
 moment.locale('pl');
 
 function Team() {
@@ -247,9 +248,13 @@ function Team() {
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
           <div className='Assigner-align-left'>
-            <p style={{ textAlign: 'center' }}>
-              {course_name} / {edition} / {group_name} / {teamResponse.name}
-            </p>
+            <CustomNavigator
+              course_name={course_name}
+              edition={edition}
+              group_name={group_name}
+              team_name={teamResponse.name}
+              team_id={teamResponse.id}
+            />
             <Stack direction='row' alignItems='center' spacing='30px'>
               <div>
                 <Stack direction='row' alignItems='center' spacing='15px'>

@@ -5,6 +5,7 @@ import './Dashboard.css';
 import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 import { Button, Stack } from '@mui/material';
+import CustomNavigator from '../CustomNavigator/CustomNavigator';
 
 function Dashboard() {
   interface IProfileResponse {
@@ -52,9 +53,10 @@ function Dashboard() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
+          <CustomNavigator showCourses={false} />
           <Stack alignItems='center' spacing='20px'>
             <p>
-              {profile.id} - {profile.first_name} - {profile.last_name}
+              Zalogowano jako <b>{profile.first_name} {profile.last_name}</b>
             </p>
             <Button
               variant='contained'

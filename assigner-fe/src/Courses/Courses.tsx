@@ -10,6 +10,7 @@ import NewCourse from '../NewCourse/NewCourse';
 import Helpers, { UserType } from '../Common/Helpers';
 
 import { ToastContainer } from 'react-toastify';
+import CustomNavigator from '../CustomNavigator/CustomNavigator';
 
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
@@ -72,6 +73,7 @@ function Courses() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
+          <CustomNavigator />
           {newCoursePopup()}
           <ul>
             {courses.map((course) => {

@@ -29,6 +29,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import CustomNavigator from '../CustomNavigator/CustomNavigator';
 
 function CourseEditionGroup() {
   const { course_name, edition, group_name } = useParams();
@@ -286,9 +287,11 @@ function CourseEditionGroup() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
-          <p>
-            {course_name} / {edition} / {group_name}
-          </p>
+          <CustomNavigator
+            course_name={course_name}
+            edition={edition}
+            group_name={group_name}
+          />
 
           <Stack direction='row'>
             <Stack>
