@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import wretch from 'wretch';
+import { toast, ToastContainer } from 'react-toastify';
 import './Home.css';
 
 function Home() {
@@ -9,14 +10,23 @@ function Home() {
   const [url, setUrl] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
+  function fetchAuth() {
+    setLoading(true);
     wretch('/api/auth')
       .post({ callbackUrl: window.location.href + 'callback' })
       .json((json) => {
         setLoading(false);
         setUrl(json.authorizeUrl);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        setTimeout(fetchAuth, 3000);
+      });
+  }
+
+  useEffect(() => {
+    fetchAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function usosLogin() {
@@ -31,7 +41,15 @@ function Home() {
           .res((_res) => {
             navigate('/dashboard');
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            toast.error('Logowanie nie powiodło się, spróbuj ponownie.', {
+              position: 'top-right',
+              autoClose: 3000,
+              hideProgressBar: false,
+              theme: 'dark',
+            });
+            fetchAuth();
+          });
       }
     };
     window.addEventListener('message', receiveVerifier);
@@ -39,6 +57,7 @@ function Home() {
   return (
     <div className='Assigner-center-container'>
       <div className='Assigner-center'>
+        <ToastContainer />
         <LoadingButton
           variant='contained'
           loading={loading}
