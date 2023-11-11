@@ -79,6 +79,20 @@ public class TeamsController {
                 .toList();
     }
 
+    @PostMapping("/{teamId}/leave") // TODO: tests
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
+    public ResponseEntity<Void> leaveTeam(
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable String groupName,
+            @PathVariable Integer teamId,
+            HttpServletRequest request
+    ) {
+        var usosId = authUtils.getUsosId(request);
+        teamsService.leaveTeam(teamId, usosId);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/manual-reassignment")
     @PreAuthorize("hasAuthority('COORDINATOR')")
     public ResponseEntity<Void> manualTeamAssign(

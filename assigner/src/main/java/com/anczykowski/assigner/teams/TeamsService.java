@@ -172,4 +172,12 @@ public class TeamsService {
             teamsRepository.addMemberToTeam(teamId, user);
         }
     }
+
+    @Transactional
+    public void leaveTeam(Integer teamId, Integer usosId) {
+        var user = usersRepository.getByUsosId(usosId)
+                .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
+
+        teamsRepository.removeMemberFromTeam(teamId, user);
+    }
 }

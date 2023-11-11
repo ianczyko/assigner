@@ -4,7 +4,7 @@ import wretch from 'wretch';
 import Snackbar from '@mui/material/Snackbar';
 import QueryStringAddon from 'wretch/addons/queryString';
 import './Team.css';
-import { IconButton, Slider, Stack, Tooltip } from '@mui/material';
+import { Button, IconButton, Slider, Stack, Tooltip } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
@@ -160,7 +160,7 @@ function Team() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamResponse]);
 
-  useEffect(() => {
+  function fetchTeamResponse() {
     wretch(
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}`
     )
@@ -180,6 +180,10 @@ function Team() {
         setTeamResponse(json);
       })
       .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    fetchTeamResponse();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, team_id]);
 
@@ -218,6 +222,23 @@ function Team() {
       .catch((error) => console.log(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition]);
+
+  function handleLeave() {
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}/leave`
+    )
+      .post()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .res((response) => {
+        fetchTeamResponse();
+      })
+      .catch((error) => console.log(error));
+  }
 
   const handleAssignmentChange = (event: SelectChangeEvent) => {
     const w = wretch().addon(QueryStringAddon);
@@ -356,6 +377,15 @@ function Team() {
                     );
                   })}
                 </ul>
+                {!teamResponse.readonly && (
+                  <Button
+                    variant='contained'
+                    onClick={handleLeave}
+                    style={{ marginTop: '20px' }}
+                  >
+                    Opuść zespół
+                  </Button>
+                )}
               </div>
               <div>
                 <ul className='Assigner-list-type-none Assigner-no-padding'>
