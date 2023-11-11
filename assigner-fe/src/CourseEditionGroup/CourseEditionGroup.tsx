@@ -28,7 +28,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, faXmark } from '@fortawesome/free-solid-svg-icons';
 import CustomNavigator from '../CustomNavigator/CustomNavigator';
 
 function CourseEditionGroup() {
@@ -197,10 +197,6 @@ function CourseEditionGroup() {
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects`
     )
       .get()
-      .forbidden((error) => {
-        console.log(error); // TODO: better error handling
-        setIsForbidden(true);
-      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
@@ -225,6 +221,23 @@ function CourseEditionGroup() {
     fetchProjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function removeTeam(team: ITeamResponse) {
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team.id}`
+    )
+      .delete()
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .res((response) => {
+        fetchTeams();
+      })
+      .catch((error) => console.log(error));
+  }
 
   const handleTeamAssignmentChange =
     (user: IUser) => (event: SelectChangeEvent) => {
@@ -315,20 +328,60 @@ function CourseEditionGroup() {
                     />
                   </Popup>
                 )}
-                <br />
-                Lista zespołów:
-                {teamsResponse.map((team) => {
-                  return (
-                    <li key={team.id.toString()}>
-                      <Link
-                        className='Assigner-link'
-                        to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
-                      >
-                        {team.name}
-                      </Link>
-                    </li>
-                  );
-                })}
+                <p>Lista zespołów:</p>
+                <div
+                  style={{
+                    marginTop: '20px',
+                    marginRight: '20px',
+                  }}
+                >
+                  <TableContainer component={Paper}>
+                    <Table aria-label='simple table'>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell>Zespół</TableCell>
+                          <TableCell align='right'>Członkowie</TableCell>
+                          <TableCell align='right'>Usuń</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {teamsResponse.map((team, index) => (
+                          <TableRow
+                            key={team.id}
+                            sx={{
+                              '&:last-child td, &:last-child th': { border: 0 },
+                            }}
+                          >
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell component='th' scope='row'>
+                              <Link
+                                className='Assigner-link'
+                                to={`/courses/${course_name}/${edition}/${group_name}/teams/${team.id}`}
+                              >
+                                {team.name}
+                              </Link>
+                            </TableCell>
+                            <TableCell component='th' scope='row'>
+                              {team.members.length}
+                            </TableCell>
+                            <TableCell component='th' scope='row'>
+                              <IconButton
+                                onClick={() => {
+                                  removeTeam(team);
+                                }}
+                                color='inherit'
+                                size='small'
+                              >
+                                <FontAwesomeIcon icon={faXmark} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
               </ul>
 
               {userType === UserType.STUDENT && (

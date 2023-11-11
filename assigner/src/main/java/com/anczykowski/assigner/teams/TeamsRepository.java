@@ -17,4 +17,6 @@ public interface TeamsRepository {
 
     @SuppressWarnings("UnusedReturnValue")
     Team removeMemberFromTeam(Integer teamId, User user);
+
+    void remove(Integer teamId);
 }

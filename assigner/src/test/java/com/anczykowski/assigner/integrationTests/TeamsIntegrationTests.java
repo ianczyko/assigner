@@ -138,4 +138,22 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
     }
 
+    @Test
+    @DirtiesContext
+    void removeTeam() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var deleteTeamRequest = delete("%s/teams/%d".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(deleteTeamRequest)
+                .andExpect(status().isOk());
+
+        var getTeamRequest = get("%s/teams/%d".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getTeamRequest)
+                .andExpect(status().isNotFound());
+    }
+
 }

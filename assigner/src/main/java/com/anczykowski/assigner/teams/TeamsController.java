@@ -215,6 +215,18 @@ public class TeamsController {
         return teamDto;
     }
 
+    @DeleteMapping("/{teamId}")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public ResponseEntity<Void> deleteTeam(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @PathVariable Integer teamId
+    ) {
+        teamsService.remove(teamId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/assigned-team") // TODO: tests
     public TeamDetailedDto getAssignedTeam(
             @SuppressWarnings("unused") @PathVariable String courseName,

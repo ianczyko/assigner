@@ -65,6 +65,12 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
         var teamPersistentSaved = repositoryImpl.save(teamPersistent);
         return modelMapper.map(teamPersistentSaved, Team.class);
     }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void remove(Integer teamId) {
+        repositoryImpl.deleteById(teamId);
+    }
 }
 
 @Component

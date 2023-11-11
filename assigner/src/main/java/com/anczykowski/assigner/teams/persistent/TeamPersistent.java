@@ -47,7 +47,7 @@ public class TeamPersistent {
     )
     private Set<UserPersistent> members;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
     private List<ProjectPreferencePersistent> preferences;
 
 }

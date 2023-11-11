@@ -180,4 +180,9 @@ public class TeamsService {
 
         teamsRepository.removeMemberFromTeam(teamId, user);
     }
+
+    @Transactional
+    public void remove(Integer teamId) {
+        teamsRepository.remove(teamId);
+    }
 }
