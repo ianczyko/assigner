@@ -376,7 +376,9 @@ function CourseEditionGroup() {
                           <TableCell></TableCell>
                           <TableCell>Zespół</TableCell>
                           <TableCell align='right'>Członkowie</TableCell>
-                          <TableCell align='right'>Usuń</TableCell>
+                          {userType === UserType.COORDINATOR && (
+                            <TableCell align='right'>Usuń</TableCell>
+                          )}
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -399,17 +401,19 @@ function CourseEditionGroup() {
                             <TableCell component='th' scope='row'>
                               {team.members.length}
                             </TableCell>
-                            <TableCell component='th' scope='row'>
-                              <IconButton
-                                onClick={() => {
-                                  removeTeam(team);
-                                }}
-                                color='inherit'
-                                size='small'
-                              >
-                                <FontAwesomeIcon icon={faXmark} />
-                              </IconButton>
-                            </TableCell>
+                            {userType === UserType.COORDINATOR && (
+                              <TableCell component='th' scope='row'>
+                                <IconButton
+                                  onClick={() => {
+                                    removeTeam(team);
+                                  }}
+                                  color='inherit'
+                                  size='small'
+                                >
+                                  <FontAwesomeIcon icon={faXmark} />
+                                </IconButton>
+                              </TableCell>
+                            )}
                           </TableRow>
                         ))}
                       </TableBody>
@@ -488,7 +492,9 @@ function CourseEditionGroup() {
                         <TableCell>Temat</TableCell>
                         <TableCell align='right'>Limit miejsc</TableCell>
                         <TableCell align='right'>Ilość przypisań</TableCell>
-                        <TableCell align='right'>Usuń</TableCell>
+                        {userType === UserType.COORDINATOR && (
+                          <TableCell align='right'>Usuń</TableCell>
+                        )}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -514,17 +520,19 @@ function CourseEditionGroup() {
                           <TableCell align='right'>
                             {project.finalAssignedTeamsCount}
                           </TableCell>
-                          <TableCell component='th' scope='row'>
-                            <IconButton
-                              onClick={() => {
-                                removeProject(project);
-                              }}
-                              color='inherit'
-                              size='small'
-                            >
-                              <FontAwesomeIcon icon={faXmark} />
-                            </IconButton>
-                          </TableCell>
+                          {userType === UserType.COORDINATOR && (
+                            <TableCell component='th' scope='row'>
+                              <IconButton
+                                onClick={() => {
+                                  removeProject(project);
+                                }}
+                                color='inherit'
+                                size='small'
+                              >
+                                <FontAwesomeIcon icon={faXmark} />
+                              </IconButton>
+                            </TableCell>
+                          )}
                         </TableRow>
                       ))}
                     </TableBody>
