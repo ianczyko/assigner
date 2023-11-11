@@ -76,7 +76,7 @@ function Project() {
                     <TableCell>Nazwa tematu</TableCell>
                     <TableCell>Opiekun Tematu</TableCell>
                     <TableCell align='right'>Limit miejsc</TableCell>
-                    <TableCell align='right'>Ilość przypisań</TableCell>
+                    <TableCell align='right'>Ilość zatwierdzonych przypisań</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

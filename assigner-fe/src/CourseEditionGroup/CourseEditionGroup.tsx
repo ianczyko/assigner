@@ -491,7 +491,7 @@ function CourseEditionGroup() {
                         <TableCell></TableCell>
                         <TableCell>Temat</TableCell>
                         <TableCell align='right'>Limit miejsc</TableCell>
-                        <TableCell align='right'>Ilość przypisań</TableCell>
+                        <TableCell align='right'>Ilość zatw. przypisań</TableCell>
                         {userType === UserType.COORDINATOR && (
                           <TableCell align='right'>Usuń</TableCell>
                         )}
