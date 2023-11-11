@@ -145,9 +145,13 @@ public class TeamsService {
         ).toList();
     }
 
-    public Optional<Team> getAssignedTeam(String groupName, Integer usosId) { // TODO: group name is not unique globally, this is suspicious
+    public Optional<Team> getAssignedTeam(String courseName, String edition, String groupName, Integer usosId) {
         var accesses = usersRepository.getAssignedTeamByUsosId(usosId);
-        return accesses.stream().filter(acc -> acc.getCourseEditionGroup().getGroupName().equals(groupName)).findAny();
+        return accesses.stream().filter(acc ->
+                acc.getCourseEditionGroup().getGroupName().equals(groupName) &&
+                acc.getCourseEditionGroup().getCourseEdition().getEdition().equals(edition) &&
+                acc.getCourseEditionGroup().getCourseEdition().getCourse().getName().equals(courseName)
+        ).findAny();
     }
 
     @Transactional

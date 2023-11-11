@@ -229,13 +229,13 @@ public class TeamsController {
 
     @GetMapping("/assigned-team") // TODO: tests
     public TeamDetailedDto getAssignedTeam(
-            @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition,
+            @PathVariable String courseName,
+            @PathVariable String edition,
             @PathVariable String groupName,
             HttpServletRequest request
     ) {
         var usosId = authUtils.getUsosId(request);
-        return teamsService.getAssignedTeam(groupName, usosId)
+        return teamsService.getAssignedTeam(courseName, edition, groupName, usosId)
                 .map(team -> modelMapper.map(team, TeamDetailedDto.class))
                 .orElse(new TeamDetailedDto());
     }
