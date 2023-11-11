@@ -73,10 +73,6 @@ function AssignmentView() {
       )
       .query({ 'is-final': !team.isAssignmentFinal })
       .put()
-      .forbidden((error) => {
-        console.log(error); // TODO: better error handling
-        setIsForbidden(true);
-      })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })

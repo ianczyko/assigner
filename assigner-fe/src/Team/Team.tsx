@@ -4,7 +4,14 @@ import wretch from 'wretch';
 import Snackbar from '@mui/material/Snackbar';
 import QueryStringAddon from 'wretch/addons/queryString';
 import './Team.css';
-import { Button, IconButton, Slider, Stack, Tooltip } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  IconButton,
+  Slider,
+  Stack,
+  Tooltip,
+} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
@@ -64,6 +71,7 @@ function Team() {
     id: number;
     name: string;
     assignedProject: IProjectResponse;
+    isAssignmentFinal: boolean;
     members: Array<IUser>;
     readonly: boolean;
   }
@@ -108,6 +116,26 @@ function Team() {
     return function (event: Event, newVal: number | number[]) {
       setSliderValueDict({ ...sliderValueDict, [id]: newVal });
     };
+  }
+
+  function changeAssignmentFinal() {
+    const w = wretch().addon(QueryStringAddon);
+    return w
+      .url(
+        `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/${team_id}/assignment-final`
+      )
+      .query({ 'is-final': !teamResponse!.isAssignmentFinal })
+      .put()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .json((json) => {
+        fetchTeamResponse();
+      })
+      .catch((error) => console.log(error));
   }
 
   function getAccessToken() {
@@ -205,7 +233,7 @@ function Team() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, team_id]);
 
-  useEffect(() => {
+  function fetchProjects() {
     wretch(
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects`
     )
@@ -220,6 +248,10 @@ function Team() {
         setProjectsResponse(json);
       })
       .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    fetchProjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition]);
 
@@ -316,6 +348,21 @@ function Team() {
                     </FormControl>
                   )}
                 </Stack>
+
+                {teamResponse.assignedProject && (
+                  <Stack direction='row' alignItems='center' spacing='10px'>
+                    <p>Zatwierdzenie przypisania:</p>
+                    <Checkbox
+                      checked={teamResponse.isAssignmentFinal}
+                      onChange={changeAssignmentFinal}
+                      disabled={userType !== UserType.COORDINATOR}
+                      sx={{
+                        color: 'white',
+                        padding: 0,
+                      }}
+                    />
+                  </Stack>
+                )}
 
                 <Stack direction='row' alignItems='center' spacing='10px'>
                   <p>Kod dostępu: </p>
