@@ -1,10 +1,9 @@
 package com.anczykowski.assigner.courses.dto;
 
-import com.anczykowski.assigner.users.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,6 +13,6 @@ public class CourseEditionDto {
 
     String edition;
 
-    Set<UserDto> users;
+    List<CourseEditionGroupShortDto> courseEditionGroups;
 
 }

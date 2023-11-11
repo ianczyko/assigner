@@ -1,0 +1,67 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4F9166C2-BF4E-0D76-8126-24479915D4A7" name="Course Edition">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Course Edition Id" id="85BC4BB0-75CA-0697-20ED-B67D4A5E10DA">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Name" id="887CDC91-7C5B-94D7-489A-2409EEEDD303">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Course Id" id="389FD5BE-FD24-4212-97ED-BC833C9BBAE9">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-10-27 14:47:44 UTC</createdTime>
+<generatorID>489D4D57-F8DA-F08F-0C8B-2D6EAC348289</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<referedAttribute>A5E0412F-A47F-8D7F-C782-5275721C8F1B</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="7F072F1B-7924-16CB-EF6A-E7A9766F89E2" name="Course Edition PK">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-10-27 14:44:53 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>85BC4BB0-75CA-0697-20ED-B67D4A5E10DA</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

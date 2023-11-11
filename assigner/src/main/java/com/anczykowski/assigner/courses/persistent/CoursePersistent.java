@@ -18,10 +18,10 @@ public class CoursePersistent {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "course")
-    @OrderBy("edition")
     private List<CourseEditionPersistent> courseEditions;
 
 }

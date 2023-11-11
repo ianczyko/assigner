@@ -1,16 +1,15 @@
 package com.anczykowski.assigner.courses.models;
 
-import com.anczykowski.assigner.users.models.User;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "users")
+@EqualsAndHashCode(exclude = {"course", "courseEditionGroups"})
 public class CourseEdition {
 
     Integer id;
@@ -19,5 +18,5 @@ public class CourseEdition {
 
     Course course;
 
-    Set<User> users;
+    List<CourseEditionGroup> courseEditionGroups;
 }

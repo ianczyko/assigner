@@ -40,6 +40,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation "com.opencsv:opencsv:5.7.1"
 	implementation "commons-io:commons-io:2.11.0"
+	implementation 'com.google.guava:guava:32.1.1-jre'
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -54,10 +55,16 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation "org.mockito:mockito-core:5.4.0"
 	testImplementation 'org.json:json:20230227'
+	testImplementation 'org.assertj:assertj-core'
 	testImplementation 'net.javacrumbs.json-unit:json-unit-spring:2.36.0'
 
 	// Cplex
-	implementation files("lib/cplex.jar")
+	if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
+		implementation files("/opt/ibm/ILOG/CPLEX_Studio2211/cplex/lib/cplex.jar")
+	} else {
+		implementation files("lib/cplex.jar")
+	}
+
 }
 
 tasks.named('test') {

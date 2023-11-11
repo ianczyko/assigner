@@ -1,0 +1,87 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="DF92A408-1756-9CC2-DA61-8244255334EC" name="Forum Comment">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:08:43 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="User Id" id="55833FCC-CB14-2C4F-162E-2659A422D3D9">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:50:42 UTC</createdTime>
+<generatorID>AFF5DEA5-3C92-CEAA-4FCA-838C15E2EA6A</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<referedAttribute>D490E422-A160-2766-997B-EFD9C89B738B</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Comment Id" id="3CD87D76-9CB0-B32E-D1FA-406D6F7B7207">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:56:30 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Content" id="7A920940-48E5-02C4-D854-1878ED762110">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:56:14 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Project Id" id="0D625675-D78C-6F27-5909-9E42424D1EA6">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:57:21 UTC</createdTime>
+<generatorID>A8BD8B01-5972-9119-092F-5BC8398C140F</generatorID>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<referedAttribute>0A56A082-BB69-13B9-BBD7-DF69E59E7590</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Creation date" id="829751AB-9D3A-28C8-7496-BDCB46B696CB">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-29 17:31:10 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="053332A6-696F-BD23-4A6A-211A735B8748" name="Forum Comment PK">
+<createdBy>iaPC</createdBy>
+<createdTime>2023-08-05 14:56:35 UTC</createdTime>
+<ownerDesignName>assigner</ownerDesignName>
+<engineerTo>
+<item key="B8344549-2584-479B-64D5-435FEAB37EFA" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>3CD87D76-9CB0-B32E-D1FA-406D6F7B7207</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,15 +1,19 @@
 package com.anczykowski.assigner.courses.persistent;
 
-import com.anczykowski.assigner.users.persistent.UserPersistent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
-@Table(name = "course_edition")
+@Table(
+        name = "course_edition",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"course_id", "edition"})
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,8 +29,8 @@ public class CourseEditionPersistent {
     @JoinColumn(name = "course_id")
     private CoursePersistent course;
 
-    @ManyToMany(
-            mappedBy = "courseEditionsAccess"
-    )
-    private Set<UserPersistent> users;
+    @OneToMany(mappedBy = "courseEdition")
+    @OrderBy("groupName")
+    private List<CourseEditionGroupPersistent> courseEditionGroups;
+
 }

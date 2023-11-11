@@ -1,63 +1,80 @@
 package com.anczykowski.assigner.solver.services;
 
-import org.springframework.stereotype.Service;
-
+import com.anczykowski.assigner.projects.ProjectsService;
 import com.anczykowski.assigner.solver.models.AssignOptimizationResult;
-import com.anczykowski.assigner.solver.models.PersonDateAssignment;
+import com.anczykowski.assigner.teams.TeamsRepository;
+import com.anczykowski.assigner.teams.TeamsService;
+import com.anczykowski.assigner.teams.models.ProjectPreference;
 import ilog.concert.IloException;
 import ilog.concert.IloIntVar;
-import ilog.concert.IloLinearNumExpr;
 import ilog.cplex.IloCplex;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class SolverService {
     static final double EPSILON = 1e-5;
+    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
 
-    public AssignOptimizationResult assignDates() {
+    final TeamsService teamsService;
+
+    final ProjectsService projectsService;
+
+    final TeamsRepository teamsRepository;
+
+    @Transactional
+    public AssignOptimizationResult assignProjects(String courseName, String edition, String groupName) {
+
+        var allTeams = teamsService.getAll(courseName, edition, groupName);
+        var teams = allTeams.stream().filter(team -> !team.getIsAssignmentFinal()).toList();
+
+        var projects = projectsService.getProjects(courseName, edition, groupName);
+
         try (IloCplex cplex = new IloCplex()) {
             cplex.setOut(null);
 
             //// parameters
-            // This will not be hard-coded in the future but obtained from a database
-            int S = 4;
-            var D = 2;
-
-            int[][] students_date_preference = {
-                {5, 1},
-                {3, 4},
-                {2, 5},
-                {3, 2}
-            };
-
-            int[] date_student_limits = {2, 2};
+            int T = teams.size();
+            var P = projects.size();
 
             //// variables
 
-            IloIntVar[][] students_date_assignment = new IloIntVar[S][];
-            for (int i = 0; i < S; ++i) {
-                students_date_assignment[i] = cplex.boolVarArray(D);
+            var teams_project_assignment = new IloIntVar[T][];
+            for (int i = 0; i < T; ++i) {
+                teams_project_assignment[i] = cplex.boolVarArray(P);
             }
 
             //// constraints
-            // one_date_per_student
-            for (int i = 0; i < S; ++i) {
-                cplex.addEq(cplex.sum(students_date_assignment[i]), 1);
+            // one_project_per_team
+            for (int i = 0; i < T; ++i) {
+                cplex.addEq(cplex.sum(teams_project_assignment[i]), 1);
             }
 
-            // date_student_limits_constraint
-            for (int j = 0; j < D; ++j) {
-                IloLinearNumExpr column = cplex.linearNumExpr();
-                for (int i = 0; i < S; ++i) {
-                    column.addTerm(1, students_date_assignment[i][j]);
+            // project_team_limits_constraint
+            for (int j = 0; j < P; ++j) {
+                var column = cplex.linearNumExpr();
+                for (int i = 0; i < T; ++i) {
+                    column.addTerm(1, teams_project_assignment[i][j]);
                 }
-                cplex.addLe(column, date_student_limits[j]);
+                var project = projects.get(j);
+                cplex.addLe(column, project.getEffectiveLimit());
             }
 
             //// objective
-            IloLinearNumExpr satisfaction = cplex.linearNumExpr();
-            for (int i = 0; i < S; ++i) {
-                for (int j = 0; j < D; ++j) {
-                    satisfaction.addTerm(students_date_assignment[i][j], students_date_preference[i][j]);
+            var satisfaction = cplex.linearNumExpr();
+            for (int i = 0; i < T; ++i) {
+                for (int j = 0; j < P; ++j) {
+                    var team = teams.get(i);
+                    var project = projects.get(j);
+                    // TODO: below line might be worth optimizing
+                    var rating = team.getPreferences().stream()
+                            .filter(p -> p.getProject().getId().equals(project.getId()))
+                            .findAny().map(ProjectPreference::getRating)
+                            .orElse(DEFAULT_RATING);
+                    satisfaction.addTerm(teams_project_assignment[i][j], rating);
                 }
             }
 
@@ -66,26 +83,23 @@ public class SolverService {
             if (cplex.solve()) {
                 var assignOptimizationResult = new AssignOptimizationResult();
                 assignOptimizationResult.setObjective(cplex.getObjValue());
-                for (int i = 0; i < S; ++i) {
-                    for (int j = 0; j < D; ++j) {
-                        var floatAssignment = cplex.getValue(students_date_assignment[i][j]);
+                for (int i = 0; i < T; ++i) {
+                    for (int j = 0; j < P; ++j) {
+                        var floatAssignment = cplex.getValue(teams_project_assignment[i][j]);
                         var isAssigned = Math.abs(floatAssignment - 1.0) < EPSILON;
                         if (isAssigned) {
-                            assignOptimizationResult.addPersonDateAssignment(
-                                PersonDateAssignment
-                                    .builder()
-                                    .personId(i)
-                                    .dateId(j)
-                                    .build()
-                            );
+                            var team = teams.get(i);
+                            var project = projects.get(j);
+                            team.setAssignedProject(project);
+                            teamsRepository.save(team);
                         }
                     }
                 }
+                assignOptimizationResult.setTeams(teams);
                 return assignOptimizationResult;
             }
         } catch (IloException e) {
-            // TODO: better error handling
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return null;
     }
