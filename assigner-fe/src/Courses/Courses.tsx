@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import wretch from 'wretch';
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import NewCourseEdition from '../NewCourseEdition/NewCourseEdition';
 import NewCourse from '../NewCourse/NewCourse';
 import Helpers, { UserType } from '../Common/Helpers';
@@ -79,32 +79,30 @@ function Courses() {
             {courses.map((course) => {
               return (
                 <li key={course.id}>
-                  <div className='Assigner-row-parent'>
-                    <div className='Assigner-row-child'>{course.name}</div>
-                    <div className='Assigner-row-child'>
-                      {userType !== UserType.STUDENT && (
-                        <Popup
-                          trigger={(open) => (
-                            <Button variant='contained'>Nowa edycja</Button>
-                          )}
-                          position='right center'
-                          closeOnDocumentClick
-                          open={isOpenDict[course.id]}
-                          onOpen={() => {
-                            setIsOpenDict({
-                              ...isOpenDict,
-                              [course.id]: !isOpenDict[course.id],
-                            });
-                          }}
-                        >
-                          <NewCourseEdition
-                            courseName={course.name}
-                            onFinish={fetchCourses}
-                          />
-                        </Popup>
-                      )}
-                    </div>
-                  </div>
+                  <Stack direction='row' spacing='20px'>
+                    <p>{course.name}</p>
+                    {userType !== UserType.STUDENT && (
+                      <Popup
+                        trigger={(open) => (
+                          <Button variant='contained'>Nowa edycja</Button>
+                        )}
+                        position='right center'
+                        closeOnDocumentClick
+                        open={isOpenDict[course.id]}
+                        onOpen={() => {
+                          setIsOpenDict({
+                            ...isOpenDict,
+                            [course.id]: !isOpenDict[course.id],
+                          });
+                        }}
+                      >
+                        <NewCourseEdition
+                          courseName={course.name}
+                          onFinish={fetchCourses}
+                        />
+                      </Popup>
+                    )}
+                  </Stack>
                   <ul>
                     {course.courseEditions.map((courseEdition) => {
                       return (
