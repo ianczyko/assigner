@@ -1,5 +1,7 @@
 package com.anczykowski.assigner.users.dto;
 
+import com.anczykowski.assigner.users.models.UserType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,4 +23,8 @@ public class UserDto {
     String surname;
 
     Integer usosId;
+
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    UserType userType;
+
 }
