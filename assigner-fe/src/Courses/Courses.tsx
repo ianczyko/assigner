@@ -38,7 +38,7 @@ function Courses() {
   }
 
   function fetchCourses() {
-    wretch('/api/courses')
+    wretch('/api/courses/filtered')
       .get()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
