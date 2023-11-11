@@ -476,8 +476,8 @@ function CourseEditionGroup() {
                   />
                 </Popup>
               )}
-              <br />
-              Lista tematów:
+
+              <p>Lista tematów:</p>
               <div
                 style={{
                   marginTop: '20px',
