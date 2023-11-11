@@ -36,10 +36,10 @@ public class ProjectPersistent {
     @OneToMany(mappedBy = "assignedProject")
     private List<TeamPersistent> assignedTeams;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<ProjectPreferencePersistent> preferences;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<ProjectForumCommentPersistent> comments;
 
 }

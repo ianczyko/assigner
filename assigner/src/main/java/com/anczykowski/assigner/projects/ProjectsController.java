@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +58,18 @@ public class ProjectsController {
             @PathVariable Integer projectId
     ) {
         return modelMapper.map(projectsService.get(projectId), ProjectDto.class);
+    }
+
+    @DeleteMapping("/{projectId}")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public ResponseEntity<Void> deleteProject(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @PathVariable Integer projectId
+    ) {
+        projectsService.remove(projectId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{projectId}/forum-comments")

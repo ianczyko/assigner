@@ -58,4 +58,9 @@ public class ProjectsService {
         var project = projectsRepository.get(projectId);
         return project.getComments();
     }
+
+    @Transactional
+    public void remove(Integer projectId) {
+        projectsRepository.remove(projectId);
+    }
 }

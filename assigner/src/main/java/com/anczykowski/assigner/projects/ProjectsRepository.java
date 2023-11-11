@@ -11,4 +11,6 @@ public interface ProjectsRepository {
     Project get(Integer projectId);
 
     List<Project> getAll(CourseEditionGroup courseEditionGroup);
+
+    void remove(Integer projectId);
 }

@@ -19,7 +19,7 @@ import NewTeam from '../NewTeam/NewTeam';
 import NewProject from '../NewProject/NewProject';
 import JoinTeam from '../JoinTeam/JoinTeam';
 import Helpers, { UserType } from '../Common/Helpers';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -46,7 +46,7 @@ function CourseEditionGroup() {
   const [groupsResponse, setGroupsResponse] =
     useState<Array<IEditionResponse> | null>(null);
   const [projectsResponse, setProjectsResponse] =
-    useState<Array<ITeamResponse> | null>(null);
+    useState<Array<IProjectResponse> | null>(null);
 
   const [assignedTeams, setAssignedTeams] = useState<any>({});
 
@@ -66,6 +66,15 @@ function CourseEditionGroup() {
     id: number;
     name: string;
     members: Array<IUser>;
+  }
+
+  interface IProjectResponse {
+    id: number;
+    name: string;
+    teamLimit: number;
+    finalAssignedTeamsCount: number;
+    projectManager: string;
+    description: string;
   }
 
   interface IUser {
@@ -235,6 +244,31 @@ function CourseEditionGroup() {
       })
       .res((response) => {
         fetchTeams();
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function removeProject(project: IProjectResponse) {
+    wretch(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project.id}`
+    )
+      .delete()
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .badRequest((error) => {
+        toast.error('Nie można usunąć projektu!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: 'dark',
+        });
+      })
+      .res((response) => {
+        fetchProjects();
       })
       .catch((error) => console.log(error));
   }
@@ -440,18 +474,63 @@ function CourseEditionGroup() {
               )}
               <br />
               Lista tematów:
-              {projectsResponse.map((project) => {
-                return (
-                  <li key={project.id.toString()}>
-                    <Link
-                      className='Assigner-link'
-                      to={`/courses/${course_name}/${edition}/${group_name}/projects/${project.id}`}
-                    >
-                      {project.name}
-                    </Link>
-                  </li>
-                );
-              })}
+              <div
+                style={{
+                  marginTop: '20px',
+                  marginRight: '20px',
+                }}
+              >
+                <TableContainer component={Paper}>
+                  <Table aria-label='simple table'>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell></TableCell>
+                        <TableCell>Temat</TableCell>
+                        <TableCell align='right'>Limit miejsc</TableCell>
+                        <TableCell align='right'>Ilość przypisań</TableCell>
+                        <TableCell align='right'>Usuń</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {projectsResponse.map((project, index) => (
+                        <TableRow
+                          key={project.id}
+                          sx={{
+                            '&:last-child td, &:last-child th': { border: 0 },
+                          }}
+                        >
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell component='th' scope='row'>
+                            <Link
+                              className='Assigner-link'
+                              to={`/courses/${course_name}/${edition}/${group_name}/projects/${project.id}`}
+                            >
+                              {project.name}
+                            </Link>
+                          </TableCell>
+                          <TableCell align='right'>
+                            {project.teamLimit}
+                          </TableCell>
+                          <TableCell align='right'>
+                            {project.finalAssignedTeamsCount}
+                          </TableCell>
+                          <TableCell component='th' scope='row'>
+                            <IconButton
+                              onClick={() => {
+                                removeProject(project);
+                              }}
+                              color='inherit'
+                              size='small'
+                            >
+                              <FontAwesomeIcon icon={faXmark} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </ul>
           </Stack>
           <h4>Lista studentów:</h4>

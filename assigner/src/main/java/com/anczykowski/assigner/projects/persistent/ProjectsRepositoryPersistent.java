@@ -41,6 +41,12 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
                 .map(c -> modelMapper.map(c, Project.class))
                 .toList();
     }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void remove(Integer projectId) {
+        repositoryImpl.deleteById(projectId);
+    }
 }
 
 @Component

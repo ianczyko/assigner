@@ -106,4 +106,22 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
                 .andExpect(json().node("[0].author.surname").isEqualTo("Kowalski"));
     }
 
+    @Test
+    @DirtiesContext
+    void removeTeam() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupProject();
+
+        var deleteProjectRequest = delete("%s/projects/%d".formatted(editionGroupPath, projectId));
+
+        mockMvc.perform(deleteProjectRequest)
+                .andExpect(status().isOk());
+
+        var getProjectRequest = get("%s/projects/%d".formatted(editionGroupPath, projectId));
+
+        mockMvc.perform(getProjectRequest)
+                .andExpect(status().isNotFound());
+    }
+
 }
