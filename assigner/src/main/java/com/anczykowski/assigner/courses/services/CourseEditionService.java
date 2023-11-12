@@ -1,7 +1,6 @@
 package com.anczykowski.assigner.courses.services;
 
 import com.anczykowski.assigner.courses.models.CourseEdition;
-import com.anczykowski.assigner.courses.repositories.CourseEditionGroupRepository;
 import com.anczykowski.assigner.courses.repositories.CourseEditionRepository;
 import com.anczykowski.assigner.courses.repositories.CoursesRepository;
 import com.anczykowski.assigner.error.NotFoundException;
@@ -13,8 +12,9 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,21 +24,22 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CourseEditionService {
 
-    UsersService usersService;
+    final UsersService usersService;
 
-    CourseEditionGroupsService courseEditionGroupsService;
+    final CourseEditionGroupsService courseEditionGroupsService;
 
-    UsersRepository usersRepository;
+    final UsersRepository usersRepository;
 
-    CoursesRepository coursesRepository;
+    final CoursesRepository coursesRepository;
 
-    CourseEditionRepository coursesEditionRepository;
+    final CourseEditionRepository coursesEditionRepository;
 
-    CourseEditionGroupRepository courseEditionGroupRepository;
+    @Value("${group.prefix:PRO}")
+    String groupPrefix;
 
     private int getHeaderLocation(String[] headers, String columnName) {
         return Arrays.asList(headers).indexOf(columnName);
@@ -92,7 +93,6 @@ public class CourseEditionService {
                             .build();
                     var userFetched = usersService.createOrGet(user);
 
-                    var groupPrefix = "PRO"; // TODO: move project-wise
                     Arrays.stream(groups.split(", ")).filter(g -> g.startsWith(groupPrefix)).findAny().ifPresent(groupName -> {
                         var courseEditionGroup = courseEditionGroupsService.createOrGet(courseName, edition, groupName);
                         userFetched.addCourseEditionGroupAccess(courseEditionGroup);
