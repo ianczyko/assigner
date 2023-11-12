@@ -9,6 +9,7 @@ import ilog.concert.IloException;
 import ilog.concert.IloIntVar;
 import ilog.cplex.IloCplex;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SolverService {
     static final double EPSILON = 1e-5;
-    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
+
+    @Value("${project.default.rating:3}")
+    Integer DEFAULT_RATING;
 
     final TeamsService teamsService;
 

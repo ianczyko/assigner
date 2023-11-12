@@ -34,7 +34,8 @@ public class TeamsService {
 
     final UsersRepository usersRepository;
 
-    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
+    @Value("${project.default.rating:3}")
+    Integer DEFAULT_RATING;
 
     @Value("${token.digits:6}")
     int tokenDigits;

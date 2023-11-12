@@ -5,6 +5,7 @@ import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.users.models.User;
 import com.google.common.math.IntMath;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,7 +35,8 @@ public final class Team {
     @Builder.Default
     private List<ProjectPreference> preferences = new ArrayList<>();
 
-    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
+    @Value("${project.default.rating:3}")
+    Integer DEFAULT_RATING;
 
     public Integer getHappiness() {
         if (assignedProject == null) return null;
