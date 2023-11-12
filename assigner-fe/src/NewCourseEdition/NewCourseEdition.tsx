@@ -37,7 +37,6 @@ function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
       })
       .res((res) => {
         onFinish();
-        console.log(res); // TODO: change this
       })
       .catch((error) => console.log(error));
   };

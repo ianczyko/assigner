@@ -73,16 +73,10 @@ function Project() {
       })
       .then((json) => {
         setProjectResponse(json);
-        console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, project_id]);
-
-  // TODO: maybe forbidden should be handled differently on this page?
-  // if (isForbidden) {
-  //   return <Forbidden />;
-  // }
 
   if (projectResponse != null) {
     return (

@@ -90,7 +90,6 @@ function CourseEditionGroup() {
     wretch(`/api/courses/${course_name}/editions/${edition}/groups`)
       .get()
       .forbidden((error) => {
-        console.log(error); // TODO: better error handling
         setIsForbidden(true);
       })
       .unauthorized((error) => {
@@ -181,7 +180,6 @@ function CourseEditionGroup() {
     )
       .get()
       .forbidden((error) => {
-        console.log(error); // TODO: better error handling
         setIsForbidden(true);
       })
       .unauthorized((error) => {
