@@ -85,7 +85,7 @@ public abstract class BaseIntegrationTests {
         var accessToken = "100";
         var accessTokenSecret = "101";
         var session = sessionRepository.findById(cookie.getValue());
-        if(session != null){
+        if (session != null) {
             session.setAttribute("accessToken", accessToken);
             session.setAttribute("accessTokenSecret", accessTokenSecret);
             session.setAttribute("usosId", usosId.toString());
@@ -125,8 +125,6 @@ public abstract class BaseIntegrationTests {
 
     protected void setupCourseAndCourseEdition() throws Exception {
         var request = post("/courses").param("name", courseName);
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
 
         var file = new MockMultipartFile(
                 "file",
@@ -139,9 +137,10 @@ public abstract class BaseIntegrationTests {
                 .param("edition", edition)
                 .cookie(cookie);
 
-        mockMvc.perform(courseEditionRequest)
-                .andExpect(status().isOk());
-
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(ignored -> mockMvc.perform(courseEditionRequest)
+                        .andExpect(status().isOk()));
     }
 
     protected void setupTeam() throws Exception {
