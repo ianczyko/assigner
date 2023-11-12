@@ -1,7 +1,7 @@
 package com.anczykowski.assigner.auth.services;
 
 
-import com.anczykowski.assigner.auth.dto.ProfileResponse;
+import com.anczykowski.assigner.auth.models.ProfileResponse;
 import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
