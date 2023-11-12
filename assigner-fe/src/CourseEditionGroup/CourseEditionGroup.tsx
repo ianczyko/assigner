@@ -342,7 +342,7 @@ function CourseEditionGroup() {
           <Stack direction='row'>
             <Stack>
               <ul>
-                {!assignedTeam?.id && (
+                {!assignedTeam?.id && userType !== UserType.TEACHER && (
                   <Popup
                     trigger={(open) => (
                       <Button variant='contained'>Nowy zespół</Button>
@@ -457,7 +457,7 @@ function CourseEditionGroup() {
               )}
             </Stack>
             <ul>
-              {userType !== UserType.STUDENT && (
+              {userType === UserType.COORDINATOR && (
                 <Popup
                   trigger={(open) => (
                     <Button variant='contained'>Nowy temat</Button>
@@ -552,7 +552,7 @@ function CourseEditionGroup() {
                     <TableCell>Imię</TableCell>
                     <TableCell>Nazwisko</TableCell>
                     <TableCell>Zespół</TableCell>
-                    {userType !== UserType.STUDENT && (
+                    {userType === UserType.COORDINATOR && (
                       <TableCell>
                         <Stack
                           direction='row'
@@ -590,7 +590,7 @@ function CourseEditionGroup() {
                           <TableCell>{user.name}</TableCell>
                           <TableCell>{user.surname}</TableCell>
                           <TableCell>
-                            {userType === UserType.STUDENT ? (
+                            {userType !== UserType.COORDINATOR ? (
                               getAssignedTeamOf(user.id)?.name ?? '-'
                             ) : (
                               <FormControl
@@ -621,7 +621,7 @@ function CourseEditionGroup() {
                               </FormControl>
                             )}
                           </TableCell>
-                          {userType !== UserType.STUDENT && (
+                          {userType === UserType.COORDINATOR && (
                             <TableCell>
                               <FormControl
                                 variant='standard'
@@ -661,7 +661,7 @@ function CourseEditionGroup() {
           </ul>
 
           <br />
-          {userType !== UserType.STUDENT && (
+          {userType === UserType.COORDINATOR && (
             <Link
               className='Assigner-link'
               to={`/courses/${course_name}/${edition}/${group_name}/assignment-view`}

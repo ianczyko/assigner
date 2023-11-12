@@ -59,11 +59,14 @@ public class AuthUtils {
         )) {
             return true;
         }
-        return SecurityContextHolder
+
+        var authorities = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getAuthorities()
-                .stream().map(Object::toString).toList().contains("COORDINATOR");
+                .stream().map(Object::toString).toList();
+
+        return authorities.contains("COORDINATOR") || authorities.contains("TEACHER");
     }
 
     public boolean hasAccessToTeam(Integer teamId, HttpServletRequest request) {
