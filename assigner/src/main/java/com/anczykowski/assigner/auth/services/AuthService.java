@@ -55,15 +55,15 @@ public class AuthService {
     @Value("${consumer.secret}")
     private String consumerSecret;
 
-    PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, Pair<OAuthConsumer, OAuthProvider>>
+    final PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, Pair<OAuthConsumer, OAuthProvider>>
             expirationPolicy = new PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<>(
             8, TimeUnit.HOURS);
 
-    PassiveExpiringMap<String, Pair<OAuthConsumer, OAuthProvider>> consumerProviderMap = new PassiveExpiringMap<>(expirationPolicy, new HashMap<>());
+    final PassiveExpiringMap<String, Pair<OAuthConsumer, OAuthProvider>> consumerProviderMap = new PassiveExpiringMap<>(expirationPolicy, new HashMap<>());
 
-    MapSessionRepository sessionRepository;
+    final MapSessionRepository sessionRepository;
 
-    UsersRepository usersRepository;
+    final UsersRepository usersRepository;
 
     public AuthService(
             MapSessionRepository sessionRepository,
