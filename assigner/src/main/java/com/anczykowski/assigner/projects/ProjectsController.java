@@ -55,6 +55,7 @@ public class ProjectsController {
     public ProjectDto getProject(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
             @PathVariable Integer projectId
     ) {
         return modelMapper.map(projectsService.get(projectId), ProjectDto.class);
@@ -89,6 +90,7 @@ public class ProjectsController {
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
             HttpServletRequest request,
             @Valid @RequestBody final ProjectForumCommentDto projectForumCommentDto
     ) {
@@ -102,7 +104,8 @@ public class ProjectsController {
     public List<ProjectForumCommentDto> getProjectForumComments(
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName
     ) {
         return projectsService.getProjectForumComments(projectId)
                 .stream()

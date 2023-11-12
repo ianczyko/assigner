@@ -44,8 +44,8 @@ public class TeamsController {
     public TeamAccessTokenDto generateAccessToken(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
-            @PathVariable Integer teamId
-    ) {
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @PathVariable Integer teamId) {
         var team = teamsService.generateAccessToken(teamId);
         return modelMapper.map(team, TeamAccessTokenDto.class);
     }
@@ -55,6 +55,7 @@ public class TeamsController {
     public TeamAccessTokenDto getAccessToken(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
             @PathVariable Integer teamId,
             HttpServletRequest request
     ) {
@@ -127,6 +128,7 @@ public class TeamsController {
     public ProjectPreferenceDto rateProject(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
             @PathVariable Integer teamId,
             @RequestParam(name = "project-id") Integer projectId,
             @RequestParam Integer rating,
@@ -200,6 +202,7 @@ public class TeamsController {
     public TeamDetailedWithAccessDto getTeam(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
             @PathVariable Integer teamId,
             HttpServletRequest request
     ) {
