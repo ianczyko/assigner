@@ -79,7 +79,7 @@ public class TeamsController {
                 .toList();
     }
 
-    @PostMapping("/{teamId}/leave") // TODO: tests
+    @PostMapping("/{teamId}/leave")
     @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public ResponseEntity<Void> leaveTeam(
             @PathVariable String courseName,

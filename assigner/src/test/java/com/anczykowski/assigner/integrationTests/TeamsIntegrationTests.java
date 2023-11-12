@@ -130,6 +130,26 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
     @Test
     @DirtiesContext
+    void leaveTeam() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var leaveTeamRequest = post("%s/teams/%d/leave".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(leaveTeamRequest)
+                .andExpect(status().isOk());
+
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getTeamMemberRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray()));
+
+    }
+
+    @Test
+    @DirtiesContext
     void addProjectPreference() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();
