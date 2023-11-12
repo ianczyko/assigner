@@ -55,6 +55,9 @@ public class AuthService {
     @Value("${consumer.secret}")
     private String consumerSecret;
 
+    @Value("${initial.coordinator.usos.id}")
+    private Integer initialCoordinatorUsosId;
+
     final PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, Pair<OAuthConsumer, OAuthProvider>>
             expirationPolicy = new PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<>(
             8, TimeUnit.HOURS);
@@ -123,6 +126,11 @@ public class AuthService {
                 if (profileData.getStaff_status() > 0) {
                     userType = UserType.TEACHER.ordinal();
                 }
+
+                if (Integer.valueOf(profileData.getId()).equals(initialCoordinatorUsosId)) {
+                    userType = UserType.COORDINATOR.ordinal();
+                }
+
                 var user = usersRepository.getByUsosId(Integer.valueOf(profileData.getId()));
                 if (user.isPresent()) {
                     userType = user.get().getUserType().ordinal();
