@@ -166,7 +166,6 @@ public class TeamsController {
                 .toList();
     }
 
-    // TODO: Write tests for this endpoint
     @GetMapping("/{teamId}/project-ratings/view")
     @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public List<ProjectPreferenceDto> getRatingsView(

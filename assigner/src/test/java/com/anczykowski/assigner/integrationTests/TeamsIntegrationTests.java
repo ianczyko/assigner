@@ -237,4 +237,39 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @DirtiesContext
+    void getRatingsView() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupProject();
+        setupSecondProject();
+        setupTeam();
+
+        var rateProjectRequest = put("%s/teams/%d/project-ratings".formatted(editionGroupPath, teamId))
+                .param("rating", "5")
+                .param("project-id", projectId.toString());
+
+        mockMvc.perform(rateProjectRequest).andExpect(status().isOk());
+
+
+        var getRatingsViewRequest = get("%s/teams/%d/project-ratings/view".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getRatingsViewRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray(
+                        new JSONObject()
+                                .put("project", new JSONObject()
+                                        .put("id", projectId)
+                                )
+                                .put("rating", 5)
+                        ,
+                        new JSONObject()
+                                .put("project", new JSONObject()
+                                        .put("id", secondProjectId)
+                                )
+                                .put("rating", 3)
+                )));
+    }
+
 }
