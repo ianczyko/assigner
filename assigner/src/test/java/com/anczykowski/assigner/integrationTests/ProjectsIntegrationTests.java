@@ -124,4 +124,20 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    @DirtiesContext
+    void changeTeamLimit() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupProject();
+
+        var changeTeamLimitRequest = put("%s/projects/%d/limit".formatted(editionGroupPath, projectId))
+                .queryParam("new_limit", "11");
+
+        mockMvc.perform(changeTeamLimitRequest)
+                .andExpect(status().isOk())
+                .andExpect(json().node("teamLimit").isEqualTo(11));
+
+    }
+
 }

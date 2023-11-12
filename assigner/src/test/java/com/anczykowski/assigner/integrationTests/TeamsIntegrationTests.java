@@ -83,6 +83,87 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
     @Test
     @DirtiesContext
+    void manualTeamToUserAssign() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var manualTeamAssignRequest = post("%s/teams/manual-reassignment".formatted(editionGroupPath))
+                .param("team-id", teamId.toString())
+                .param("usos-id", testUser2UsosId.toString());
+
+        mockMvc.perform(manualTeamAssignRequest)
+                .andExpect(status().isOk());
+
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getTeamMemberRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray(
+                        new JSONObject().put("usosId", testUserUsosId),
+                        new JSONObject().put("usosId", testUser2UsosId)
+                )));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void manualTeamToUserAssignRemoveAssignment() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var manualTeamAssignRequest = post("%s/teams/manual-reassignment".formatted(editionGroupPath))
+                .param("previous-team-id", teamId.toString())
+                .param("usos-id", testUserUsosId.toString());
+
+        mockMvc.perform(manualTeamAssignRequest)
+                .andExpect(status().isOk());
+
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getTeamMemberRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray()));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void leaveTeam() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var leaveTeamRequest = post("%s/teams/%d/leave".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(leaveTeamRequest)
+                .andExpect(status().isOk());
+
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getTeamMemberRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray()));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void getAssignedTeam() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var getAssignedTeamRequest = get("%s/teams/assigned-team".formatted(editionGroupPath));
+
+        mockMvc.perform(getAssignedTeamRequest)
+                .andExpect(status().isOk())
+                .andExpect(json().node("id").isEqualTo(teamId));
+    }
+
+    @Test
+    @DirtiesContext
     void addProjectPreference() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();
@@ -154,6 +235,41 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
         mockMvc.perform(getTeamRequest)
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void getRatingsView() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupProject();
+        setupSecondProject();
+        setupTeam();
+
+        var rateProjectRequest = put("%s/teams/%d/project-ratings".formatted(editionGroupPath, teamId))
+                .param("rating", "5")
+                .param("project-id", projectId.toString());
+
+        mockMvc.perform(rateProjectRequest).andExpect(status().isOk());
+
+
+        var getRatingsViewRequest = get("%s/teams/%d/project-ratings/view".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getRatingsViewRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray(
+                        new JSONObject()
+                                .put("project", new JSONObject()
+                                        .put("id", projectId)
+                                )
+                                .put("rating", 5)
+                        ,
+                        new JSONObject()
+                                .put("project", new JSONObject()
+                                        .put("id", secondProjectId)
+                                )
+                                .put("rating", 3)
+                )));
     }
 
 }

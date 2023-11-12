@@ -83,13 +83,13 @@ function CourseEditionGroup() {
     secondName: string | null;
     surname: string;
     usosId: number;
+    userType: UserType;
   }
 
   function fetchGroups() {
     wretch(`/api/courses/${course_name}/editions/${edition}/groups`)
       .get()
       .forbidden((error) => {
-        console.log(error); // TODO: better error handling
         setIsForbidden(true);
       })
       .unauthorized((error) => {
@@ -180,7 +180,6 @@ function CourseEditionGroup() {
     )
       .get()
       .forbidden((error) => {
-        console.log(error); // TODO: better error handling
         setIsForbidden(true);
       })
       .unauthorized((error) => {
@@ -282,7 +281,7 @@ function CourseEditionGroup() {
         .query({
           'team-id': event.target.value,
           'previous-team-id': getAssignedTeamOf(user.id)?.id,
-          usosId: user.usosId,
+          'usos-id': user.usosId,
         })
         .post()
         .unauthorized((error) => {
@@ -343,7 +342,7 @@ function CourseEditionGroup() {
           <Stack direction='row'>
             <Stack>
               <ul>
-                {!assignedTeam?.id && (
+                {!assignedTeam?.id && userType !== UserType.TEACHER && (
                   <Popup
                     trigger={(open) => (
                       <Button variant='contained'>Nowy zespół</Button>
@@ -458,7 +457,7 @@ function CourseEditionGroup() {
               )}
             </Stack>
             <ul>
-              {userType !== UserType.STUDENT && (
+              {userType === UserType.COORDINATOR && (
                 <Popup
                   trigger={(open) => (
                     <Button variant='contained'>Nowy temat</Button>
@@ -491,7 +490,9 @@ function CourseEditionGroup() {
                         <TableCell></TableCell>
                         <TableCell>Temat</TableCell>
                         <TableCell align='right'>Limit miejsc</TableCell>
-                        <TableCell align='right'>Ilość zatw. przypisań</TableCell>
+                        <TableCell align='right'>
+                          Ilość zatw. przypisań
+                        </TableCell>
                         {userType === UserType.COORDINATOR && (
                           <TableCell align='right'>Usuń</TableCell>
                         )}
@@ -551,7 +552,7 @@ function CourseEditionGroup() {
                     <TableCell>Imię</TableCell>
                     <TableCell>Nazwisko</TableCell>
                     <TableCell>Zespół</TableCell>
-                    {userType !== UserType.STUDENT && (
+                    {userType === UserType.COORDINATOR && (
                       <TableCell>
                         <Stack
                           direction='row'
@@ -575,90 +576,92 @@ function CourseEditionGroup() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {editionResponse.users.map((user, index) => {
-                    return (
-                      <TableRow
-                        key={user.id.toString()}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                        }}
-                      >
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{user.name}</TableCell>
-                        <TableCell>{user.surname}</TableCell>
-                        <TableCell>
-                          {userType === UserType.STUDENT ? (
-                            getAssignedTeamOf(user.id)?.name ?? '-'
-                          ) : (
-                            <FormControl
-                              variant='standard'
-                              sx={{ minWidth: 120, paddingTop: '2px' }}
-                            >
-                              <Select
-                                value={assignedTeams[user.id] ?? ''}
-                                onChange={handleTeamAssignmentChange(user)}
-                                label='Przypisany zespół'
-                                sx={{
-                                  '& .MuiSelect-select': {
-                                    paddingLeft: 2,
-                                  },
-                                }}
-                              >
-                                <MenuItem value=''>
-                                  <em>Brak</em>
-                                </MenuItem>
-                                {teamsResponse!.map((team) => {
-                                  return (
-                                    <MenuItem key={team.id} value={team.id}>
-                                      {team.name}
-                                    </MenuItem>
-                                  );
-                                })}
-                              </Select>
-                            </FormControl>
-                          )}
-                        </TableCell>
-                        {userType !== UserType.STUDENT && (
+                  {editionResponse.users
+                    .filter((user) => user.userType === UserType.STUDENT)
+                    .map((user, index) => {
+                      return (
+                        <TableRow
+                          key={user.id.toString()}
+                          sx={{
+                            '&:last-child td, &:last-child th': { border: 0 },
+                          }}
+                        >
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{user.name}</TableCell>
+                          <TableCell>{user.surname}</TableCell>
                           <TableCell>
-                            <FormControl
-                              variant='standard'
-                              sx={{ minWidth: 120, paddingTop: '2px' }}
-                            >
-                              <Select
-                                value={group_name}
-                                onChange={handleGroupAssignmentChange(user)}
-                                label='Przypisana grupa'
-                                disabled={assignedTeams[user.id] !== ''}
-                                sx={{
-                                  '& .MuiSelect-select': {
-                                    paddingLeft: 2,
-                                  },
-                                }}
+                            {userType !== UserType.COORDINATOR ? (
+                              getAssignedTeamOf(user.id)?.name ?? '-'
+                            ) : (
+                              <FormControl
+                                variant='standard'
+                                sx={{ minWidth: 120, paddingTop: '2px' }}
                               >
-                                {groupsResponse!.map((group) => {
-                                  return (
-                                    <MenuItem
-                                      key={group.groupName}
-                                      value={group.groupName}
-                                    >
-                                      {group.groupName}
-                                    </MenuItem>
-                                  );
-                                })}
-                              </Select>
-                            </FormControl>
+                                <Select
+                                  value={assignedTeams[user.id] ?? ''}
+                                  onChange={handleTeamAssignmentChange(user)}
+                                  label='Przypisany zespół'
+                                  sx={{
+                                    '& .MuiSelect-select': {
+                                      paddingLeft: 2,
+                                    },
+                                  }}
+                                >
+                                  <MenuItem value=''>
+                                    <em>Brak</em>
+                                  </MenuItem>
+                                  {teamsResponse!.map((team) => {
+                                    return (
+                                      <MenuItem key={team.id} value={team.id}>
+                                        {team.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            )}
                           </TableCell>
-                        )}
-                      </TableRow>
-                    );
-                  })}
+                          {userType === UserType.COORDINATOR && (
+                            <TableCell>
+                              <FormControl
+                                variant='standard'
+                                sx={{ minWidth: 120, paddingTop: '2px' }}
+                              >
+                                <Select
+                                  value={group_name}
+                                  onChange={handleGroupAssignmentChange(user)}
+                                  label='Przypisana grupa'
+                                  disabled={assignedTeams[user.id] !== ''}
+                                  sx={{
+                                    '& .MuiSelect-select': {
+                                      paddingLeft: 2,
+                                    },
+                                  }}
+                                >
+                                  {groupsResponse!.map((group) => {
+                                    return (
+                                      <MenuItem
+                                        key={group.groupName}
+                                        value={group.groupName}
+                                      >
+                                        {group.groupName}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      );
+                    })}
                 </TableBody>
               </Table>
             </TableContainer>
           </ul>
 
           <br />
-          {userType !== UserType.STUDENT && (
+          {userType === UserType.COORDINATOR && (
             <Link
               className='Assigner-link'
               to={`/courses/${course_name}/${edition}/${group_name}/assignment-view`}

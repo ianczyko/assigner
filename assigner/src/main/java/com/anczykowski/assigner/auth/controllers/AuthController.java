@@ -2,14 +2,15 @@ package com.anczykowski.assigner.auth.controllers;
 
 import com.anczykowski.assigner.auth.dto.AuthRequest;
 import com.anczykowski.assigner.auth.dto.AuthResponse;
-import com.anczykowski.assigner.auth.dto.ProfileResponse;
+import com.anczykowski.assigner.auth.dto.ProfileResponseDto;
 import com.anczykowski.assigner.auth.dto.VerifyRequest;
 import com.anczykowski.assigner.auth.services.AuthService;
 import com.anczykowski.assigner.error.ForbiddenException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.WebUtils;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthController {
 
-    AuthService authService;
+    final ModelMapper modelMapper;
+
+    final AuthService authService;
 
     @PostMapping("/auth")
     public AuthResponse auth(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
@@ -49,12 +52,11 @@ public class AuthController {
 
 
     @GetMapping("/profile")
-    public ProfileResponse profile(HttpServletRequest request) {
+    public ProfileResponseDto profile(HttpServletRequest request) {
         var cookie = WebUtils.getCookie(request, "SESSION");
         if (cookie == null) {
             throw new ForbiddenException();
         }
-        // TODO: service should not return response, domain to dto mapping should happen here
-        return authService.userData(cookie.getValue());
+        return modelMapper.map(authService.userData(cookie.getValue()), ProfileResponseDto.class);
     }
 }

@@ -48,7 +48,6 @@ function Forum() {
       })
       .json((json) => {
         setForumResponse(json);
-        console.log(json); // TODO: remove me
       })
       .catch((error) => console.log(error));
   }

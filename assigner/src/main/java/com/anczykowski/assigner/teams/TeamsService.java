@@ -34,8 +34,6 @@ public class TeamsService {
 
     final UsersRepository usersRepository;
 
-    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
-
     @Value("${token.digits:6}")
     int tokenDigits;
 
@@ -137,7 +135,7 @@ public class TeamsService {
         var projects = projectsService.getProjects(courseName, edition, groupName);
         return projects.stream().map(
                 project -> projectPreferenceMap.getOrDefault(project.getId(), ProjectPreference.builder()
-                        .rating(DEFAULT_RATING)
+                        .rating(team.getDefaultRating())
                         .team(team)
                         .project(project)
                         .build()
@@ -161,7 +159,6 @@ public class TeamsService {
         return teamsRepository.save(team);
     }
 
-    // TODO: tests
     @Transactional
     public void manualTeamAssign(Integer usosId, Integer teamId, Integer previousTeamId) {
 

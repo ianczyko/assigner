@@ -20,7 +20,7 @@ public class ProjectsService {
 
     final CourseEditionGroupsService courseEditionGroupsService;
 
-    final UsersRepository usersRepository; // TODO: maybe use service here?
+    final UsersRepository usersRepository;
 
     final ProjectForumCommentsRepository projectForumCommentsRepository;
 
@@ -62,5 +62,12 @@ public class ProjectsService {
     @Transactional
     public void remove(Integer projectId) {
         projectsRepository.remove(projectId);
+    }
+
+    @Transactional
+    public Project changeLimit(Integer projectId, Integer newLimit) {
+        var project = projectsRepository.get(projectId);
+        project.setTeamLimit(newLimit);
+        return projectsRepository.save(project);
     }
 }

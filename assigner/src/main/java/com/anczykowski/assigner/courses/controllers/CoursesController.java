@@ -51,6 +51,15 @@ public class CoursesController {
                 .toList();
     }
 
+    @GetMapping("/filtered")
+    public List<CourseDto> getCoursesFiltered(HttpServletRequest request) {
+        var usosId = authUtils.getUsosId(request);
+        return coursesService.getAllFiltered(usosId)
+                .stream()
+                .map(c -> modelMapper.map(c, CourseDto.class))
+                .toList();
+    }
+
     @PostMapping("/{courseName}/editions")
     @PreAuthorize("hasAuthority('COORDINATOR')")
     public CourseEditionDto newCourseEdition(

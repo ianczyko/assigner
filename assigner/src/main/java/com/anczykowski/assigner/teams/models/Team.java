@@ -34,16 +34,20 @@ public final class Team {
     @Builder.Default
     private List<ProjectPreference> preferences = new ArrayList<>();
 
-    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
+    final Integer defaultRating = 3;
 
     public Integer getHappiness() {
         if (assignedProject == null) return null;
+        return getPreferenceFor(assignedProject);
+
+    }
+
+    public Integer getPreferenceFor(Project project) {
         return preferences
                 .stream()
-                .filter(p -> p.getProject().getId().equals(assignedProject.getId()))
+                .filter(p -> p.getProject().getId().equals(project.getId()))
                 .findAny()
-                .map(ProjectPreference::getRating).orElse(DEFAULT_RATING);
-
+                .map(ProjectPreference::getRating).orElse(defaultRating);
     }
 
     public void regenerateAccessToken(Integer tokenDigits, Integer validDays) {

@@ -38,7 +38,7 @@ function Courses() {
   }
 
   function fetchCourses() {
-    wretch('/api/courses')
+    wretch('/api/courses/filtered')
       .get()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
@@ -81,7 +81,7 @@ function Courses() {
                 <li key={course.id}>
                   <Stack direction='row' spacing='20px'>
                     <p>{course.name}</p>
-                    {userType !== UserType.STUDENT && (
+                    {userType === UserType.COORDINATOR && (
                       <Popup
                         trigger={(open) => (
                           <Button variant='contained'>Nowa edycja</Button>
@@ -163,7 +163,7 @@ function Courses() {
   );
 
   function newCoursePopup() {
-    if (userType === UserType.STUDENT) {
+    if (userType !== UserType.COORDINATOR) {
       return;
     }
     return (

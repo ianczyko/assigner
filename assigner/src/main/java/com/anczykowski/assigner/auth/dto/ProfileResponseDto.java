@@ -1,9 +1,12 @@
 package com.anczykowski.assigner.auth.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
-public class ProfileResponse {
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+public class ProfileResponseDto {
     String id;
 
     String first_name;

@@ -55,9 +55,22 @@ public class ProjectsController {
     public ProjectDto getProject(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
             @PathVariable Integer projectId
     ) {
         return modelMapper.map(projectsService.get(projectId), ProjectDto.class);
+    }
+
+    @PutMapping("/{projectId}/limit")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public ProjectDto changeProjectLimit(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @PathVariable Integer projectId,
+            @RequestParam("new_limit") Integer newLimit
+    ) {
+        return modelMapper.map(projectsService.changeLimit(projectId, newLimit), ProjectDto.class);
     }
 
     @DeleteMapping("/{projectId}")
@@ -77,6 +90,7 @@ public class ProjectsController {
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
             HttpServletRequest request,
             @Valid @RequestBody final ProjectForumCommentDto projectForumCommentDto
     ) {
@@ -90,7 +104,8 @@ public class ProjectsController {
     public List<ProjectForumCommentDto> getProjectForumComments(
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName
     ) {
         return projectsService.getProjectForumComments(projectId)
                 .stream()

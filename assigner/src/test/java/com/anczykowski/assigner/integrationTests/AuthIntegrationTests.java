@@ -9,7 +9,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
 
     @Test
     void protectedEndpointWithoutCredentialsReturns401() throws Exception {
-        var request = get("/profile");
+        var request = get("/courses");
         mockMvc.perform(request)
                 .andExpect(status().isUnauthorized());
     }
@@ -18,7 +18,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
     @DirtiesContext
     void protectedEndpointAfterAuthReturns200() throws Exception {
         authenticate();
-        var request = get("/profile");
+        var request = get("/courses");
         mockMvc.perform(request)
                 .andExpect(status().isOk());
     }
@@ -28,7 +28,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
     void protectedEndpointAfterAuthAndLogoutReturns401() throws Exception {
         authenticate();
 
-        var request = get("/profile");
+        var request = get("/courses");
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
@@ -36,7 +36,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
         mockMvc.perform(logoutRequest)
                 .andExpect(status().isOk());
 
-        var profileRequest = get("/profile");
+        var profileRequest = get("/courses");
         mockMvc.perform(profileRequest)
                 .andExpect(status().isUnauthorized());
     }
@@ -46,7 +46,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
     void protectedEndpointAfterAuthAndLogoutAndAuthReturns200() throws Exception {
         authenticate();
 
-        var request = get("/profile");
+        var request = get("/courses");
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
@@ -55,7 +55,7 @@ public class AuthIntegrationTests extends BaseIntegrationTests {
                 .andExpect(status().isOk());
 
         authenticate();
-        var profileRequest = get("/profile");
+        var profileRequest = get("/courses");
         mockMvc.perform(profileRequest)
                 .andExpect(status().isOk());
     }

@@ -1,9 +1,12 @@
 package com.anczykowski.assigner.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 public class AuthRequest {
 
     @NotBlank

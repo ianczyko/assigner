@@ -44,7 +44,6 @@ function JoinTeam({
         Helpers.handleForbidden();
       })
       .res((res) => {
-        console.log(res); // TODO: remove me
         onFinish();
       })
       .catch((error) => console.log(error));

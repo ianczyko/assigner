@@ -4,7 +4,6 @@ import com.anczykowski.assigner.projects.ProjectsService;
 import com.anczykowski.assigner.solver.models.AssignOptimizationResult;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import com.anczykowski.assigner.teams.TeamsService;
-import com.anczykowski.assigner.teams.models.ProjectPreference;
 import ilog.concert.IloException;
 import ilog.concert.IloIntVar;
 import ilog.cplex.IloCplex;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SolverService {
     static final double EPSILON = 1e-5;
-    static final Integer DEFAULT_RATING = 3; // TODO: move somewhere more project-wise
 
     final TeamsService teamsService;
 
@@ -69,11 +67,7 @@ public class SolverService {
                 for (int j = 0; j < P; ++j) {
                     var team = teams.get(i);
                     var project = projects.get(j);
-                    // TODO: below line might be worth optimizing
-                    var rating = team.getPreferences().stream()
-                            .filter(p -> p.getProject().getId().equals(project.getId()))
-                            .findAny().map(ProjectPreference::getRating)
-                            .orElse(DEFAULT_RATING);
+                    var rating = team.getPreferenceFor(project);
                     satisfaction.addTerm(teams_project_assignment[i][j], rating);
                 }
             }

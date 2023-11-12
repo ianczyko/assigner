@@ -1,7 +1,7 @@
 package com.anczykowski.assigner.auth.services;
 
 
-import com.anczykowski.assigner.auth.dto.ProfileResponse;
+import com.anczykowski.assigner.auth.models.ProfileResponse;
 import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
@@ -55,15 +55,18 @@ public class AuthService {
     @Value("${consumer.secret}")
     private String consumerSecret;
 
-    PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, Pair<OAuthConsumer, OAuthProvider>>
+    @Value("${initial.coordinator.usos.id}")
+    private Integer initialCoordinatorUsosId;
+
+    final PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, Pair<OAuthConsumer, OAuthProvider>>
             expirationPolicy = new PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<>(
             8, TimeUnit.HOURS);
 
-    PassiveExpiringMap<String, Pair<OAuthConsumer, OAuthProvider>> consumerProviderMap = new PassiveExpiringMap<>(expirationPolicy, new HashMap<>());
+    final PassiveExpiringMap<String, Pair<OAuthConsumer, OAuthProvider>> consumerProviderMap = new PassiveExpiringMap<>(expirationPolicy, new HashMap<>());
 
-    MapSessionRepository sessionRepository;
+    final MapSessionRepository sessionRepository;
 
-    UsersRepository usersRepository;
+    final UsersRepository usersRepository;
 
     public AuthService(
             MapSessionRepository sessionRepository,
@@ -123,6 +126,11 @@ public class AuthService {
                 if (profileData.getStaff_status() > 0) {
                     userType = UserType.TEACHER.ordinal();
                 }
+
+                if (Integer.valueOf(profileData.getId()).equals(initialCoordinatorUsosId)) {
+                    userType = UserType.COORDINATOR.ordinal();
+                }
+
                 var user = usersRepository.getByUsosId(Integer.valueOf(profileData.getId()));
                 if (user.isPresent()) {
                     userType = user.get().getUserType().ordinal();

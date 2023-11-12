@@ -56,9 +56,7 @@ function AssignmentView() {
       .forbidden((error) => {
         Helpers.handleForbidden();
       })
-      .res((res) => {
-        console.log(res); // TODO: remove me
-      })
+      .res((res) => {})
       .catch((error) => console.log(error));
 
     await fetchTeams();
@@ -97,7 +95,6 @@ function AssignmentView() {
     )
       .get()
       .forbidden((error) => {
-        console.log(error); // TODO: better error handling
         setIsForbidden(true);
       })
       .unauthorized((error) => {
