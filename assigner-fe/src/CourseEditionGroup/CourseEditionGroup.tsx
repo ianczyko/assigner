@@ -281,7 +281,7 @@ function CourseEditionGroup() {
         .query({
           'team-id': event.target.value,
           'previous-team-id': getAssignedTeamOf(user.id)?.id,
-          usosId: user.usosId,
+          'usos-id': user.usosId,
         })
         .post()
         .unauthorized((error) => {

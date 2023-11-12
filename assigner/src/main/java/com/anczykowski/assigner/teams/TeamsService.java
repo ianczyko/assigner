@@ -159,7 +159,6 @@ public class TeamsService {
         return teamsRepository.save(team);
     }
 
-    // TODO: tests
     @Transactional
     public void manualTeamAssign(Integer usosId, Integer teamId, Integer previousTeamId) {
 

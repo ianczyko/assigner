@@ -101,7 +101,7 @@ public class TeamsController {
             @SuppressWarnings("unused") @PathVariable String groupName,
             @RequestParam(name = "team-id", required = false) Integer teamId,
             @RequestParam(name = "previous-team-id", required = false) Integer previousTeamId,
-            @RequestParam Integer usosId
+            @RequestParam(name = "usos-id") Integer usosId
     ) {
         teamsService.manualTeamAssign(usosId, teamId, previousTeamId);
         return ResponseEntity.ok().build();

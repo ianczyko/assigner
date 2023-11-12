@@ -83,6 +83,53 @@ public class TeamsIntegrationTests extends BaseIntegrationTests {
 
     @Test
     @DirtiesContext
+    void manualTeamToUserAssign() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var manualTeamAssignRequest = post("%s/teams/manual-reassignment".formatted(editionGroupPath))
+                .param("team-id", teamId.toString())
+                .param("usos-id", testUser2UsosId.toString());
+
+        mockMvc.perform(manualTeamAssignRequest)
+                .andExpect(status().isOk());
+
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getTeamMemberRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray(
+                        new JSONObject().put("usosId", testUserUsosId),
+                        new JSONObject().put("usosId", testUser2UsosId)
+                )));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void manualTeamToUserAssignRemoveAssignment() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupTeam();
+
+        var manualTeamAssignRequest = post("%s/teams/manual-reassignment".formatted(editionGroupPath))
+                .param("previous-team-id", teamId.toString())
+                .param("usos-id", testUserUsosId.toString());
+
+        mockMvc.perform(manualTeamAssignRequest)
+                .andExpect(status().isOk());
+
+        var getTeamMemberRequest = get("%s/teams/%d/members".formatted(editionGroupPath, teamId));
+
+        mockMvc.perform(getTeamMemberRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonIgnoringWrapper().isEqualTo(jsonArray()));
+
+    }
+
+    @Test
+    @DirtiesContext
     void addProjectPreference() throws Exception {
         authenticate();
         setupCourseAndCourseEdition();
