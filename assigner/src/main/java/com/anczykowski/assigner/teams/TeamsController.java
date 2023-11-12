@@ -190,11 +190,7 @@ public class TeamsController {
     ) {
         return teamsService.getAll(courseName, edition, groupName)
                 .stream()
-                .map(c -> {
-                    var mapped = modelMapper.map(c, TeamDto.class);
-                    mapped.setHappiness(c.getHappiness()); // TODO: check if this can be simplified
-                    return mapped;
-                })
+                .map(c -> modelMapper.map(c, TeamDto.class))
                 .toList();
     }
 
