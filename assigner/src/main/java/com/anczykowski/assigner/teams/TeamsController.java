@@ -227,7 +227,7 @@ public class TeamsController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/assigned-team") // TODO: tests
+    @GetMapping("/assigned-team")
     public TeamDetailedDto getAssignedTeam(
             @PathVariable String courseName,
             @PathVariable String edition,
