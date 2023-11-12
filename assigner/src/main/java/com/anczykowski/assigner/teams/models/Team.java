@@ -5,7 +5,6 @@ import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.users.models.User;
 import com.google.common.math.IntMath;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,17 +34,20 @@ public final class Team {
     @Builder.Default
     private List<ProjectPreference> preferences = new ArrayList<>();
 
-    @Value("${project.default.rating:3}")
-    Integer DEFAULT_RATING;
+    final Integer defaultRating = 3;
 
     public Integer getHappiness() {
         if (assignedProject == null) return null;
+        return getPreferenceFor(assignedProject);
+
+    }
+
+    public Integer getPreferenceFor(Project project) {
         return preferences
                 .stream()
-                .filter(p -> p.getProject().getId().equals(assignedProject.getId()))
+                .filter(p -> p.getProject().getId().equals(project.getId()))
                 .findAny()
-                .map(ProjectPreference::getRating).orElse(DEFAULT_RATING);
-
+                .map(ProjectPreference::getRating).orElse(defaultRating);
     }
 
     public void regenerateAccessToken(Integer tokenDigits, Integer validDays) {

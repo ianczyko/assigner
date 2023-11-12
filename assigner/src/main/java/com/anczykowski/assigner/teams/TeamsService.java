@@ -34,9 +34,6 @@ public class TeamsService {
 
     final UsersRepository usersRepository;
 
-    @Value("${project.default.rating:3}")
-    Integer DEFAULT_RATING;
-
     @Value("${token.digits:6}")
     int tokenDigits;
 
@@ -138,7 +135,7 @@ public class TeamsService {
         var projects = projectsService.getProjects(courseName, edition, groupName);
         return projects.stream().map(
                 project -> projectPreferenceMap.getOrDefault(project.getId(), ProjectPreference.builder()
-                        .rating(DEFAULT_RATING)
+                        .rating(team.getDefaultRating())
                         .team(team)
                         .project(project)
                         .build()
