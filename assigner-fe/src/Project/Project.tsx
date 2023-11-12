@@ -1,10 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
+import QueryStringAddon from 'wretch/addons/queryString';
 import './Project.css';
-import Helpers from '../Common/Helpers';
+import Helpers, { UserType } from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
-import { Stack } from '@mui/material';
+import { IconButton, Stack, Tooltip } from '@mui/material';
 import Forum from '../Forum/Forum';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,6 +15,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import CustomNavigator from '../CustomNavigator/CustomNavigator';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 function Project() {
   const { course_name, edition, group_name, project_id } = useParams();
@@ -23,6 +26,8 @@ function Project() {
   const [projectResponse, setProjectResponse] =
     useState<IProjectResponse | null>(null);
 
+  const [userType, setUserType] = useState<UserType>(UserType.STUDENT);
+
   interface IProjectResponse {
     id: number;
     name: string;
@@ -30,6 +35,25 @@ function Project() {
     finalAssignedTeamsCount: number;
     projectManager: string;
     description: string;
+  }
+
+  function changeLimitBy(difference: number) {
+    const w = wretch().addon(QueryStringAddon);
+    w.url(
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project_id}/limit`
+    )
+      .query({ new_limit: projectResponse!.teamLimit + difference })
+      .put()
+      .unauthorized((error) => {
+        Helpers.handleUnathorised(navigate);
+      })
+      .forbidden((error) => {
+        Helpers.handleForbidden();
+      })
+      .json((json) => {
+        setProjectResponse(json);
+      })
+      .catch((error) => console.log(error));
   }
 
   useEffect(() => {
@@ -43,7 +67,11 @@ function Project() {
       .forbidden((error) => {
         Helpers.handleForbidden();
       })
-      .json((json) => {
+      .res((response) => {
+        Helpers.extractUserType(response, setUserType);
+        return response.json();
+      })
+      .then((json) => {
         setProjectResponse(json);
         console.log(json); // TODO: remove me
       })
@@ -76,7 +104,9 @@ function Project() {
                     <TableCell>Nazwa tematu</TableCell>
                     <TableCell>Opiekun Tematu</TableCell>
                     <TableCell align='right'>Limit miejsc</TableCell>
-                    <TableCell align='right'>Ilość zatwierdzonych przypisań</TableCell>
+                    <TableCell align='right'>
+                      Ilość zatwierdzonych przypisań
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -86,8 +116,45 @@ function Project() {
                   >
                     <TableCell>{projectResponse.name}</TableCell>
                     <TableCell>{projectResponse.projectManager}</TableCell>
-                    <TableCell align='right'>
-                      {projectResponse.teamLimit}
+                    <TableCell>
+                      <Stack
+                        direction='row'
+                        justifyContent='right'
+                        alignItems='center'
+                        spacing='1px'
+                      >
+                        {userType === UserType.COORDINATOR && (
+                          <Tooltip title='Zwiększ limit miejsc o 1.'>
+                            <IconButton
+                              onClick={() => {
+                                changeLimitBy(1);
+                              }}
+                              color='inherit'
+                              size='small'
+                            >
+                              <FontAwesomeIcon icon={faPlus} />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+
+                        <p>{projectResponse.teamLimit}</p>
+                        {userType === UserType.COORDINATOR && (
+                          <Tooltip title='Zmniejsz limit miejsc o 1.'>
+                            <span>
+                              <IconButton
+                                onClick={() => {
+                                  changeLimitBy(-1);
+                                }}
+                                color='inherit'
+                                size='small'
+                                disabled={projectResponse.teamLimit < 1}
+                              >
+                                <FontAwesomeIcon icon={faMinus} />
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        )}
+                      </Stack>
                     </TableCell>
                     <TableCell align='right'>
                       {projectResponse.finalAssignedTeamsCount}

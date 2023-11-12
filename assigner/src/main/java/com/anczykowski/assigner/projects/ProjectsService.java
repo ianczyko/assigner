@@ -63,4 +63,11 @@ public class ProjectsService {
     public void remove(Integer projectId) {
         projectsRepository.remove(projectId);
     }
+
+    @Transactional
+    public Project changeLimit(Integer projectId, Integer newLimit) {
+        var project = projectsRepository.get(projectId);
+        project.setTeamLimit(newLimit);
+        return projectsRepository.save(project);
+    }
 }

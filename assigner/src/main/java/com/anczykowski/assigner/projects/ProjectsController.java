@@ -60,6 +60,18 @@ public class ProjectsController {
         return modelMapper.map(projectsService.get(projectId), ProjectDto.class);
     }
 
+    @PutMapping("/{projectId}/limit")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public ProjectDto changeProjectLimit(
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @PathVariable Integer projectId,
+            @RequestParam("new_limit") Integer newLimit
+    ) {
+        return modelMapper.map(projectsService.changeLimit(projectId, newLimit), ProjectDto.class);
+    }
+
     @DeleteMapping("/{projectId}")
     @PreAuthorize("hasAuthority('COORDINATOR')")
     public ResponseEntity<Void> deleteProject(
