@@ -112,7 +112,7 @@ public class CourseEditionService {
         return coursesEditionRepository.getAll(courseName);
     }
 
-    public CourseEdition get(String courseName, String edition, String groupName) {
+    public CourseEdition get(String courseName, String edition) {
         return coursesEditionRepository.get(courseName, edition)
                 .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
