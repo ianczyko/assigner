@@ -71,7 +71,7 @@ public class SessionFilter extends OncePerRequestFilter {
                 String userType = session.getAttribute("userType");
                 response.addHeader("user-type", userType);
 
-                // TODO: make this cleaner (maybe just store userType as int in the first place?)
+                // userType stored as int could be simpler
                 var userTypeString = UserType.values()[Integer.parseInt(userType)].toString();
 
                 var authorities = new ArrayList<GrantedAuthority>();
