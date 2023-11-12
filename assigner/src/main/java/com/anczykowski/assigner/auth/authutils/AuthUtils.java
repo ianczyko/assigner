@@ -33,6 +33,23 @@ public class AuthUtils {
             HttpServletRequest request
     ) {
         var usosId = getUsosId(request);
+        if (hasAccessToCourseEditionGroupNoThrow(
+                courseName,
+                edition,
+                groupName,
+                usosId
+        )) {
+            return true;
+        }
+        throw new ForbiddenException("User has no access to requested course edition");
+    }
+
+    public boolean hasAccessToCourseEditionGroupNoThrow(
+            String courseName,
+            String edition,
+            String groupName,
+            Integer usosId
+    ) {
         if (usosId == null) return false;
         if (courseEditionGroupRepository.checkIfUserHasAccessToCourseEditionGroup(
                 courseName,
@@ -42,15 +59,11 @@ public class AuthUtils {
         )) {
             return true;
         }
-        if (SecurityContextHolder
+        return SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getAuthorities()
-                .stream().map(Object::toString).toList().contains("COORDINATOR")
-        ) {
-            return true;
-        }
-        throw new ForbiddenException("User has no access to requested course edition");
+                .stream().map(Object::toString).toList().contains("COORDINATOR");
     }
 
     public boolean hasAccessToTeam(Integer teamId, HttpServletRequest request) {

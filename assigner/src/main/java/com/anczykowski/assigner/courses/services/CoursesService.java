@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.courses.services;
 
+import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.courses.models.Course;
 import com.anczykowski.assigner.courses.repositories.CourseEditionGroupRepository;
 import com.anczykowski.assigner.courses.repositories.CourseEditionRepository;
@@ -24,6 +25,8 @@ public class CoursesService {
 
     CourseEditionGroupRepository courseEditionGroupRepository;
 
+    AuthUtils authUtils;
+
     @Transactional
     public Course create(String name) {
         var course = Course.builder()
@@ -41,10 +44,11 @@ public class CoursesService {
 
         courses.forEach(c -> c.getCourseEditions()
                 .forEach(e -> e.setCourseEditionGroups(e.getCourseEditionGroups()
-                        .stream().filter(g -> courseEditionGroupRepository.checkIfUserHasAccessToCourseEditionGroup(c.getName(),
+                        .stream().filter(g -> authUtils.hasAccessToCourseEditionGroupNoThrow(c.getName(),
                                 e.getEdition(),
                                 g.getGroupName(),
-                                usosId)).toList())
+                                usosId)
+                        ).toList())
                 )
         );
 
