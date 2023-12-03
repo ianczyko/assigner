@@ -5,7 +5,7 @@ import com.anczykowski.assigner.solver.models.AssignOptimizationResult;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import com.anczykowski.assigner.teams.TeamsService;
 import ilog.concert.IloException;
-import ilog.concert.IloIntVar;
+import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,9 +40,9 @@ public class SolverService {
 
             //// variables
 
-            var teams_project_assignment = new IloIntVar[T][];
+            var teams_project_assignment = new IloNumVar[T][];
             for (int i = 0; i < T; ++i) {
-                teams_project_assignment[i] = cplex.boolVarArray(P);
+                teams_project_assignment[i] = cplex.numVarArray(P, 0.0, 1.0);
             }
 
             //// constraints
