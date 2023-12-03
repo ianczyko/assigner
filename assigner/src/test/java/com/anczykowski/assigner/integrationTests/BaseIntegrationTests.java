@@ -139,8 +139,11 @@ public abstract class BaseIntegrationTests {
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andDo(ignored -> mockMvc.perform(courseEditionRequest)
-                        .andExpect(status().isOk()));
+                .andDo(ignored -> {
+                    Thread.sleep(100);
+                    mockMvc.perform(courseEditionRequest)
+                            .andExpect(status().isOk());
+                });
     }
 
     protected void setupTeam() throws Exception {
