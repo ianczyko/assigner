@@ -27,7 +27,7 @@ public class ProjectsController {
     AuthUtils authUtils;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('COORDINATOR')")
+    @PreAuthorize("hasAuthority('COORDINATOR') or hasAuthority('TEACHER')")
     public ProjectDto newProject(
             @PathVariable String courseName,
             @PathVariable String edition,
