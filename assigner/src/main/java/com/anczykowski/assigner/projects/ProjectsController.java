@@ -86,6 +86,7 @@ public class ProjectsController {
     }
 
     @PostMapping("/{projectId}/forum-comments")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public ProjectForumCommentDto addProjectForumComment(
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
@@ -101,11 +102,13 @@ public class ProjectsController {
     }
 
     @GetMapping("/{projectId}/forum-comments")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public List<ProjectForumCommentDto> getProjectForumComments(
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
-            @SuppressWarnings("unused") @PathVariable String groupName
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            HttpServletRequest request
     ) {
         return projectsService.getProjectForumComments(projectId)
                 .stream()
