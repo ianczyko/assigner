@@ -41,7 +41,7 @@ public class UsersController {
     @PreAuthorize("hasAuthority('COORDINATOR')")
     public UserDto changeUserRole(
             @PathVariable("usos-id") Integer usosId,
-            @RequestParam Integer newRole
+            @RequestParam("new-role") Integer newRole
     ) {
         var user = usersService.changeRole(usosId, newRole);
         return modelMapper.map(user, UserDto.class);

@@ -44,7 +44,7 @@ public class UsersIntegrationTests extends BaseIntegrationTests {
                 )));
 
         var changeRoleRequest = put("/users/%s/role".formatted(testUser2UsosId))
-                .queryParam("newRole", String.valueOf(UserType.TEACHER.ordinal()));
+                .queryParam("new-role", String.valueOf(UserType.TEACHER.ordinal()));
 
         mockMvc.perform(changeRoleRequest)
                 .andExpect(status().isOk());
