@@ -56,6 +56,14 @@ public class UsersRepositoryPersistent implements UsersRepository {
     public UserPersistent getUserReferenceById(Integer id) {
         return repositoryImpl.getReferenceById(id);
     }
+
+    @Override
+    public List<User> getAll() {
+        return repositoryImpl.findAll()
+                .stream()
+                .map(c -> modelMapper.map(c, User.class))
+                .toList();
+    }
 }
 
 @Component

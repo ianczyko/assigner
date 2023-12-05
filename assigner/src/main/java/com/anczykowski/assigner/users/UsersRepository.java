@@ -17,4 +17,6 @@ public interface UsersRepository {
     List<Team> getAssignedTeamByUsosId(Integer usosId);
 
     UserPersistent getUserReferenceById(Integer id);
+
+    List<User> getAll();
 }
