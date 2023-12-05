@@ -182,7 +182,7 @@ function Project() {
                 {projectResponse.description}
               </Typography>
             </Paper>
-            {userType === UserType.COORDINATOR && (
+            {userType !== UserType.STUDENT && (
               <div
                 style={{
                   display: 'flex',
