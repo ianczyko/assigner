@@ -52,11 +52,16 @@ function UpdateProjectDescription({
     <form ref={form} onSubmit={handleSubmit(onSubmit)}>
       <h2>Zmiana opisu</h2>
       <label htmlFor='description'>Nowy opis tematu</label>
-      <input
+      <textarea
+        rows={9}
+        cols={32}
+        style={{ resize: 'none' }}
         placeholder='np. System ma wyznaczać wstępny przydział projektów na podstawie całkowitoliczbowego modelu optymalizacyjnego'
         {...register('description', { required: true })}
       />
-      <input type='submit' />
+      <input type='submit' style={{
+        marginTop: 20
+      }} />
     </form>
   );
 }

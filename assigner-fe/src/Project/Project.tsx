@@ -173,7 +173,14 @@ function Project() {
                 width: 600,
               }}
             >
-              <Typography>{projectResponse.description}</Typography>
+              <Typography
+                style={{
+                  whiteSpace: 'pre-wrap',
+                  textAlign: 'left',
+                }}
+              >
+                {projectResponse.description}
+              </Typography>
             </Paper>
             {userType === UserType.COORDINATOR && (
               <div

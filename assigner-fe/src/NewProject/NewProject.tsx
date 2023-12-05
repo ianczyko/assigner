@@ -55,7 +55,10 @@ function NewProject({
         {...register('name', { required: true })}
       />
       <label htmlFor='description'>Opis tematu</label>
-      <input
+      <textarea
+        rows={9}
+        cols={32}
+        style={{ resize: 'none' }}
         placeholder='np. System ma wyznaczać wstępny przydział projektów na podstawie całkowitoliczbowego modelu optymalizacyjnego'
         {...register('description', { required: true })}
       />
