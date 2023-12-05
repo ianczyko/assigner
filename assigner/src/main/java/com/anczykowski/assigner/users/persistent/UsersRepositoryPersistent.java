@@ -5,6 +5,7 @@ import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -59,7 +60,7 @@ public class UsersRepositoryPersistent implements UsersRepository {
 
     @Override
     public List<User> getAll() {
-        return repositoryImpl.findAll()
+        return repositoryImpl.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(c -> modelMapper.map(c, User.class))
                 .toList();
