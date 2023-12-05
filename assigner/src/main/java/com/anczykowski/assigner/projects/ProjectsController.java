@@ -116,4 +116,17 @@ public class ProjectsController {
                 .toList();
     }
 
+    @PutMapping("/{projectId}/description")
+    @PreAuthorize("hasAuthority('COORDINATOR') or hasAuthority('TEACHER')")
+    public ProjectDto updateDescription(
+            @PathVariable Integer projectId,
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @RequestParam("new-description") String newDescription
+    ) {
+        var project = projectsService.updateDescription(projectId, newDescription);
+        return modelMapper.map(project, ProjectDto.class);
+    }
+
 }

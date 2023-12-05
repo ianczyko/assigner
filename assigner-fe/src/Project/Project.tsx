@@ -5,7 +5,7 @@ import QueryStringAddon from 'wretch/addons/queryString';
 import './Project.css';
 import Helpers, { UserType } from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
-import { IconButton, Stack, Tooltip } from '@mui/material';
+import { Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import Forum from '../Forum/Forum';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,6 +17,8 @@ import Paper from '@mui/material/Paper';
 import CustomNavigator from '../CustomNavigator/CustomNavigator';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import Popup from 'reactjs-popup';
+import UpdateProjectDescription from '../UpdateProjectDescription/UpdateProjectDescription';
 
 function Project() {
   const { course_name, edition, group_name, project_id } = useParams();
@@ -27,6 +29,8 @@ function Project() {
     useState<IProjectResponse | null>(null);
 
   const [userType, setUserType] = useState<UserType>(UserType.STUDENT);
+
+  const [isOpenDesc, setIsOpenDesc] = useState(false);
 
   interface IProjectResponse {
     id: number;
@@ -56,7 +60,7 @@ function Project() {
       .catch((error) => console.log(error));
   }
 
-  useEffect(() => {
+  function fetchProject() {
     wretch(
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project_id}`
     )
@@ -75,6 +79,10 @@ function Project() {
         setProjectResponse(json);
       })
       .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    fetchProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course_name, edition, project_id]);
 
@@ -157,8 +165,45 @@ function Project() {
                 </TableBody>
               </Table>
             </TableContainer>
-
-            <p>{projectResponse.description}</p>
+            <Paper
+              style={{
+                maxHeight: 300,
+                overflow: 'auto',
+                padding: 16,
+                width: 600,
+              }}
+            >
+              <Typography>{projectResponse.description}</Typography>
+            </Paper>
+            {userType === UserType.COORDINATOR && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Popup
+                  trigger={(open) => (
+                    <Button variant='contained' sx={{ width: 150 }}>
+                      Zmień opis
+                    </Button>
+                  )}
+                  position='right center'
+                  closeOnDocumentClick
+                  open={isOpenDesc}
+                  onOpen={() => setIsOpenDesc(!isOpenDesc)}
+                >
+                  <UpdateProjectDescription
+                    courseEdition={edition!}
+                    courseName={course_name!}
+                    groupName={group_name!}
+                    projectId={project_id!}
+                    onFinish={fetchProject}
+                  />
+                </Popup>
+              </div>
+            )}
             <Forum />
           </Stack>
         </header>
