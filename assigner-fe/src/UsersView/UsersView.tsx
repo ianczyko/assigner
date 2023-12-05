@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import wretch from 'wretch';
+import QueryStringAddon from 'wretch/addons/queryString';
 import './UsersView.css';
 import Forbidden from '../Forbidden/Forbidden';
 import Helpers, { UserType } from '../Common/Helpers';
@@ -12,7 +13,13 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Paper } from '@mui/material';
+import {
+  FormControl,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 
 function UsersView() {
   const [isForbidden, setIsForbidden] = useState(false);
@@ -53,6 +60,26 @@ function UsersView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleRoleAssignmentChange =
+    (user: IUser) => (event: SelectChangeEvent) => {
+      const w = wretch().addon(QueryStringAddon);
+      w.url(`/api/users/${user.usosId}/role`)
+        .query({
+          'new-role': event.target.value,
+        })
+        .put()
+        .unauthorized((error) => {
+          Helpers.handleUnathorised(navigate);
+        })
+        .forbidden((error) => {
+          Helpers.handleForbidden();
+        })
+        .res((res) => {
+          fetchUsers();
+        })
+        .catch((error) => console.log(error));
+    };
+
   if (isForbidden) {
     return <Forbidden />;
   }
@@ -67,7 +94,7 @@ function UsersView() {
             custom_text='Zarządzanie Użytkownikami'
           />
 
-          <TableContainer sx={{ width: 650 }} component={Paper}>
+          <TableContainer sx={{ width: 750 }} component={Paper}>
             <Table aria-label='simple table'>
               <TableHead>
                 <TableRow>
@@ -92,7 +119,33 @@ function UsersView() {
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.secondName}</TableCell>
                     <TableCell>{user.surname}</TableCell>
-                    <TableCell>{user.userType}</TableCell>
+                    <TableCell>
+                      <FormControl
+                        variant='standard'
+                        sx={{ minWidth: 120, paddingTop: '2px' }}
+                      >
+                        <Select
+                          value={String(user.userType)}
+                          onChange={handleRoleAssignmentChange(user)}
+                          label='Przypisany zespół'
+                          sx={{
+                            '& .MuiSelect-select': {
+                              paddingLeft: 2,
+                            },
+                          }}
+                        >
+                          <MenuItem value={0}>
+                            <em>Student</em>
+                          </MenuItem>
+                          <MenuItem value={1}>
+                            <em>Nauczyciel</em>
+                          </MenuItem>
+                          <MenuItem value={2}>
+                            <em>Koordynator</em>
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
