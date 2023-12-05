@@ -12,6 +12,7 @@ interface NavigatorParams {
   project_name?: string;
   project_id?: number;
   team_name?: string;
+  custom_text?: string;
   team_id?: number;
 }
 
@@ -24,6 +25,7 @@ export default function CustomNavigator({
   project_id,
   team_name,
   team_id,
+  custom_text,
 }: NavigatorParams) {
   return (
     <Stack direction='row' spacing='10px' paddingBottom='40px'>
@@ -75,7 +77,7 @@ export default function CustomNavigator({
           </Link>
         </>
       )}
-      
+
       {team_name && team_id && (
         <>
           <p>/</p>
@@ -85,6 +87,13 @@ export default function CustomNavigator({
           >
             {team_name}
           </Link>
+        </>
+      )}
+
+      {custom_text && (
+        <>
+          <p>/</p>
+          <p>{custom_text}</p>
         </>
       )}
     </Stack>

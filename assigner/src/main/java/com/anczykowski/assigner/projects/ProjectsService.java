@@ -70,4 +70,11 @@ public class ProjectsService {
         project.setTeamLimit(newLimit);
         return projectsRepository.save(project);
     }
+
+    @Transactional
+    public Project updateDescription(Integer projectId, String newDescription) {
+        var project = projectsRepository.get(projectId);
+        project.setDescription(newDescription);
+        return projectsRepository.save(project);
+    }
 }

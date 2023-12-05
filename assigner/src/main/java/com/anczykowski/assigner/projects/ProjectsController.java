@@ -27,7 +27,7 @@ public class ProjectsController {
     AuthUtils authUtils;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('COORDINATOR')")
+    @PreAuthorize("hasAuthority('COORDINATOR') or hasAuthority('TEACHER')")
     public ProjectDto newProject(
             @PathVariable String courseName,
             @PathVariable String edition,
@@ -86,6 +86,7 @@ public class ProjectsController {
     }
 
     @PostMapping("/{projectId}/forum-comments")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public ProjectForumCommentDto addProjectForumComment(
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
@@ -101,16 +102,31 @@ public class ProjectsController {
     }
 
     @GetMapping("/{projectId}/forum-comments")
+    @PreAuthorize("@authUtils.hasAccessToCourseEditionGroup(#courseName, #edition, #groupName, #request)")
     public List<ProjectForumCommentDto> getProjectForumComments(
             @PathVariable Integer projectId,
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
-            @SuppressWarnings("unused") @PathVariable String groupName
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            HttpServletRequest request
     ) {
         return projectsService.getProjectForumComments(projectId)
                 .stream()
                 .map(c -> modelMapper.map(c, ProjectForumCommentDto.class))
                 .toList();
+    }
+
+    @PutMapping("/{projectId}/description")
+    @PreAuthorize("hasAuthority('COORDINATOR') or hasAuthority('TEACHER')")
+    public ProjectDto updateDescription(
+            @PathVariable Integer projectId,
+            @SuppressWarnings("unused") @PathVariable String courseName,
+            @SuppressWarnings("unused") @PathVariable String edition,
+            @SuppressWarnings("unused") @PathVariable String groupName,
+            @RequestParam("new-description") String newDescription
+    ) {
+        var project = projectsService.updateDescription(projectId, newDescription);
+        return modelMapper.map(project, ProjectDto.class);
     }
 
 }

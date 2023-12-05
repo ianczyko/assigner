@@ -3,6 +3,7 @@ package com.anczykowski.assigner.courses.services;
 import com.anczykowski.assigner.courses.models.CourseEdition;
 import com.anczykowski.assigner.courses.repositories.CourseEditionRepository;
 import com.anczykowski.assigner.courses.repositories.CoursesRepository;
+import com.anczykowski.assigner.error.MalformedCsvException;
 import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.UsersService;
@@ -42,7 +43,11 @@ public class CourseEditionService {
     String groupPrefix;
 
     private int getHeaderLocation(String[] headers, String columnName) {
-        return Arrays.asList(headers).indexOf(columnName);
+        var location = Arrays.asList(headers).indexOf(columnName);
+        if (location == -1) {
+            throw new MalformedCsvException(columnName);
+        }
+        return location;
     }
 
     private String getUsosIdFromEmail(String email) {

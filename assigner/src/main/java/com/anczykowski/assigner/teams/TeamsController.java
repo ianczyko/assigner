@@ -41,11 +41,14 @@ public class TeamsController {
     }
 
     @PutMapping("/{teamId}/access-token")
+    @PreAuthorize("@authUtils.hasAccessToTeam(#teamId, #request)")
     public TeamAccessTokenDto generateAccessToken(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
             @SuppressWarnings("unused") @PathVariable String groupName,
-            @PathVariable Integer teamId) {
+            @PathVariable Integer teamId,
+            HttpServletRequest request
+    ) {
         var team = teamsService.generateAccessToken(teamId);
         return modelMapper.map(team, TeamAccessTokenDto.class);
     }

@@ -140,4 +140,21 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
 
     }
 
+    @Test
+    @DirtiesContext
+    void updateDescription() throws Exception {
+        authenticate();
+        setupCourseAndCourseEdition();
+        setupProject();
+
+        var updateDescriptionRequest = put(editionGroupPath + "/projects/%s/description".formatted(projectId))
+                .queryParam("new-description", "XYZ");
+
+        mockMvc.perform(updateDescriptionRequest)
+                .andExpect(status().isOk())
+                .andExpect(json().node("name").isEqualTo("name1"))
+                .andExpect(json().node("description").isEqualTo("XYZ"));
+
+    }
+
 }

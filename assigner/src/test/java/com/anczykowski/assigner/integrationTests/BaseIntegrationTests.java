@@ -132,15 +132,18 @@ public abstract class BaseIntegrationTests {
                 MediaType.TEXT_PLAIN_VALUE,
                 "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365;grupy\nKowalski;Jan;;0;0;%d@pw.edu.pl;\"CWI101, PRO101, WYK1\"\nKowalski2;Jan2;;0;0;%d@pw.edu.pl;\"CWI101, PRO101, WYK1\"".formatted(testUserUsosId, testUser2UsosId).getBytes()
         );
-        var courseEditionRequest = multipart("/courses/PZSP3/editions")
+        var courseEditionRequest = multipart("/courses/%s/editions".formatted(courseName))
                 .file(file)
                 .param("edition", edition)
                 .cookie(cookie);
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andDo(ignored -> mockMvc.perform(courseEditionRequest)
-                        .andExpect(status().isOk()));
+                .andDo(ignored -> {
+                    Thread.sleep(100);
+                    mockMvc.perform(courseEditionRequest)
+                            .andExpect(status().isOk());
+                });
     }
 
     protected void setupTeam() throws Exception {

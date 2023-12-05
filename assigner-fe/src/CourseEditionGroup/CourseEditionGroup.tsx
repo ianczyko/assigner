@@ -457,7 +457,7 @@ function CourseEditionGroup() {
               )}
             </Stack>
             <ul>
-              {userType === UserType.COORDINATOR && (
+              {userType !== UserType.STUDENT && (
                 <Popup
                   trigger={(open) => (
                     <Button variant='contained'>Nowy temat</Button>

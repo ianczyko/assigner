@@ -1,39 +1,41 @@
-import './NewProject.css';
+import './UpdateProjectDescription.css';
 
 import wretch from 'wretch';
+import QueryStringAddon from 'wretch/addons/queryString';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useRef } from 'react';
 import Helpers from '../Common/Helpers';
 import { useNavigate } from 'react-router-dom';
 
-interface NewProjectParams {
+interface UpdateProjectDescriptionParams {
   courseName: string;
   courseEdition: string;
   groupName: string;
+  projectId: string;
   onFinish: Function;
 }
 
-function NewProject({
+function UpdateProjectDescription({
   courseName,
   courseEdition,
   groupName,
+  projectId,
   onFinish,
-}: NewProjectParams) {
+}: UpdateProjectDescriptionParams) {
   const { register, handleSubmit } = useForm();
 
   const form = useRef(null);
   const navigate = useNavigate();
 
   const onSubmit = async (data: FieldValues) => {
-    wretch()
-      .url(
-        `/api/courses/${courseName}/editions/${courseEdition}/groups/${groupName}/projects`
-      )
-      .post({
-        name: data.name,
-        description: data.description,
-        teamLimit: data.teamLimit,
+    const w = wretch().addon(QueryStringAddon);
+    w.url(
+      `/api/courses/${courseName}/editions/${courseEdition}/groups/${groupName}/projects/${projectId}/description`
+    )
+      .query({
+        'new-description': data.description,
       })
+      .put()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
       })
@@ -48,13 +50,8 @@ function NewProject({
 
   return (
     <form ref={form} onSubmit={handleSubmit(onSubmit)}>
-      <h2>Nowy temat</h2>
-      <label htmlFor='name'>Nazwa tematu</label>
-      <input
-        placeholder='np. System do przydziału projektów '
-        {...register('name', { required: true })}
-      />
-      <label htmlFor='description'>Opis tematu</label>
+      <h2>Zmiana opisu</h2>
+      <label htmlFor='description'>Nowy opis tematu</label>
       <textarea
         rows={9}
         cols={32}
@@ -62,11 +59,11 @@ function NewProject({
         placeholder='np. System ma wyznaczać wstępny przydział projektów na podstawie całkowitoliczbowego modelu optymalizacyjnego'
         {...register('description', { required: true })}
       />
-      <label htmlFor='teamLimit'>Limit przypisanych zespołów</label>
-      <input placeholder='1' {...register('teamLimit', { required: true })} />
-      <input type='submit' />
+      <input type='submit' style={{
+        marginTop: 20
+      }} />
     </form>
   );
 }
 
-export default NewProject;
+export default UpdateProjectDescription;

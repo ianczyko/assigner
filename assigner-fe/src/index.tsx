@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Team from './Team/Team';
 import Project from './Project/Project';
 import AssignmentView from './AssignmentView/AssignmentView';
+import UsersView from './UsersView/UsersView';
 import { ThemeProvider, createTheme } from '@mui/material';
 
 const darkTheme = createTheme({
@@ -37,6 +38,7 @@ root.render(
           <Route path='/callback' element={<Callback />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/courses' element={<Courses />} />
+          <Route path='/users' element={<UsersView />} />
           <Route
             path='/courses/:course_name/:edition/:group_name'
             element={<CourseEditionGroup />}

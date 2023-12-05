@@ -19,6 +19,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponseEntity, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(MalformedCsvException.class)
+    public ResponseEntity<?> malformedCsvException(MalformedCsvException ex, WebRequest request) {
+        var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorResponseEntity, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> notFoundByIdException(EntityNotFoundException ex, WebRequest request) {
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));

@@ -23,6 +23,7 @@ public class ProjectPersistent {
 
     private String name;
 
+    @Column(columnDefinition="text")
     private String description;
 
     private Integer teamLimit;
