@@ -6,6 +6,7 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { useRef } from 'react';
 import Helpers from '../Common/Helpers';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface NewCourseEditionParams {
   courseName: string;
@@ -34,6 +35,15 @@ function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
       })
       .forbidden((error) => {
         Helpers.handleForbidden();
+      })
+      .badRequest((error) => {
+        let missingField = JSON.parse(error.message).message;
+        toast.error(`Nieprawidłowy CSV, brakujące pole: (${missingField})`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: 'dark',
+        });
       })
       .res((res) => {
         onFinish();
