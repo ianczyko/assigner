@@ -14,7 +14,11 @@ import {
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCopy,
+  faQuestionCircle,
+  faRefresh,
+} from '@fortawesome/free-solid-svg-icons';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -381,9 +385,16 @@ function Team() {
                             {team_id}:{accessTokenResponse!.accessToken}
                           </p>
                           <Stack direction='row' alignItems='center'>
-                            <IconButton onClick={handleCopy} color='inherit'>
-                              <FontAwesomeIcon icon={faCopy} />
-                            </IconButton>
+                            <Tooltip title='Kopiuj kod dostępu'>
+                              <IconButton onClick={handleCopy} color='inherit'>
+                                <FontAwesomeIcon icon={faCopy} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title='Wygeneruj nowy kod dostępu'>
+                              <IconButton onClick={generateAccessToken} color='inherit'>
+                                <FontAwesomeIcon icon={faRefresh} />
+                              </IconButton>
+                            </Tooltip>
                             <Snackbar
                               open={isCopied}
                               autoHideDuration={2500}
