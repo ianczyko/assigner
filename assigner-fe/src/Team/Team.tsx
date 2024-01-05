@@ -23,7 +23,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Helpers, { UserType } from '../Common/Helpers';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import moment from 'moment';
 import 'moment/locale/pl';
 import CustomNavigator from '../CustomNavigator/CustomNavigator';
@@ -108,6 +108,15 @@ function Team() {
           .put()
           .unauthorized((error) => {
             Helpers.handleUnathorised(navigate);
+          })
+          .badRequest((error) => {
+            let preferenceError = JSON.parse(error.message).message;
+            toast.error(`Nieprawidłowa preferencja: (${preferenceError})`, {
+              position: 'top-right',
+              autoClose: 3000,
+              hideProgressBar: false,
+              theme: 'dark',
+            });
           })
           .res((res) => {})
           .catch((error) => console.log(error));

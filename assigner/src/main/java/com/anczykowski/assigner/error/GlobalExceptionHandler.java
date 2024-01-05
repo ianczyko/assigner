@@ -1,6 +1,7 @@
 package com.anczykowski.assigner.error;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.modelmapper.MappingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MalformedCsvException.class)
     public ResponseEntity<?> malformedCsvException(MalformedCsvException ex, WebRequest request) {
+        var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorResponseEntity, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> constraintViolationException(ConstraintViolationException ex, WebRequest request) {
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorResponseEntity, HttpStatus.BAD_REQUEST);
     }
