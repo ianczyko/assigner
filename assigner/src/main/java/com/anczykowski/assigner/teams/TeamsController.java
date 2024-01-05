@@ -6,15 +6,19 @@ import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.users.dto.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @AllArgsConstructor
 @RequestMapping("/courses/{courseName}/editions/{edition}/groups/{groupName}/teams")
 public class TeamsController {
@@ -134,7 +138,7 @@ public class TeamsController {
             @SuppressWarnings("unused") @PathVariable String groupName,
             @PathVariable Integer teamId,
             @RequestParam(name = "project-id") Integer projectId,
-            @RequestParam Integer rating,
+            @RequestParam @Min(1) @Max(5) Integer rating,
             HttpServletRequest request
     ) {
         var preference = teamsService.rateProject(teamId, projectId, rating);
