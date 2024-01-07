@@ -462,7 +462,7 @@ function CourseEditionGroup() {
                   trigger={(open) => (
                     <Button variant='contained'>Nowy temat</Button>
                   )}
-                  position='right center'
+                  position='right top'
                   closeOnDocumentClick
                   open={isOpenProject}
                   onOpen={() => setIsOpenProject(!isOpenProject)}
