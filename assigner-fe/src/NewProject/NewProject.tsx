@@ -33,6 +33,7 @@ function NewProject({
         name: data.name,
         description: data.description,
         teamLimit: data.teamLimit,
+        projectManager: data.projectManager,
       })
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
@@ -62,6 +63,8 @@ function NewProject({
         placeholder='np. System ma wyznaczać wstępny przydział projektów na podstawie całkowitoliczbowego modelu optymalizacyjnego'
         {...register('description', { required: true })}
       />
+      <label htmlFor='projectManager'>Opiekun projektu</label>
+      <input placeholder='np. Jan Kowalski' {...register('projectManager', { required: false })} />
       <label htmlFor='teamLimit'>Limit przypisanych zespołów</label>
       <input placeholder='1' {...register('teamLimit', { required: true })} />
       <input type='submit' />
