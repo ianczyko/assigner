@@ -38,19 +38,6 @@ public class CourseEditionGroupsService {
     }
 
     @Transactional
-    public CourseEditionGroup createOrGet(String courseName, String edition, String groupName) {
-        var existingCourseEditionGroup = courseEditionGroupRepository.get(courseName, edition, groupName);
-        return existingCourseEditionGroup.orElseGet(() -> {
-            var courseEdition = coursesEditionRepository.get(courseName, edition)
-                    .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
-            return courseEditionGroupRepository.save(CourseEditionGroup.builder()
-                    .courseEdition(courseEdition)
-                    .groupName(groupName)
-                    .build());
-        });
-    }
-
-    @Transactional
     public void reassignUser(Integer usosId, String groupFromName, String groupToName, String courseName, String edition) {
         var user = usersRepository.getByUsosId(usosId)
                 .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
@@ -59,9 +46,6 @@ public class CourseEditionGroupsService {
         var groupTo = courseEditionGroupRepository.get(courseName, edition, groupToName)
                 .orElseThrow(() -> new NotFoundException("%s %s %s course edition group not found".formatted(courseName, edition, groupFromName)));
 
-
-        // groupTo.getUsers().add(user);
-
         groupFrom.getUsers().remove(user);
         user.getCourseEditionGroupsAccess().remove(groupFrom);
 
@@ -69,7 +53,28 @@ public class CourseEditionGroupsService {
 
         courseEditionGroupRepository.save(groupFrom);
         usersRepository.save(user);
+    }
 
-        // courseEditionGroupRepository.save(groupTo);
+    @Transactional
+    public CourseEditionGroup create(String courseName, String edition, String group) {
+        var courseEdition = coursesEditionRepository.get(courseName, edition)
+                .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
+        return courseEditionGroupRepository.save(CourseEditionGroup.builder()
+                .courseEdition(courseEdition)
+                .groupName(group)
+                .build());
+    }
+
+    @Transactional
+    public void assignUser(Integer usosId, String courseName, String edition, String group) {
+        var user = usersRepository.getByUsosId(usosId)
+                .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
+        var groupTo = courseEditionGroupRepository.get(courseName, edition, group)
+                .orElseThrow(() -> new NotFoundException("%s %s %s course edition group not found".formatted(courseName, edition, group)));
+
+        user.getCourseEditionGroupsAccess().add(groupTo);
+
+        courseEditionGroupRepository.save(groupTo);
+        usersRepository.save(user);
     }
 }

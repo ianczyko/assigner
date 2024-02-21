@@ -9,17 +9,11 @@ import com.anczykowski.assigner.courses.services.CourseEditionService;
 import com.anczykowski.assigner.courses.services.CoursesService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.apache.commons.io.input.BOMInputStream;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -64,22 +58,25 @@ public class CoursesController {
     @PreAuthorize("hasAuthority('COORDINATOR')")
     public CourseEditionDto newCourseEdition(
             @PathVariable String courseName,
-            @RequestParam String edition,
-            @RequestParam(value = "file") MultipartFile file
+            @RequestParam String edition
     ) {
-        try (var fileStream = file.getInputStream()) {
-            var inputCsvBufferedReader = new BufferedReader(
-                    new InputStreamReader(
-                            new BOMInputStream(fileStream), StandardCharsets.UTF_8
-                    )
-            );
-            return modelMapper.map(
-                    courseEditionsService.create(courseName, edition, inputCsvBufferedReader),
-                    CourseEditionDto.class
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return modelMapper.map(
+                courseEditionsService.create(courseName, edition),
+                CourseEditionDto.class
+        );
+    }
+
+    @PostMapping("/{courseName}/editions/{edition}/groups")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public CourseEditionGroupDto newCourseEditionGroup(
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @RequestParam String group
+    ) {
+        return modelMapper.map(
+                courseEditionGroupsService.create(courseName, edition, group),
+                CourseEditionGroupDto.class
+        );
     }
 
     @GetMapping("/{courseName}/editions/{edition}/groups")
@@ -95,14 +92,38 @@ public class CoursesController {
 
     @PostMapping("/{courseName}/editions/{edition}/groups/user-reassignment")
     @PreAuthorize("hasAuthority('COORDINATOR')")
-    public ResponseEntity<Void> manualTeamAssign(
-            @SuppressWarnings("unused") @PathVariable String courseName,
-            @SuppressWarnings("unused") @PathVariable String edition,
+    public ResponseEntity<Void> manualUserReassign(
+            @PathVariable String courseName,
+            @PathVariable String edition,
             @RequestParam(name = "group-from") String groupFrom,
             @RequestParam(name = "group-to") String groupTo,
             @RequestParam Integer usosId
     ) {
         courseEditionGroupsService.reassignUser(usosId, groupFrom, groupTo, courseName, edition);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{courseName}/editions/{edition}/groups/user-assignment")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public ResponseEntity<Void> manualUserAssign(
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @RequestParam String group,
+            @RequestParam Integer usosId
+    ) {
+        courseEditionGroupsService.assignUser(usosId, courseName, edition, group);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{courseName}/editions/{edition}/groups/initial")
+    public ResponseEntity<Void> pickInitialGroup(
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @RequestParam String group,
+            HttpServletRequest request
+    ) {
+        var usosId = authUtils.getUsosId(request);
+        courseEditionGroupsService.assignUser(usosId, courseName, edition, group);
         return ResponseEntity.ok().build();
     }
 
