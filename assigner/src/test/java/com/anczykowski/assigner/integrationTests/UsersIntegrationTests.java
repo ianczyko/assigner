@@ -59,17 +59,6 @@ public class UsersIntegrationTests extends BaseIntegrationTests {
 
     }
 
-    void manualAddUser(Integer usosId, UserType userType) throws Exception {
-        var request = post("/users")
-                .content(new JSONObject()
-                        .put("usosId", usosId)
-                        .put("userType", userType.ordinal())
-                        .put("name", "test")
-                        .put("surname", "test")
-                        .toString());
 
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
-    }
 
 }
