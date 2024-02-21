@@ -1,4 +1,4 @@
-import './NewCourseEdition.css';
+import './NewCourseEditionGroup.css';
 
 import wretch from 'wretch';
 import QueryStringAddon from 'wretch/addons/queryString';
@@ -7,12 +7,19 @@ import { useRef } from 'react';
 import Helpers from '../Common/Helpers';
 import { useNavigate } from 'react-router-dom';
 
-interface NewCourseEditionParams {
-  courseName: string;
+import 'react-toastify/dist/ReactToastify.css';
+
+interface NewCourseEditionGroupParams {
   onFinish: Function;
+  edition: string;
+  courseName: string;
 }
 
-function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
+function NewCourseEditionGroup({
+  edition,
+  courseName,
+  onFinish,
+}: NewCourseEditionGroupParams) {
   const { register, handleSubmit } = useForm();
 
   const form = useRef(null);
@@ -21,10 +28,8 @@ function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
 
   const onSubmit = async (data: FieldValues) => {
     const w = wretch().addon(QueryStringAddon);
-    w.url(`/api/courses/${courseName}/editions`)
-      .query({
-        edition: data.edition,
-      })
+    w.url(`/api/courses/${courseName}/editions/${edition}/groups`)
+      .query({ group: data.group })
       .post()
       .unauthorized((error) => {
         Helpers.handleUnathorised(navigate);
@@ -40,15 +45,17 @@ function NewCourseEdition({ courseName, onFinish }: NewCourseEditionParams) {
 
   return (
     <form ref={form} onSubmit={handleSubmit(onSubmit)}>
-      <h2>Nowa edycja dla kursu {courseName}</h2>
-      <label htmlFor='edition'>Nazwa edycji</label>
+      <h2>
+        Nowy grupa dla edycji {edition} kursu {courseName}{' '}
+      </h2>
+      <label htmlFor='group'>Nazwa grupy</label>
       <input
-        placeholder='np. 22z'
-        {...register('edition', { required: true })}
+        placeholder='np. 101 lub pt 16:15'
+        {...register('group', { required: true })}
       />
       <input type='submit' />
     </form>
   );
 }
 
-export default NewCourseEdition;
+export default NewCourseEditionGroup;
