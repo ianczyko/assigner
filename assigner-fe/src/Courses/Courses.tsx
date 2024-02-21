@@ -102,7 +102,13 @@ function Courses() {
                         onOpen={() => {
                           setIsOpenDict({
                             ...isOpenDict,
-                            [course.id]: !isOpenDict[course.id],
+                            [course.id]: true,
+                          });
+                        }}
+                        onClose={() => {
+                          setIsOpenDict({
+                            ...isOpenDict,
+                            [course.id]: false,
                           });
                         }}
                       >
@@ -132,8 +138,13 @@ function Courses() {
                                 onOpen={() => {
                                   setIsOpenGroupDict({
                                     ...isOpenGroupDict,
-                                    [courseEdition.id]:
-                                      !isOpenGroupDict[courseEdition.id],
+                                    [courseEdition.id]: true,
+                                  });
+                                }}
+                                onClose={() => {
+                                  setIsOpenGroupDict({
+                                    ...isOpenGroupDict,
+                                    [courseEdition.id]: false,
                                   });
                                 }}
                               >
@@ -158,15 +169,20 @@ function Courses() {
                                   onOpen={() => {
                                     setIsOpenJoinDict({
                                       ...isOpenJoinDict,
-                                      [courseEdition.id]:
-                                        !isOpenJoinDict[courseEdition.id],
+                                      [courseEdition.id]: true,
+                                    });
+                                  }}
+                                  onClose={() => {
+                                    setIsOpenJoinDict({
+                                      ...isOpenJoinDict,
+                                      [courseEdition.id]: false,
                                     });
                                   }}
                                 >
                                   <JoinCourseEditionGroup
-                                     edition={courseEdition.edition}
-                                     courseName={course.name}
-                                     onFinish={fetchCourses}
+                                    edition={courseEdition.edition}
+                                    courseName={course.name}
+                                    onFinish={fetchCourses}
                                   />
                                 </Popup>
                               )}
@@ -237,7 +253,8 @@ function Courses() {
           position='right center'
           closeOnDocumentClick
           open={isOpenCourse}
-          onOpen={() => setIsOpenCourse(!isOpenCourse)}
+          onOpen={() => setIsOpenCourse(true)}
+          onClose={() => setIsOpenCourse(false)}
         >
           <NewCourse onFinish={fetchCourses} />
         </Popup>

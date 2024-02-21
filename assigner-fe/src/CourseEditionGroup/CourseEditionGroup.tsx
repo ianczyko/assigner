@@ -350,7 +350,9 @@ function CourseEditionGroup() {
                     position='right center'
                     closeOnDocumentClick
                     open={isOpen}
-                    onOpen={() => setIsOpen(!isOpen)}
+                    onOpen={() => setIsOpen(true)}
+                    onClose={() => setIsOpen(false)}
+                    
                   >
                     <NewTeam
                       courseEdition={edition!}
@@ -443,7 +445,8 @@ function CourseEditionGroup() {
                       position='right center'
                       closeOnDocumentClick
                       open={isOpenJoin}
-                      onOpen={() => setIsOpenJoin(!isOpenJoin)}
+                      onOpen={() => setIsOpenJoin(true)}
+                      onClose={() => setIsOpenJoin(false)}
                     >
                       <JoinTeam
                         courseEdition={edition!}
@@ -465,7 +468,8 @@ function CourseEditionGroup() {
                   position='right top'
                   closeOnDocumentClick
                   open={isOpenProject}
-                  onOpen={() => setIsOpenProject(!isOpenProject)}
+                  onOpen={() => setIsOpenProject(true)}
+                  onClose={() => setIsOpenProject(false)}
                 >
                   <NewProject
                     courseEdition={edition!}
