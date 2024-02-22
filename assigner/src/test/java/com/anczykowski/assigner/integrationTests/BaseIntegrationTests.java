@@ -18,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.session.MapSession;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static net.javacrumbs.jsonunit.spring.JsonUnitResultMatchers.json;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -99,6 +97,19 @@ public abstract class BaseIntegrationTests {
         authenticate(testUserUsosId);
     }
 
+    void manualAddUser(Integer usosId, UserType userType) throws Exception {
+        var request = post("/users")
+                .content(new JSONObject()
+                        .put("usosId", usosId)
+                        .put("userType", userType.ordinal())
+                        .put("name", "Jan")
+                        .put("surname", "Kowalski")
+                        .toString());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+    }
+
     protected void authenticate(Integer usosId) throws Exception {
         authenticate(usosId, UserType.COORDINATOR);
     }
@@ -125,25 +136,30 @@ public abstract class BaseIntegrationTests {
 
     protected void setupCourseAndCourseEdition() throws Exception {
         var request = post("/courses").param("name", courseName);
+        var courseEditionRequest = post("/courses/%s/editions".formatted(courseName))
+                .param("edition", edition);
 
-        var file = new MockMultipartFile(
-                "file",
-                "students.csv",
-                MediaType.TEXT_PLAIN_VALUE,
-                "nazwisko;imie;imie2;skreslony;rezygnacja;login_office365;grupy\nKowalski;Jan;;0;0;%d@pw.edu.pl;\"CWI101, PRO101, WYK1\"\nKowalski2;Jan2;;0;0;%d@pw.edu.pl;\"CWI101, PRO101, WYK1\"".formatted(testUserUsosId, testUser2UsosId).getBytes()
-        );
-        var courseEditionRequest = multipart("/courses/%s/editions".formatted(courseName))
-                .file(file)
-                .param("edition", edition)
-                .cookie(cookie);
+        var courseEditionGroupRequest = post("/courses/%s/editions/%s/groups".formatted(courseName, edition))
+                .param("group", groupName);
 
-        mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andDo(ignored -> {
-                    Thread.sleep(100);
-                    mockMvc.perform(courseEditionRequest)
-                            .andExpect(status().isOk());
-                });
+        manualAddUser(testUserUsosId, UserType.STUDENT);
+        manualAddUser(testUser2UsosId, UserType.STUDENT);
+
+        mockMvc.perform(request).andExpect(status().isOk());
+        mockMvc.perform(courseEditionRequest).andExpect(status().isOk());
+        mockMvc.perform(courseEditionGroupRequest).andExpect(status().isOk());
+
+        assignUserToGroup(testUserUsosId, groupName);
+        assignUserToGroup(testUser2UsosId, groupName);
+
+    }
+
+    private void assignUserToGroup(Integer usosId, String groupName) throws Exception {
+        var manualTeamAssignRequest = post("/courses/%s/editions/%s/groups/user-assignment".formatted(courseName, edition))
+                .param("group", groupName)
+                .param("usosId", usosId.toString());
+
+        mockMvc.perform(manualTeamAssignRequest).andExpect(status().isOk());
     }
 
     protected void setupTeam() throws Exception {

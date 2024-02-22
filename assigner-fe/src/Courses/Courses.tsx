@@ -8,14 +8,22 @@ import { Button, Stack } from '@mui/material';
 import NewCourseEdition from '../NewCourseEdition/NewCourseEdition';
 import NewCourse from '../NewCourse/NewCourse';
 import Helpers, { UserType } from '../Common/Helpers';
+import CustomNavigator from '../CustomNavigator/CustomNavigator';
+import NewCourseEditionGroup from '../NewCourseEditionGroup/NewCourseEditionGroup';
+import JoinCourseEditionGroup from '../JoinCourseEditionGroup/JoinCourseEditionGroup';
 
 import { ToastContainer } from 'react-toastify';
-import CustomNavigator from '../CustomNavigator/CustomNavigator';
 
 function Courses() {
   const [courses, setCourses] = useState<Array<ICourse> | null>(null);
   const [isOpenCourse, setIsOpenCourse] = useState(false);
   const [isOpenDict, setIsOpenDict] = useState<Record<number, boolean>>({});
+  const [isOpenGroupDict, setIsOpenGroupDict] = useState<
+    Record<number, boolean>
+  >({});
+  const [isOpenJoinDict, setIsOpenJoinDict] = useState<Record<number, boolean>>(
+    {}
+  );
   const [userType, setUserType] = useState<UserType>(UserType.STUDENT);
 
   const navigate = useNavigate();
@@ -27,7 +35,7 @@ function Courses() {
   }
 
   interface ICourseEditionGroup {
-    id: string;
+    id: number;
     edition: string;
     courseEditionGroups: Array<ICourseEditionGroupGroup>;
   }
@@ -78,13 +86,15 @@ function Courses() {
           <ul>
             {courses.map((course) => {
               return (
-                <li key={course.id}>
+                <li key={course.id} style={{ marginTop: 10 }}>
                   <Stack direction='row' spacing='20px'>
                     <p>{course.name}</p>
                     {userType === UserType.COORDINATOR && (
                       <Popup
                         trigger={(open) => (
-                          <Button variant='contained'>Nowa edycja</Button>
+                          <Button variant='contained' size='small'>
+                            Nowa edycja
+                          </Button>
                         )}
                         position='right center'
                         closeOnDocumentClick
@@ -106,8 +116,62 @@ function Courses() {
                   <ul>
                     {course.courseEditions.map((courseEdition) => {
                       return (
-                        <li key={courseEdition.id}>
-                          {courseEdition.edition}
+                        <li key={courseEdition.id} style={{ marginTop: 10 }}>
+                          <Stack direction='row' spacing='20px'>
+                            <p>{courseEdition.edition}</p>
+                            {userType === UserType.COORDINATOR && (
+                              <Popup
+                                trigger={(open) => (
+                                  <Button variant='contained' size='small'>
+                                    Nowa grupa
+                                  </Button>
+                                )}
+                                position='right center'
+                                closeOnDocumentClick
+                                open={isOpenGroupDict[courseEdition.id]}
+                                onOpen={() => {
+                                  setIsOpenGroupDict({
+                                    ...isOpenGroupDict,
+                                    [courseEdition.id]:
+                                      !isOpenGroupDict[courseEdition.id],
+                                  });
+                                }}
+                              >
+                                <NewCourseEditionGroup
+                                  edition={courseEdition.edition}
+                                  courseName={course.name}
+                                  onFinish={fetchCourses}
+                                />
+                              </Popup>
+                            )}
+                            {userType === UserType.STUDENT &&
+                              courseEdition.courseEditionGroups.length ===
+                                0 && (
+                                <Popup
+                                  trigger={(open) => (
+                                    <Button variant='contained' size='small'>
+                                      Dołącz do edycji
+                                    </Button>
+                                  )}
+                                  position='right center'
+                                  open={isOpenJoinDict[courseEdition.id]}
+                                  onOpen={() => {
+                                    setIsOpenJoinDict({
+                                      ...isOpenJoinDict,
+                                      [courseEdition.id]:
+                                        !isOpenJoinDict[courseEdition.id],
+                                    });
+                                  }}
+                                >
+                                  <JoinCourseEditionGroup
+                                     edition={courseEdition.edition}
+                                     courseName={course.name}
+                                     onFinish={fetchCourses}
+                                  />
+                                </Popup>
+                              )}
+                          </Stack>
+
                           <ul>
                             {courseEdition.courseEditionGroups.map(
                               (courseEditionGroup) => {

@@ -1,0 +1,22 @@
+form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid white;
+  border-radius: 3px;
+  padding: 9px 15px;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin-bottom: 13px;
+  margin-top: 19px;
+  font-size: 14px;
+}
