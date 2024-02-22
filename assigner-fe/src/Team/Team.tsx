@@ -8,6 +8,7 @@ import {
   Button,
   Checkbox,
   IconButton,
+  List,
   Slider,
   Stack,
   Tooltip,
@@ -400,7 +401,10 @@ function Team() {
                               </IconButton>
                             </Tooltip>
                             <Tooltip title='Wygeneruj nowy kod dostępu'>
-                              <IconButton onClick={generateAccessToken} color='inherit'>
+                              <IconButton
+                                onClick={generateAccessToken}
+                                color='inherit'
+                              >
                                 <FontAwesomeIcon icon={faRefresh} />
                               </IconButton>
                             </Tooltip>
@@ -457,30 +461,44 @@ function Team() {
               <div>
                 <ul className='Assigner-list-type-none Assigner-no-padding'>
                   Preferencje zespołu:
-                  {preferenceResponse.map((pref) => {
-                    return (
-                      <li key={pref.project.id} className='Assigner-no-padding'>
-                        <Link
-                          className='Assigner-link'
-                          to={`/courses/${course_name}/${edition}/${group_name}/projects/${pref.project.id}`}
+                  <List
+                    style={{
+                      maxHeight: '30vh',
+                      minWidth: '25vw',
+                      overflow: 'scroll',
+                      overflowX: 'hidden',
+                      paddingRight: '25px',
+                      marginBottom: '20px',
+                    }}
+                  >
+                    {preferenceResponse.map((pref) => {
+                      return (
+                        <li
+                          key={pref.project.id}
+                          className='Assigner-no-padding'
                         >
-                          {pref.project.name}
-                        </Link>
+                          <Link
+                            className='Assigner-link'
+                            to={`/courses/${course_name}/${edition}/${group_name}/projects/${pref.project.id}`}
+                          >
+                            {pref.project.name}
+                          </Link>
 
-                        <Slider
-                          aria-label='Ocena'
-                          defaultValue={pref.rating}
-                          valueLabelDisplay='auto'
-                          step={1}
-                          marks
-                          onChange={updateSliderValues(pref.project.id)}
-                          min={1}
-                          max={5}
-                          disabled={teamResponse.readonly}
-                        />
-                      </li>
-                    );
-                  })}
+                          <Slider
+                            aria-label='Ocena'
+                            defaultValue={pref.rating}
+                            valueLabelDisplay='auto'
+                            step={1}
+                            marks
+                            onChange={updateSliderValues(pref.project.id)}
+                            min={1}
+                            max={5}
+                            disabled={teamResponse.readonly}
+                          />
+                        </li>
+                      );
+                    })}
+                  </List>
                   {!teamResponse.readonly && (
                     <LoadingButton
                       variant='contained'
