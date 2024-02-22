@@ -350,7 +350,8 @@ function CourseEditionGroup() {
                     position='right center'
                     closeOnDocumentClick
                     open={isOpen}
-                    onOpen={() => setIsOpen(!isOpen)}
+                    onOpen={() => setIsOpen(true)}
+                    onClose={() => setIsOpen(false)}
                   >
                     <NewTeam
                       courseEdition={edition!}
@@ -368,8 +369,11 @@ function CourseEditionGroup() {
                     marginRight: '20px',
                   }}
                 >
-                  <TableContainer component={Paper}>
-                    <Table aria-label='simple table'>
+                  <TableContainer
+                    component={Paper}
+                    style={{ maxHeight: '35vh' }}
+                  >
+                    <Table aria-label='simple table' stickyHeader>
                       <TableHead>
                         <TableRow>
                           <TableCell></TableCell>
@@ -443,7 +447,8 @@ function CourseEditionGroup() {
                       position='right center'
                       closeOnDocumentClick
                       open={isOpenJoin}
-                      onOpen={() => setIsOpenJoin(!isOpenJoin)}
+                      onOpen={() => setIsOpenJoin(true)}
+                      onClose={() => setIsOpenJoin(false)}
                     >
                       <JoinTeam
                         courseEdition={edition!}
@@ -465,7 +470,8 @@ function CourseEditionGroup() {
                   position='right top'
                   closeOnDocumentClick
                   open={isOpenProject}
-                  onOpen={() => setIsOpenProject(!isOpenProject)}
+                  onOpen={() => setIsOpenProject(true)}
+                  onClose={() => setIsOpenProject(false)}
                 >
                   <NewProject
                     courseEdition={edition!}
@@ -483,8 +489,8 @@ function CourseEditionGroup() {
                   marginRight: '20px',
                 }}
               >
-                <TableContainer component={Paper}>
-                  <Table aria-label='simple table'>
+                <TableContainer component={Paper} style={{ maxHeight: '35vh' }}>
+                  <Table aria-label='simple table' stickyHeader>
                     <TableHead>
                       <TableRow>
                         <TableCell></TableCell>
@@ -544,8 +550,12 @@ function CourseEditionGroup() {
           </Stack>
           <h4>Lista studentów:</h4>
           <ul>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+            <TableContainer component={Paper} style={{ maxHeight: '35vh' }}>
+              <Table
+                sx={{ minWidth: 650 }}
+                aria-label='simple table'
+                stickyHeader
+              >
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
@@ -665,6 +675,7 @@ function CourseEditionGroup() {
             <Link
               className='Assigner-link'
               to={`/courses/${course_name}/${edition}/${group_name}/assignment-view`}
+              style={{ marginBottom: '20px' }}
             >
               Przypisania tematów do zespołów
             </Link>

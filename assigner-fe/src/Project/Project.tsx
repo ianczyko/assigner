@@ -199,7 +199,8 @@ function Project() {
                   position='right center'
                   closeOnDocumentClick
                   open={isOpenDesc}
-                  onOpen={() => setIsOpenDesc(!isOpenDesc)}
+                  onOpen={() => setIsOpenDesc(true)}
+                  onClose={() => setIsOpenDesc(false)}
                 >
                   <UpdateProjectDescription
                     courseEdition={edition!}
