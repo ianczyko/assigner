@@ -31,6 +31,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 
 @Service
@@ -48,6 +49,8 @@ public class AuthService {
     final String AUTHORIZATION_URL = OAUTH_SERVICES + "/authorize";
 
     final String USER_URL = OAUTH_BASE_URL + "/services/users/user";
+
+    private final Logger logger = Logger.getLogger(AuthService.class.getName());
 
     @Value("${consumer.key}")
     private String consumerKey;
@@ -135,6 +138,12 @@ public class AuthService {
                 if (user.isPresent()) {
                     userType = user.get().getUserType();
                 } else {
+                    logger.info("Creating user: id=[%s] student=[%d] staff=[%d] final_role=[%s]".formatted(
+                            profileData.getId(),
+                            profileData.getStudent_status(),
+                            profileData.getStaff_status(),
+                            userType.toString()
+                    ));
                     usersRepository.save(User.builder()
                             .name(profileData.getFirst_name())
                             .surname(profileData.getLast_name())

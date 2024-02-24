@@ -76,6 +76,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> defaultExceptionHandler(Exception ex, WebRequest request) {
+        logger.error("defaultExceptionHandler", ex);
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorResponseEntity, HttpStatus.INTERNAL_SERVER_ERROR);
     }
