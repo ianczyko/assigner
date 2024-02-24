@@ -1,6 +1,6 @@
 lib/
 installers/*.bin
-.env
+*.env
 HELP.md
 .gradle
 build/

@@ -3,23 +3,23 @@ version: "3.9"
 services:
   assigner-db:
     image: postgres
-    ports:
-      - "5432:5432" # For development purposes expose DB port
-    environment:
-      POSTGRES_PASSWORD: "1234"
+    restart: always
+    env_file: assigner/db.env
+    volumes:
+      - assigner_pgdata:/var/lib/postgresql/data
 
   assigner:
     build: assigner
+    restart: always
     expose:
       - 8080
     env_file: assigner/.env
     depends_on:
       - assigner-db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://assigner-db:5432/postgres
 
   assigner-fe:
     build: assigner-fe
+    restart: always
     ports:
       - "3000:80"
     environment:
@@ -27,3 +27,6 @@ services:
       - BE_PORT=8080
     depends_on:
       - assigner
+
+volumes:
+  assigner_pgdata:
