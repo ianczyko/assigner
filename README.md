@@ -2,7 +2,7 @@
 
 ## How to start the whole system (docker compose)
 
-> First, configure the `assigner/.env` file (details can be found in [assigner/README.md](assigner/README.md))
+> First, configure the `assigner/.env` and `assigner/db.env` file (details can be found in [assigner/README.md](assigner/README.md))
 
 ```sh
 docker compose up --build
@@ -24,7 +24,7 @@ newgrp docker
 
 #### Start the system
 
-Configure the `assigner/.env` file (details can be found in [assigner/README.md](assigner/README.md)
+Configure the `assigner/.env` file (details can be found in [assigner/README.md](assigner/README.md))
 
 ```sh
 docker compose up --build
