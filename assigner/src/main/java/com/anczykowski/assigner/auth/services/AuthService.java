@@ -122,28 +122,29 @@ public class AuthService {
                 session.setAttribute("accessTokenSecret", accessTokenSecret);
                 session.setAttribute("usosId", profileData.getId());
 
-                var userType = UserType.STUDENT.ordinal();
+                var userType = UserType.STUDENT;
                 if (profileData.getStaff_status() > 0) {
-                    userType = UserType.TEACHER.ordinal();
+                    userType = UserType.TEACHER;
                 }
 
                 if (Integer.valueOf(profileData.getId()).equals(initialCoordinatorUsosId)) {
-                    userType = UserType.COORDINATOR.ordinal();
+                    userType = UserType.COORDINATOR;
                 }
 
                 var user = usersRepository.getByUsosId(Integer.valueOf(profileData.getId()));
                 if (user.isPresent()) {
-                    userType = user.get().getUserType().ordinal();
+                    userType = user.get().getUserType();
                 } else {
                     usersRepository.save(User.builder()
                             .name(profileData.getFirst_name())
                             .surname(profileData.getLast_name())
                             .secondName(profileData.getMiddle_names())
+                            .userType(userType)
                             .usosId(Integer.valueOf(profileData.getId()))
                             .build()
                     );
                 }
-                session.setAttribute("userType", String.valueOf(userType));
+                session.setAttribute("userType", String.valueOf(userType.ordinal()));
 
                 sessionRepository.save(session);
             }
