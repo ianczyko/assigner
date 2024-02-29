@@ -104,7 +104,7 @@ function Project() {
                 <TableHead>
                   <TableRow>
                     <TableCell>Nazwa tematu</TableCell>
-                    <TableCell>Opiekun Tematu</TableCell>
+                    <TableCell>Właściciel tematu</TableCell>
                     <TableCell align='right'>Limit miejsc</TableCell>
                     <TableCell align='right'>
                       Ilość zatwierdzonych przypisań
