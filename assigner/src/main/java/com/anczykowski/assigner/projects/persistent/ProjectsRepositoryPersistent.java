@@ -36,7 +36,7 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
 
     @Override
     public List<Project> getAll(CourseEditionGroup courseEditionGroup) {
-        return repositoryImpl.findByCourseEditionGroup_Id(courseEditionGroup.getId())
+        return repositoryImpl.findByCourseEditionGroup_IdOrderById(courseEditionGroup.getId())
                 .stream()
                 .map(c -> modelMapper.map(c, Project.class))
                 .toList();
@@ -51,5 +51,5 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
 
 @Component
 interface ProjectsRepositoryPersistentImpl extends JpaRepository<ProjectPersistent, Integer> {
-    List<ProjectPersistent> findByCourseEditionGroup_Id(Integer courseEditionGroupId);
+    List<ProjectPersistent> findByCourseEditionGroup_IdOrderById(Integer courseEditionGroupId);
 }
