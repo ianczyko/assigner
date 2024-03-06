@@ -37,6 +37,11 @@ public class CourseEditionGroupsService {
                 .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 
+    public Integer getId(String courseName, String edition, String groupName) {
+        return courseEditionGroupRepository.getId(courseName, edition, groupName)
+                .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
+    }
+
     @Transactional
     public void reassignUser(Integer usosId, String groupFromName, String groupToName, String courseName, String edition) {
         var user = usersRepository.getByUsosId(usosId)

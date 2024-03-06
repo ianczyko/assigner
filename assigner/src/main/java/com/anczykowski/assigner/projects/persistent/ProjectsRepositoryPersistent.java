@@ -1,8 +1,8 @@
 package com.anczykowski.assigner.projects.persistent;
 
-import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.projects.ProjectsRepository;
 import com.anczykowski.assigner.projects.models.Project;
+import com.anczykowski.assigner.projects.models.projections.ProjectFlat;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,11 +35,16 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
     }
 
     @Override
-    public List<Project> getAll(CourseEditionGroup courseEditionGroup) {
-        return repositoryImpl.findByCourseEditionGroup_IdOrderById(courseEditionGroup.getId())
+    public List<Project> getAll(Integer courseEditionGroupId) {
+        return repositoryImpl.findByCourseEditionGroup_IdOrderById(courseEditionGroupId)
                 .stream()
                 .map(c -> modelMapper.map(c, Project.class))
                 .toList();
+    }
+
+    @Override
+    public List<ProjectFlat> getAllFlat(Integer courseEditionGroupId) {
+        return repositoryImpl.findFlatByCourseEditionGroup_IdOrderById(courseEditionGroupId);
     }
 
     @Override
@@ -51,5 +56,7 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
 
 @Component
 interface ProjectsRepositoryPersistentImpl extends JpaRepository<ProjectPersistent, Integer> {
+    List<ProjectFlat> findFlatByCourseEditionGroup_IdOrderById(Integer courseEditionGroupId);
+
     List<ProjectPersistent> findByCourseEditionGroup_IdOrderById(Integer courseEditionGroupId);
 }

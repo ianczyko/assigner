@@ -1,6 +1,7 @@
 package com.anczykowski.assigner.courses.persistent;
 
 import com.anczykowski.assigner.courses.models.CourseEditionGroup;
+import com.anczykowski.assigner.courses.models.projections.CourseId;
 import com.anczykowski.assigner.courses.repositories.CourseEditionGroupRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -52,6 +53,20 @@ public class CourseEditionGroupsRepositoryPersistent implements CourseEditionGro
     }
 
     @Override
+    public Optional<Integer> getId(
+            String courseName,
+            String edition,
+            String groupName
+    ) {
+        return repositoryImpl.findIdByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
+                        courseName,
+                        edition,
+                        groupName
+                )
+                .map(CourseId::getId);
+    }
+
+    @Override
     public boolean checkIfUserHasAccessToCourseEditionGroup(
             String courseName,
             String edition,
@@ -80,6 +95,12 @@ interface CourseEditionGroupsRepositoryPersistentImpl extends JpaRepository<Cour
     List<CourseEditionGroupPersistent> findByCourseEditionCourseNameAndCourseEditionEdition(String courseName, String edition);
 
     Optional<CourseEditionGroupPersistent> findByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
+            String courseName,
+            String edition,
+            String groupName
+    );
+
+    Optional<CourseId> findIdByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
             String courseName,
             String edition,
             String groupName
