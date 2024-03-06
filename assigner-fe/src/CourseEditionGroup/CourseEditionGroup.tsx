@@ -174,7 +174,7 @@ function CourseEditionGroup() {
 
   function fetchTeams() {
     wretch(
-      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/flat`
     )
       .get()
       .forbidden((error) => {

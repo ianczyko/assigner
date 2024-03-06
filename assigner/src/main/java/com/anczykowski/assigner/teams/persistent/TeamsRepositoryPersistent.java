@@ -1,10 +1,12 @@
 package com.anczykowski.assigner.teams.persistent;
 
-import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.teams.models.projections.TeamFlat;
+import com.anczykowski.assigner.teams.persistent.projections.TeamPersistentFlat;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
+import com.anczykowski.assigner.users.models.projections.UserFlat;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -34,10 +37,29 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
     }
 
     @Override
-    public List<Team> getAll(CourseEditionGroup courseEdition) {
-        return repositoryImpl.findByCourseEditionGroup_IdOrderById(courseEdition.getId())
+    public List<Team> getAll(Integer courseEditionId) {
+        return repositoryImpl.findByCourseEditionGroup_IdOrderById(courseEditionId)
                 .stream()
                 .map(c -> modelMapper.map(c, Team.class))
+                .toList();
+    }
+
+    @Override
+    public List<TeamFlat> getAllFlat(Integer courseEditionId) {
+        return repositoryImpl.findFlatByCourseEditionGroup_IdOrderById(courseEditionId)
+                .stream()
+                .map(c -> TeamFlat.builder()
+                        .id(c.getId())
+                        .name(c.getName())
+                        .members(c.getMembers().stream().map(cm -> UserFlat.builder()
+                                .id(cm.getId())
+                                .name(cm.getName())
+                                .secondName(cm.getSecondName())
+                                .surname(cm.getSurname())
+                                .build()
+                        ).collect(Collectors.toSet()))
+                        .build()
+                )
                 .toList();
     }
 
@@ -76,4 +98,6 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
 @Component
 interface TeamsRepositoryPersistentImpl extends JpaRepository<TeamPersistent, Integer> {
     List<TeamPersistent> findByCourseEditionGroup_IdOrderById(Integer courseEditionId);
+
+    List<TeamPersistentFlat> findFlatByCourseEditionGroup_IdOrderById(Integer courseEditionId);
 }

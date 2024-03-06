@@ -7,6 +7,7 @@ import com.anczykowski.assigner.projects.ProjectsService;
 import com.anczykowski.assigner.teams.models.ProjectPreference;
 import com.anczykowski.assigner.teams.models.ProjectPreferenceId;
 import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.teams.models.projections.TeamFlat;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +62,13 @@ public class TeamsService {
     }
 
     public List<Team> getAll(String courseName, String edition, String groupName) {
-        var courseEdition = courseEditionsService.get(courseName, edition, groupName);
-        return teamsRepository.getAll(courseEdition);
+        var courseEditionId = courseEditionsService.getId(courseName, edition, groupName);
+        return teamsRepository.getAll(courseEditionId);
+    }
+
+    public List<TeamFlat> getAllFlat(String courseName, String edition, String groupName) {
+        var courseEditionId = courseEditionsService.getId(courseName, edition, groupName);
+        return teamsRepository.getAllFlat(courseEditionId);
     }
 
     @Transactional

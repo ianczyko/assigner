@@ -1,7 +1,7 @@
 package com.anczykowski.assigner.teams;
 
-import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.teams.models.projections.TeamFlat;
 import com.anczykowski.assigner.users.models.User;
 
 import java.util.List;
@@ -9,7 +9,9 @@ import java.util.List;
 public interface TeamsRepository {
     Team save(Team team);
 
-    List<Team> getAll(CourseEditionGroup courseEdition);
+    List<Team> getAll(Integer courseEditionId);
+
+    List<TeamFlat> getAllFlat(Integer courseEditionId);
 
     Team get(Integer teamId);
 
