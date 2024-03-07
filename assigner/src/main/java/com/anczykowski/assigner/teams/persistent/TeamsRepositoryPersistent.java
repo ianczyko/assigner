@@ -1,6 +1,9 @@
 package com.anczykowski.assigner.teams.persistent;
 
+import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.teams.TeamsRepository;
+import com.anczykowski.assigner.teams.models.ProjectPreference;
+import com.anczykowski.assigner.teams.models.ProjectPreferenceId;
 import com.anczykowski.assigner.teams.models.Team;
 import com.anczykowski.assigner.teams.models.projections.TeamFlat;
 import com.anczykowski.assigner.teams.persistent.projections.TeamPersistentFlat;
@@ -65,7 +68,50 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
 
     @Override
     public Team get(Integer teamId) {
-        return modelMapper.map(repositoryImpl.getReferenceById(teamId), Team.class);
+        var teamPersistent = repositoryImpl.getReferenceById(teamId);
+        var assignedProjectPersistent = teamPersistent.getAssignedProject();
+        var assignedProject = assignedProjectPersistent == null ? null : Project.builder()
+                .id(assignedProjectPersistent.getId())
+                .name(assignedProjectPersistent.getName())
+                .teamLimit(assignedProjectPersistent.getTeamLimit())
+                .build();
+        return Team.builder()
+                .id(teamPersistent.getId())
+                .name(teamPersistent.getName())
+                .assignedProject(assignedProject)
+                .accessToken(teamPersistent.getAccessToken())
+                .isAssignmentFinal(teamPersistent.getIsAssignmentFinal())
+                .members(teamPersistent
+                        .getMembers()
+                        .stream()
+                        .map(m -> User.builder()
+                                .id(m.getId())
+                                .name(m.getName())
+                                .usosId(m.getUsosId())
+                                .secondName(m.getSecondName())
+                                .surname(m.getSurname())
+                                .build())
+                        .collect(Collectors.toSet()))
+                .preferences(teamPersistent
+                        .getPreferences()
+                        .stream()
+                        .map(p -> {
+                            var project = p.getProject();
+                            return ProjectPreference.builder()
+                                    .id(ProjectPreferenceId.builder()
+                                            .teamId(p.getId().getTeamId())
+                                            .projectId(p.getId().getProjectId())
+                                            .build())
+                                    .rating(p.getRating())
+                                    .project(Project.builder()
+                                            .id(project.getId())
+                                            .name(project.getName())
+                                            .build())
+                                    .build();
+                        })
+                        .toList()
+                )
+                .build();
     }
 
     @Override

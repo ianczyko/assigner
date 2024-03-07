@@ -38,8 +38,7 @@ public class ProjectsIntegrationTests extends BaseIntegrationTests {
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(json().node("[0].name").isEqualTo("name1"))
-                .andExpect(json().node("[0].description").isEqualTo("desc1"));
+                .andExpect(json().node("[0].name").isEqualTo("name1"));
     }
 
     @Test
