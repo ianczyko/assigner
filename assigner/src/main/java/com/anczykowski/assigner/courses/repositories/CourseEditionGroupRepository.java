@@ -16,6 +16,12 @@ public interface CourseEditionGroupRepository {
             String groupName
     );
 
+    Optional<CourseEditionGroup> getShallow(
+            String courseName,
+            String edition,
+            String groupName
+    );
+
     Optional<Integer> getId(
             String courseName,
             String edition,
