@@ -34,7 +34,10 @@ public class CourseEditionGroupsRepositoryPersistent implements CourseEditionGro
     public List<CourseEditionGroup> getAll(String courseName, String edition) {
         return repositoryImpl.findByCourseEditionCourseNameAndCourseEditionEdition(courseName, edition)
                 .stream()
-                .map(c -> modelMapper.map(c, CourseEditionGroup.class))
+                .map(c -> CourseEditionGroup.builder()
+                        .id(c.getId())
+                        .groupName(c.getGroupName())
+                        .build())  // TODO: return new class without omitted field
                 .toList();
     }
 

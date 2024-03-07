@@ -4,6 +4,7 @@ import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.courses.dto.CourseDto;
 import com.anczykowski.assigner.courses.dto.CourseEditionDto;
 import com.anczykowski.assigner.courses.dto.CourseEditionGroupDto;
+import com.anczykowski.assigner.courses.dto.CourseEditionGroupFlatDto;
 import com.anczykowski.assigner.courses.services.CourseEditionGroupsService;
 import com.anczykowski.assigner.courses.services.CourseEditionService;
 import com.anczykowski.assigner.courses.services.CoursesService;
@@ -80,13 +81,13 @@ public class CoursesController {
     }
 
     @GetMapping("/{courseName}/editions/{edition}/groups")
-    public List<CourseEditionGroupDto> getCourseEditionGroups(
+    public List<CourseEditionGroupFlatDto> getCourseEditionGroups(
             @PathVariable String courseName,
             @PathVariable String edition
     ) {
         return courseEditionGroupsService.getAll(courseName, edition)
                 .stream()
-                .map(c -> modelMapper.map(c, CourseEditionGroupDto.class))
+                .map(c -> modelMapper.map(c, CourseEditionGroupFlatDto.class))
                 .toList();
     }
 

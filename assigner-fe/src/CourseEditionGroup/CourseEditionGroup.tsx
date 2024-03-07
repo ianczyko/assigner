@@ -44,7 +44,7 @@ function CourseEditionGroup() {
   const [teamsResponse, setTeamsResponse] =
     useState<Array<ITeamResponse> | null>(null);
   const [groupsResponse, setGroupsResponse] =
-    useState<Array<IEditionResponse> | null>(null);
+    useState<Array<IEditionFlatResponse> | null>(null);
   const [projectsResponse, setProjectsResponse] =
     useState<Array<IProjectFlatResponse> | null>(null);
 
@@ -60,6 +60,11 @@ function CourseEditionGroup() {
     id: number;
     groupName: string;
     users: Array<IUser>;
+  }
+
+  interface IEditionFlatResponse {
+    id: number;
+    groupName: string;
   }
 
   interface ITeamResponse {
