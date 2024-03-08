@@ -69,7 +69,7 @@ public class UsersRepositoryPersistent implements UsersRepository {
                         .surname(u.getSurname())
                         .usosId(u.getUsosId())
                         .userType(u.getUserType())
-                        // TODO: this method does not set courseEditionGroupsAccess, user different User models (User/UserWithAccess)
+                        // // TODO: this method returns omitted field in domain class
                         .build()
                 )
                 .toList();

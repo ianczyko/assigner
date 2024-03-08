@@ -39,7 +39,7 @@ public class CourseEditionGroupsRepositoryPersistent implements CourseEditionGro
                 .map(c -> CourseEditionGroup.builder()
                         .id(c.getId())
                         .groupName(c.getGroupName())
-                        .build())  // TODO: return new class without omitted field
+                        .build())  // TODO: this method returns omitted field in domain class
                 .toList();
     }
 
