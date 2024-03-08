@@ -2,7 +2,10 @@ package com.anczykowski.assigner.projects.persistent;
 
 import com.anczykowski.assigner.projects.ProjectsRepository;
 import com.anczykowski.assigner.projects.models.Project;
+import com.anczykowski.assigner.projects.models.ProjectForumComment;
 import com.anczykowski.assigner.projects.models.projections.ProjectFlat;
+import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.users.models.User;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -31,7 +35,47 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
 
     @Override
     public Project get(Integer projectId) {
-        return modelMapper.map(repositoryImpl.getReferenceById(projectId), Project.class);
+        var projectPersistent = repositoryImpl.getReferenceById(projectId);
+        return Project.builder()
+                .id(projectPersistent.getId())
+                .name(projectPersistent.getName())
+                .description(projectPersistent.getDescription())
+                .teamLimit(projectPersistent.getTeamLimit())
+                .projectManager(projectPersistent.getProjectManager())
+                .assignedTeams(projectPersistent
+                        .getAssignedTeams()
+                        .stream()
+                        .map(at -> Team.builder()
+                                .id(at.getId())
+                                .name(at.getName())
+                                .accessToken(at.getAccessToken())
+                                .isAssignmentFinal(at.getIsAssignmentFinal())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public List<ProjectForumComment> getComments(Integer projectId) {
+        return repositoryImpl.getReferenceById(projectId)
+                .getComments()
+                .stream()
+                .map(c -> {
+                    var author = c.getAuthor();
+                    return ProjectForumComment.builder()
+                            .id(c.getId())
+                            .content(c.getContent())
+                            .createdDate(c.getCreatedDate())
+                            .author(User.builder()
+                                    .id(author.getId())
+                                    .name(author.getName())
+                                    .usosId(author.getUsosId())
+                                    .secondName(author.getSecondName())
+                                    .surname(author.getSurname())
+                                    .build())
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

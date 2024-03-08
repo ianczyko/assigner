@@ -61,8 +61,7 @@ public class ProjectsService {
     }
 
     public List<ProjectForumComment> getProjectForumComments(Integer projectId) {
-        var project = projectsRepository.get(projectId);
-        return project.getComments();
+        return projectsRepository.getComments(projectId);
     }
 
     @Transactional
