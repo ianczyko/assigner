@@ -38,7 +38,13 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
     public List<Project> getAll(Integer courseEditionGroupId) {
         return repositoryImpl.findByCourseEditionGroup_IdOrderById(courseEditionGroupId)
                 .stream()
-                .map(c -> modelMapper.map(c, Project.class))
+                .map(c -> Project.builder()
+                        .id(c.getId())
+                        .name(c.getName())
+                        .description(c.getDescription())
+                        .teamLimit(c.getTeamLimit())
+                        .projectManager(c.getProjectManager())
+                        .build())
                 .toList();
     }
 
