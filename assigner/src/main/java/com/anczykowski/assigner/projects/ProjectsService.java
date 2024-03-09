@@ -4,6 +4,7 @@ import com.anczykowski.assigner.courses.services.CourseEditionGroupsService;
 import com.anczykowski.assigner.error.NotFoundException;
 import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.projects.models.ProjectForumComment;
+import com.anczykowski.assigner.projects.models.projections.ProjectFlat;
 import com.anczykowski.assigner.users.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,9 +36,18 @@ public class ProjectsService {
         return projectsRepository.get(projectId);
     }
 
+    public Project getFull(Integer projectId) {
+        return projectsRepository.getFull(projectId);
+    }
+
     public List<Project> getProjects(String courseName, String edition, String groupName) {
-        var courseEditionGroup = courseEditionGroupsService.get(courseName, edition, groupName);
-        return projectsRepository.getAll(courseEditionGroup);
+        var courseEditionGroupId = courseEditionGroupsService.getId(courseName, edition, groupName);
+        return projectsRepository.getAll(courseEditionGroupId);
+    }
+
+    public List<ProjectFlat> getProjectsFlat(String courseName, String edition, String groupName) {
+        var courseEditionGroupId = courseEditionGroupsService.getId(courseName, edition, groupName);
+        return projectsRepository.getAllFlat(courseEditionGroupId);
     }
 
     @Transactional
@@ -46,7 +56,7 @@ public class ProjectsService {
             Integer usosId,
             ProjectForumComment projectForumComment
     ) {
-        var project = projectsRepository.get(projectId);
+        var project = projectsRepository.getFull(projectId);
         var user = usersRepository.getByUsosId(usosId)
                 .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
         projectForumComment.setProject(project);
@@ -55,8 +65,7 @@ public class ProjectsService {
     }
 
     public List<ProjectForumComment> getProjectForumComments(Integer projectId) {
-        var project = projectsRepository.get(projectId);
-        return project.getComments();
+        return projectsRepository.getComments(projectId);
     }
 
     @Transactional
@@ -66,14 +75,14 @@ public class ProjectsService {
 
     @Transactional
     public Project changeLimit(Integer projectId, Integer newLimit) {
-        var project = projectsRepository.get(projectId);
+        var project = projectsRepository.getFull(projectId);
         project.setTeamLimit(newLimit);
         return projectsRepository.save(project);
     }
 
     @Transactional
     public Project updateDescription(Integer projectId, String newDescription) {
-        var project = projectsRepository.get(projectId);
+        var project = projectsRepository.getFull(projectId);
         project.setDescription(newDescription);
         return projectsRepository.save(project);
     }

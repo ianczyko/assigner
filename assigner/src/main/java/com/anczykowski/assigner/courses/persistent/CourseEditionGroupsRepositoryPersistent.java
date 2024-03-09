@@ -1,7 +1,9 @@
 package com.anczykowski.assigner.courses.persistent;
 
 import com.anczykowski.assigner.courses.models.CourseEditionGroup;
+import com.anczykowski.assigner.courses.models.projections.CourseId;
 import com.anczykowski.assigner.courses.repositories.CourseEditionGroupRepository;
+import com.anczykowski.assigner.users.models.User;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -33,7 +36,10 @@ public class CourseEditionGroupsRepositoryPersistent implements CourseEditionGro
     public List<CourseEditionGroup> getAll(String courseName, String edition) {
         return repositoryImpl.findByCourseEditionCourseNameAndCourseEditionEdition(courseName, edition)
                 .stream()
-                .map(c -> modelMapper.map(c, CourseEditionGroup.class))
+                .map(c -> CourseEditionGroup.builder()
+                        .id(c.getId())
+                        .groupName(c.getGroupName())
+                        .build())  // TODO: this method returns omitted field in domain class
                 .toList();
     }
 
@@ -49,6 +55,49 @@ public class CourseEditionGroupsRepositoryPersistent implements CourseEditionGro
                         groupName
                 )
                 .map(ce -> modelMapper.map(ce, CourseEditionGroup.class));
+    }
+
+    @Override
+    public Optional<CourseEditionGroup> getShallow(
+            String courseName,
+            String edition,
+            String groupName
+    ) {
+        return repositoryImpl.findByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
+                        courseName,
+                        edition,
+                        groupName
+                )
+                .map(ce ->
+                        CourseEditionGroup.builder()
+                                .id(ce.getId())
+                                .groupName(ce.getGroupName())
+                                .users(ce
+                                        .getUsers()
+                                        .stream()
+                                        .map(u -> User.builder()
+                                                .id(u.getId())
+                                                .name(u.getName())
+                                                .usosId(u.getUsosId())
+                                                .secondName(u.getSecondName())
+                                                .surname(u.getSurname())
+                                                .build())
+                                        .collect(Collectors.toSet()))
+                                .build());
+    }
+
+    @Override
+    public Optional<Integer> getId(
+            String courseName,
+            String edition,
+            String groupName
+    ) {
+        return repositoryImpl.findIdByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
+                        courseName,
+                        edition,
+                        groupName
+                )
+                .map(CourseId::getId);
     }
 
     @Override
@@ -80,6 +129,12 @@ interface CourseEditionGroupsRepositoryPersistentImpl extends JpaRepository<Cour
     List<CourseEditionGroupPersistent> findByCourseEditionCourseNameAndCourseEditionEdition(String courseName, String edition);
 
     Optional<CourseEditionGroupPersistent> findByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
+            String courseName,
+            String edition,
+            String groupName
+    );
+
+    Optional<CourseId> findIdByCourseEditionCourseNameAndCourseEditionEditionAndGroupName(
             String courseName,
             String edition,
             String groupName

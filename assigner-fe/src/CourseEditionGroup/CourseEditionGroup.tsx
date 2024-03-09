@@ -44,9 +44,9 @@ function CourseEditionGroup() {
   const [teamsResponse, setTeamsResponse] =
     useState<Array<ITeamResponse> | null>(null);
   const [groupsResponse, setGroupsResponse] =
-    useState<Array<IEditionResponse> | null>(null);
+    useState<Array<IEditionFlatResponse> | null>(null);
   const [projectsResponse, setProjectsResponse] =
-    useState<Array<IProjectResponse> | null>(null);
+    useState<Array<IProjectFlatResponse> | null>(null);
 
   const [assignedTeams, setAssignedTeams] = useState<any>({});
 
@@ -62,19 +62,22 @@ function CourseEditionGroup() {
     users: Array<IUser>;
   }
 
+  interface IEditionFlatResponse {
+    id: number;
+    groupName: string;
+  }
+
   interface ITeamResponse {
     id: number;
     name: string;
     members: Array<IUser>;
   }
 
-  interface IProjectResponse {
+  interface IProjectFlatResponse {
     id: number;
     name: string;
     teamLimit: number;
-    finalAssignedTeamsCount: number;
     projectManager: string;
-    description: string;
   }
 
   interface IUser {
@@ -176,7 +179,7 @@ function CourseEditionGroup() {
 
   function fetchTeams() {
     wretch(
-      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/flat`
     )
       .get()
       .forbidden((error) => {
@@ -247,7 +250,7 @@ function CourseEditionGroup() {
       .catch((error) => console.log(error));
   }
 
-  function removeProject(project: IProjectResponse) {
+  function removeProject(project: IProjectFlatResponse) {
     wretch(
       `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/projects/${project.id}`
     )
@@ -496,9 +499,6 @@ function CourseEditionGroup() {
                         <TableCell></TableCell>
                         <TableCell>Temat</TableCell>
                         <TableCell align='right'>Limit miejsc</TableCell>
-                        <TableCell align='right'>
-                          Ilość zatw. przypisań
-                        </TableCell>
                         {userType === UserType.COORDINATOR && (
                           <TableCell align='right'>Usuń</TableCell>
                         )}
@@ -523,9 +523,6 @@ function CourseEditionGroup() {
                           </TableCell>
                           <TableCell align='right'>
                             {project.teamLimit}
-                          </TableCell>
-                          <TableCell align='right'>
-                            {project.finalAssignedTeamsCount}
                           </TableCell>
                           {userType === UserType.COORDINATOR && (
                             <TableCell component='th' scope='row'>

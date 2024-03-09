@@ -7,6 +7,7 @@ import com.anczykowski.assigner.projects.ProjectsService;
 import com.anczykowski.assigner.teams.models.ProjectPreference;
 import com.anczykowski.assigner.teams.models.ProjectPreferenceId;
 import com.anczykowski.assigner.teams.models.Team;
+import com.anczykowski.assigner.teams.models.projections.TeamFlat;
 import com.anczykowski.assigner.users.UsersRepository;
 import com.anczykowski.assigner.users.models.User;
 import lombok.RequiredArgsConstructor;
@@ -61,13 +62,18 @@ public class TeamsService {
     }
 
     public List<Team> getAll(String courseName, String edition, String groupName) {
-        var courseEdition = courseEditionsService.get(courseName, edition, groupName);
-        return teamsRepository.getAll(courseEdition);
+        var courseEditionId = courseEditionsService.getId(courseName, edition, groupName);
+        return teamsRepository.getAll(courseEditionId);
+    }
+
+    public List<TeamFlat> getAllFlat(String courseName, String edition, String groupName) {
+        var courseEditionId = courseEditionsService.getId(courseName, edition, groupName);
+        return teamsRepository.getAllFlat(courseEditionId);
     }
 
     @Transactional
     public Team generateAccessToken(Integer teamId) {
-        var team = teamsRepository.get(teamId);
+        var team = teamsRepository.getFull(teamId);
         team.regenerateAccessToken(tokenDigits, tokenValidDays);
         return teamsRepository.save(team);
     }
@@ -78,7 +84,7 @@ public class TeamsService {
 
     @Transactional
     public Set<User> addMember(Integer teamId, Integer accessToken, Integer usosId) {
-        var team = teamsRepository.get(teamId);
+        var team = teamsRepository.getFull(teamId);
         if (!team.getAccessToken().equals(accessToken)) {
             throw new ForbiddenException("Unmatched access token");
         }
@@ -96,8 +102,8 @@ public class TeamsService {
 
     @Transactional
     public ProjectPreference rateProject(Integer teamId, Integer projectId, Integer rating) {
-        var project = projectsService.get(projectId);
-        var team = teamsRepository.get(teamId);
+        var project = projectsService.getFull(projectId);
+        var team = teamsRepository.getFull(teamId);
         var preference = ProjectPreference.builder()
                 .id(new ProjectPreferenceId(project.getId(), team.getId()))
                 .project(project)
@@ -114,8 +120,8 @@ public class TeamsService {
 
     @Transactional
     public Team assignProject(Integer teamId, Integer projectId) {
-        var team = teamsRepository.get(teamId);
-        var project = projectId == null ? null : projectsService.get(projectId);
+        var team = teamsRepository.getFull(teamId);
+        var project = projectId == null ? null : projectsService.getFull(projectId);
         team.setAssignedProject(project);
         return teamsRepository.save(team);
     }
@@ -154,7 +160,7 @@ public class TeamsService {
 
     @Transactional
     public Team setIsAssignmentFinal(Integer teamId, Boolean isApproved) {
-        var team = teamsRepository.get(teamId);
+        var team = teamsRepository.getFull(teamId);
         team.setIsAssignmentFinal(isApproved);
         return teamsRepository.save(team);
     }

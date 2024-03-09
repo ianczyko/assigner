@@ -200,6 +200,18 @@ public class TeamsController {
                 .toList();
     }
 
+    @GetMapping("/flat")
+    public List<TeamFlatDto> getTeamsFlat(
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable String groupName
+    ) {
+        return teamsService.getAllFlat(courseName, edition, groupName)
+                .stream()
+                .map(c -> modelMapper.map(c, TeamFlatDto.class))
+                .toList();
+    }
+
     @GetMapping("/{teamId}")
     public TeamDetailedWithAccessDto getTeam(
             @SuppressWarnings("unused") @PathVariable String courseName,

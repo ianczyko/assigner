@@ -2,6 +2,7 @@ package com.anczykowski.assigner.projects;
 
 import com.anczykowski.assigner.auth.authutils.AuthUtils;
 import com.anczykowski.assigner.projects.dto.ProjectDto;
+import com.anczykowski.assigner.projects.dto.ProjectFlatDto;
 import com.anczykowski.assigner.projects.dto.ProjectForumCommentDto;
 import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.projects.models.ProjectForumComment;
@@ -40,14 +41,14 @@ public class ProjectsController {
     }
 
     @GetMapping
-    public List<ProjectDto> getProjects(
+    public List<ProjectFlatDto> getProjects(
             @PathVariable String courseName,
             @PathVariable String edition,
             @PathVariable String groupName
     ) {
-        return projectsService.getProjects(courseName, edition, groupName)
+        return projectsService.getProjectsFlat(courseName, edition, groupName)
                 .stream()
-                .map(c -> modelMapper.map(c, ProjectDto.class))
+                .map(c -> modelMapper.map(c, ProjectFlatDto.class))
                 .toList();
     }
 

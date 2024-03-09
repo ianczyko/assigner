@@ -6,6 +6,7 @@ import org.modelmapper.MappingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +35,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> notFoundByIdException(EntityNotFoundException ex, WebRequest request) {
+        var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorResponseEntity, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(JpaObjectRetrievalFailureException.class)
+    public ResponseEntity<?> notFoundJpaException(JpaObjectRetrievalFailureException ex, WebRequest request) {
         var errorResponseEntity = new ErrorResponseEntity(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorResponseEntity, HttpStatus.NOT_FOUND);
     }

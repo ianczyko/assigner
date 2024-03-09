@@ -62,7 +62,16 @@ public class UsersRepositoryPersistent implements UsersRepository {
     public List<User> getAll() {
         return repositoryImpl.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
-                .map(c -> modelMapper.map(c, User.class))
+                .map(u -> User.builder()
+                        .id(u.getId())
+                        .name(u.getName())
+                        .secondName(u.getSecondName())
+                        .surname(u.getSurname())
+                        .usosId(u.getUsosId())
+                        .userType(u.getUserType())
+                        // // TODO: this method returns omitted field in domain class
+                        .build()
+                )
                 .toList();
     }
 }

@@ -33,7 +33,12 @@ public class CourseEditionGroupsService {
     }
 
     public CourseEditionGroup get(String courseName, String edition, String groupName) {
-        return courseEditionGroupRepository.get(courseName, edition, groupName)
+        return courseEditionGroupRepository.getShallow(courseName, edition, groupName)
+                .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
+    }
+
+    public Integer getId(String courseName, String edition, String groupName) {
+        return courseEditionGroupRepository.getId(courseName, edition, groupName)
                 .orElseThrow(() -> new NotFoundException("%s %s course edition not found".formatted(courseName, edition)));
     }
 
