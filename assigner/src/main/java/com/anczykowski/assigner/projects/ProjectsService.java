@@ -36,6 +36,10 @@ public class ProjectsService {
         return projectsRepository.get(projectId);
     }
 
+    public Project getFull(Integer projectId) {
+        return projectsRepository.getFull(projectId);
+    }
+
     public List<Project> getProjects(String courseName, String edition, String groupName) {
         var courseEditionGroupId = courseEditionGroupsService.getId(courseName, edition, groupName);
         return projectsRepository.getAll(courseEditionGroupId);
@@ -52,7 +56,7 @@ public class ProjectsService {
             Integer usosId,
             ProjectForumComment projectForumComment
     ) {
-        var project = projectsRepository.get(projectId);
+        var project = projectsRepository.getFull(projectId);
         var user = usersRepository.getByUsosId(usosId)
                 .orElseThrow(() -> new NotFoundException("user with usosId %d not found".formatted(usosId)));
         projectForumComment.setProject(project);
@@ -71,14 +75,14 @@ public class ProjectsService {
 
     @Transactional
     public Project changeLimit(Integer projectId, Integer newLimit) {
-        var project = projectsRepository.get(projectId);
+        var project = projectsRepository.getFull(projectId);
         project.setTeamLimit(newLimit);
         return projectsRepository.save(project);
     }
 
     @Transactional
     public Project updateDescription(Integer projectId, String newDescription) {
-        var project = projectsRepository.get(projectId);
+        var project = projectsRepository.getFull(projectId);
         project.setDescription(newDescription);
         return projectsRepository.save(project);
     }

@@ -15,6 +15,8 @@ public interface TeamsRepository {
 
     Team get(Integer teamId);
 
+    Team getFull(Integer teamId);
+
     Team addMemberToTeam(Integer teamId, User user);
 
     @SuppressWarnings("UnusedReturnValue")

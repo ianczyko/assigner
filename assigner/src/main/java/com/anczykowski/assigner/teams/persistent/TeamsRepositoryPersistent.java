@@ -121,6 +121,11 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
     }
 
     @Override
+    public Team getFull(Integer teamId) {
+        return modelMapper.map(repositoryImpl.getReferenceById(teamId), Team.class);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public Team addMemberToTeam(Integer teamId, User user) {
         var teamPersistent = repositoryImpl.getReferenceById(teamId);

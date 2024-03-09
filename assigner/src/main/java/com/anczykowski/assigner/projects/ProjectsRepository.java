@@ -11,6 +11,8 @@ public interface ProjectsRepository {
 
     Project get(Integer projectId);
 
+    Project getFull(Integer projectId);
+
     List<Project> getAll(Integer courseEditionGroupId);
     List<ProjectFlat> getAllFlat(Integer courseEditionGroupId);
 

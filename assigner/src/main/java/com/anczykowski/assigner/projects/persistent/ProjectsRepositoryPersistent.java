@@ -62,6 +62,11 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
     }
 
     @Override
+    public Project getFull(Integer projectId) {
+        return modelMapper.map(repositoryImpl.getReferenceById(projectId), Project.class);
+    }
+
+    @Override
     public List<ProjectForumComment> getComments(Integer projectId) {
         return repositoryImpl.getReferenceById(projectId)
                 .getComments()
