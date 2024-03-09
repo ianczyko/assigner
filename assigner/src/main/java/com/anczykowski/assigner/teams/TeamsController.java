@@ -200,6 +200,19 @@ public class TeamsController {
                 .toList();
     }
 
+    @GetMapping("/detailed")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
+    public List<TeamDetailedUsersDto> getTeamsDetailed(
+            @PathVariable String courseName,
+            @PathVariable String edition,
+            @PathVariable String groupName
+    ) {
+        return teamsService.getAll(courseName, edition, groupName)
+                .stream()
+                .map(c -> modelMapper.map(c, TeamDetailedUsersDto.class))
+                .toList();
+    }
+
     @GetMapping("/flat")
     public List<TeamFlatDto> getTeamsFlat(
             @PathVariable String courseName,
