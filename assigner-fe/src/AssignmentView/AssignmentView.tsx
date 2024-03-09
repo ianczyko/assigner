@@ -5,7 +5,7 @@ import QueryStringAddon from 'wretch/addons/queryString';
 import './AssignmentView.css';
 import Forbidden from '../Forbidden/Forbidden';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Checkbox, IconButton, Stack, Tooltip } from '@mui/material';
+import { Button, Checkbox, IconButton, Stack, Tooltip } from '@mui/material';
 import Helpers from '../Common/Helpers';
 import { ToastContainer } from 'react-toastify';
 import Table from '@mui/material/Table';
@@ -17,6 +17,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { CSVLink } from 'react-csv';
 import CustomNavigator from '../CustomNavigator/CustomNavigator';
 
 function AssignmentView() {
@@ -36,12 +37,21 @@ function AssignmentView() {
     assignedProject: IProjectResponse;
     happiness: number;
     isAssignmentFinal: boolean;
+    members: Array<IUser>;
   }
 
   interface IProjectResponse {
     id: number;
     name: string;
     description: string;
+  }
+
+  interface IUser {
+    id: number;
+    name: string;
+    secondName: string | null;
+    surname: string;
+    usosId: number;
   }
 
   async function submitAssign() {
@@ -92,7 +102,7 @@ function AssignmentView() {
 
   function fetchTeams() {
     return wretch(
-      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams`
+      `/api/courses/${course_name}/editions/${edition}/groups/${group_name}/teams/detailed`
     )
       .get()
       .forbidden((error) => {
@@ -110,6 +120,23 @@ function AssignmentView() {
       .catch((error) => console.log(error));
   }
 
+  function getCsvData() {
+    const data = teamsResponse!.flatMap((t) =>
+      t.members.map((m) => ({
+        user_usos_id: m.usosId,
+        user_name: m.name,
+        user_surname: m.surname,
+        team_id: t.id,
+        team_name: t.name,
+        assigned_project_id: t.assignedProject.id,
+        assigned_project_name: t.assignedProject.name,
+        is_assignment_final: t.isAssignmentFinal,
+        happiness: t.happiness,
+      }))
+    );
+    return data;
+  }
+
   useEffect(() => {
     fetchTeams();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,17 +151,19 @@ function AssignmentView() {
       <div className='Assigner-center-container'>
         <header className='Assigner-center Assigner-header'>
           <ToastContainer />
-
           <CustomNavigator
             course_name={course_name}
             edition={edition}
             group_name={group_name}
           />
-
           <h4>Obecne przypisania zespołów do projektów:</h4>
           <ul>
             <TableContainer component={Paper} style={{ maxHeight: '45vh' }}>
-              <Table sx={{ minWidth: 630 }} aria-label='simple table' stickyHeader>
+              <Table
+                sx={{ minWidth: 630 }}
+                aria-label='simple table'
+                stickyHeader
+              >
                 <TableHead>
                   <TableRow>
                     <TableCell>Zespół</TableCell>
@@ -237,6 +266,19 @@ function AssignmentView() {
           >
             Przypisz tematy za pomocą <br /> modelu optymalizacyjnego
           </LoadingButton>
+          <CSVLink
+            filename={`assigner_export_${course_name}.csv`}
+            separator=';'
+            data={getCsvData()}
+          >
+            <Button
+              variant='contained'
+              onClick={() => {}}
+              style={{ margin: '20px 0 20px 0' }}
+            >
+              Export CSV
+            </Button>
+          </CSVLink>
         </header>
       </div>
     );
