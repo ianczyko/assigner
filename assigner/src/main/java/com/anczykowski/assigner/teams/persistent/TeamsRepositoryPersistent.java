@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.teams.persistent;
 
+import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.teams.TeamsRepository;
 import com.anczykowski.assigner.teams.models.ProjectPreference;
@@ -70,6 +71,7 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
     public Team get(Integer teamId) {
         var teamPersistent = repositoryImpl.getReferenceById(teamId);
         var assignedProjectPersistent = teamPersistent.getAssignedProject();
+        var courseEditionGroup = teamPersistent.getCourseEditionGroup();
         var assignedProject = assignedProjectPersistent == null ? null : Project.builder()
                 .id(assignedProjectPersistent.getId())
                 .name(assignedProjectPersistent.getName())
@@ -81,6 +83,10 @@ public class TeamsRepositoryPersistent implements TeamsRepository {
                 .assignedProject(assignedProject)
                 .accessToken(teamPersistent.getAccessToken())
                 .isAssignmentFinal(teamPersistent.getIsAssignmentFinal())
+                .courseEditionGroup(CourseEditionGroup.builder()
+                        .id(courseEditionGroup.getId())
+                        .groupName(courseEditionGroup.getGroupName())
+                        .build())
                 .members(teamPersistent
                         .getMembers()
                         .stream()
