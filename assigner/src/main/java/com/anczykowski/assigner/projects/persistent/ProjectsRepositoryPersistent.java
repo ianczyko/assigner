@@ -1,5 +1,6 @@
 package com.anczykowski.assigner.projects.persistent;
 
+import com.anczykowski.assigner.courses.models.CourseEditionGroup;
 import com.anczykowski.assigner.projects.ProjectsRepository;
 import com.anczykowski.assigner.projects.models.Project;
 import com.anczykowski.assigner.projects.models.ProjectForumComment;
@@ -36,12 +37,17 @@ public class ProjectsRepositoryPersistent implements ProjectsRepository {
     @Override
     public Project get(Integer projectId) {
         var projectPersistent = repositoryImpl.getReferenceById(projectId);
+        var courseEditionGroup = projectPersistent.getCourseEditionGroup();
         return Project.builder()
                 .id(projectPersistent.getId())
                 .name(projectPersistent.getName())
                 .description(projectPersistent.getDescription())
                 .teamLimit(projectPersistent.getTeamLimit())
                 .projectManager(projectPersistent.getProjectManager())
+                .courseEditionGroup(CourseEditionGroup.builder()
+                        .id(courseEditionGroup.getId())
+                        .groupName(courseEditionGroup.getGroupName())
+                        .build())
                 .assignedTeams(projectPersistent
                         .getAssignedTeams()
                         .stream()
