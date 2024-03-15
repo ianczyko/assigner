@@ -126,12 +126,12 @@ function AssignmentView() {
         user_usos_id: m.usosId,
         user_name: m.name,
         user_surname: m.surname,
-        team_id: t.id,
-        team_name: t.name,
-        assigned_project_id: t.assignedProject.id,
-        assigned_project_name: t.assignedProject.name,
-        is_assignment_final: t.isAssignmentFinal,
-        happiness: t.happiness,
+        team_id: t?.id ?? '-',
+        team_name: t?.name ?? '-',
+        assigned_project_id: t?.assignedProject?.id ?? '-',
+        assigned_project_name: t?.assignedProject?.name ?? '-',
+        is_assignment_final: t?.isAssignmentFinal ?? '-',
+        happiness: t?.happiness ?? '-',
       }))
     );
     return data;
