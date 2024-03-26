@@ -269,6 +269,7 @@ public class TeamsController {
     }
 
     @PutMapping("/{teamId}/assignment-final")
+    @PreAuthorize("hasAuthority('COORDINATOR')")
     public TeamDetailedWithAccessDto setIsAssignmentFinal(
             @SuppressWarnings("unused") @PathVariable String courseName,
             @SuppressWarnings("unused") @PathVariable String edition,
