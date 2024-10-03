@@ -13,6 +13,8 @@ public class CourseEditionDto {
 
     String edition;
 
+    Boolean archived = false;
+
     List<CourseEditionGroupShortDto> courseEditionGroups;
 
 }

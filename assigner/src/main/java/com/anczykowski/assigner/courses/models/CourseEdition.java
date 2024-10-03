@@ -16,6 +16,8 @@ public class CourseEdition {
 
     String edition;
 
+    boolean archived = false;
+
     Course course;
 
     List<CourseEditionGroup> courseEditionGroups;

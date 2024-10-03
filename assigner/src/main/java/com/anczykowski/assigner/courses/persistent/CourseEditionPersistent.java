@@ -25,6 +25,8 @@ public class CourseEditionPersistent {
 
     private String edition;
 
+    private Boolean archived;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CoursePersistent course;

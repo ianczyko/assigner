@@ -37,6 +37,7 @@ function Courses() {
   interface ICourseEditionGroup {
     id: number;
     edition: string;
+    archived: boolean;
     courseEditionGroups: Array<ICourseEditionGroupGroup>;
   }
 
@@ -125,6 +126,7 @@ function Courses() {
                         <li key={courseEdition.id} style={{ marginTop: 10 }}>
                           <Stack direction='row' spacing='20px'>
                             <p>{courseEdition.edition}</p>
+                            {courseEdition.archived && <p>(Archiwum)</p>}
                             {userType === UserType.COORDINATOR && (
                               <Popup
                                 trigger={(open) => (
@@ -156,6 +158,7 @@ function Courses() {
                               </Popup>
                             )}
                             {userType === UserType.STUDENT &&
+                              !courseEdition.archived &&
                               courseEdition.courseEditionGroups.length ===
                                 0 && (
                                 <Popup
