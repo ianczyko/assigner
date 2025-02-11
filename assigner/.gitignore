@@ -1,5 +1,5 @@
 lib/
-installers/*.bin
+LP/
 *.env
 HELP.md
 .gradle

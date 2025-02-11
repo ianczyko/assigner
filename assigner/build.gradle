@@ -58,12 +58,8 @@ dependencies {
 	testImplementation 'org.assertj:assertj-core'
 	testImplementation 'net.javacrumbs.json-unit:json-unit-spring:2.36.0'
 
-	// Cplex
-	if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
-		implementation files("/opt/ibm/ILOG/CPLEX_Studio2211/cplex/lib/cplex.jar")
-	} else {
-		implementation files("lib/cplex.jar")
-	}
+	implementation 'com.javasolver:jsr331:2.3.1'
+	implementation 'com.javasolver:jsr331-glpk:2.3.1'
 
 }
 
