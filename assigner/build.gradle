@@ -61,13 +61,6 @@ dependencies {
 	implementation 'com.javasolver:jsr331:2.3.1'
 	implementation 'com.javasolver:jsr331-glpk:2.3.1'
 
-	// Cplex
-	if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
-		implementation files("/opt/ibm/ILOG/CPLEX_Studio2211/cplex/lib/cplex.jar")
-	} else {
-		implementation files("lib/cplex.jar")
-	}
-
 }
 
 tasks.named('test') {
