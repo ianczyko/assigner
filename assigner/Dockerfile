@@ -1,5 +1,6 @@
 # TODO: consider alpine
 FROM gradle:7.6.0-jdk17-focal
+RUN apt-get update && apt-get -y install glpk-utils
 WORKDIR /app
 
 # Dependencies
